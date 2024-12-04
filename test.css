@@ -1,0 +1,33 @@
+.operation-status {
+    background: #f1f1f1;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: left;
+    max-width: 600px;
+    margin: 1rem auto;
+}
+
+.operation-status ul {
+    list-style: none;
+    padding: 0;
+}
+
+.operation-status li {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+.operation-status .normal {
+    color: green;
+}
+
+.operation-status .delay {
+    color: orange;
+}
+
+.operation-status .suspend {
+    color: red;
+}
