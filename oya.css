@@ -1,0 +1,125 @@
+/* ベーススタイル */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #222; /* 背景を暗く */
+    color: #fff;
+    text-align: center;
+}
+
+/* アニメーション用 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 2s ease-in-out;
+}
+
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.slide-in-right {
+    animation: slideInRight 1.5s ease-out;
+}
+
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ヘッダー */
+.header {
+    background: linear-gradient(to right, #007BFF, #6610f2);
+    padding: 20px 0;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.logo {
+    font-size: 36px;
+    font-weight: bold;
+    letter-spacing: 3px;
+}
+
+/* ナビゲーション */
+.nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    animation: fadeIn 2s ease-in-out;
+}
+
+.nav ul li {
+    margin: 0 15px;
+}
+
+.nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s;
+}
+
+.nav ul li a:hover {
+    color: #f8d210;
+    transform: scale(1.1);
+}
+
+/* ヒーローセクション */
+.hero {
+    background: linear-gradient(to bottom, #ff7e5f, #feb47b);
+    padding: 50px 20px;
+    margin: 20px auto;
+    border-radius: 20px;
+    animation: bounceIn 1.5s ease-in-out;
+}
+
+/* セクション */
+.about {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 30px;
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* 画像アニメーション */
+.about img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 10px 0;
+    animation: rotate 3s linear infinite;
+}
+
+/* フッター */
+.footer {
+    padding: 10px 0;
+    background: #333;
+    animation: fadeIn 2s ease-in-out;
+}
+
+.footer p {
+    margin: 0;
+    color: #aaa;
+}
