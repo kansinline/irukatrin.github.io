@@ -1,18 +1,125 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>いるか電鉄 - 時刻表</title>
-    <link rel="stylesheet" href="zyunbi.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>運行情報</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .area {
+      margin: 10px;
+      padding: 10px;
+      border: 2px solid #ccc; /* 枠の太さを調整するための変更 */
+      border-radius: 5px;
+      width: 150px;
+      text-align: center;
+      position: relative;
+      transition: border-color 0.3s;
+      cursor: pointer; /* クリック可能なエリアを示すカーソルの追加 */
+    }
+    .area .status {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    .status.ontime {
+      color: green;
+    }
+    .status.delayed {
+      color: yellow;
+      border-color: #ffb900; /* 枠の色を黄色に */
+      background-color: #fffae3; /* Light yellow background for delayed */
+      border-width: 4px; /* 枠の太さを調整するための追加 */
+    }
+    .status.outOfService {
+      color: red;
+      border-color: red;
+      background-color: #ffe3e3; /* Light red background for out of service */
+    }
+    .status.normalOperation {
+      color: green;
+      border-color: green;
+      background-color: #e0f7e0; /* Light green background for normal operation */
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="message">
-            <h1>ただいま運行しておりません</h1>
-            <p>路線などができていない関係上、現在運行しておりません。</p>
-            <a href="index.html" class="home-button">ホームに戻る</a>
-        </div>
+  <header>
+    <h1>運行情報・運休情報</h1>
+  </header>
+
+  <main>
+    <div id="train-status-container" class="container">
+      <!-- エリアごとの運行情報を表示する場所 -->
     </div>
+
+    <div class="notice">
+      <p>情報はアプリ・ソーシャルメディアでもご確認いただけます。</p>
+      <div class="links">
+        <a href="#">JR東日本アプリ</a>
+        <a href="#">どこトレ</a>
+        <a href="#">運行情報 公式X</a>
+        <a href="#">LINE公式アカウント</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>情報は定期的に更新されます。</p>
+  </footer>
+
+  <script>
+    // APIから運行情報を取得して表示
+    fetch("https://marvelous-five-eel.glitch.me/trains")
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById('train-status-container');
+        container.innerHTML = ''; // 初期化
+
+        // 各エリアの情報を表示
+        data.forEach(train => {
+          const areaElement = document.createElement('div');
+          areaElement.classList.add('area');
+
+          const nameElement = document.createElement('h2');
+          nameElement.textContent = train.name;
+
+          const statusElement = document.createElement('p');
+          statusElement.classList.add('status');
+          const imgElement = document.createElement('img');
+
+          if (train.status === "通常運転中") {
+            statusElement.textContent = "●"; // 通常運転時の丸
+            areaElement.style.backgroundColor = '#e0f7e0'; // Green for normal operation
+            areaElement.style.borderColor = 'green';
+            statusElement.classList.add('normalOperation');
+          } else if (train.status === "遅延") {
+            statusElement.textContent = "⚠️"; // 遅延時のびっくりマーク
+            areaElement.style.backgroundColor = '#fffae3'; // Light yellow for delayed
+            areaElement.style.borderColor = '#ffb900'; // 太い黄色の枠
+            statusElement.classList.add('delayed');
+          } else if (train.status === "運休") {
+            statusElement.textContent = "×"; // 運休時の×マーク
+            areaElement.style.backgroundColor = '#ffe3e3'; // Light red for out of service
+            areaElement.style.borderColor = 'red';
+            statusElement.classList.add('outOfService');
+          }
+
+          // クリック時の処理
+          areaElement.addEventListener('click', () => {
+            alert(`エリア名: ${train.name}\n状態: ${train.status}`);
+          });
+
+          areaElement.appendChild(nameElement);
+          areaElement.appendChild(statusElement);
+          areaElement.appendChild(imgElement);
+          container.appendChild(areaElement);
+        });
+      })
+      .catch(error => console.error("Error fetching train data:", error));
+  </script>
 </body>
 </html>
