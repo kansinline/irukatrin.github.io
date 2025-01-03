@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>利用規約</title>
+    <style>
+        /* スタイル設定 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:active {
+            background-color: #3e8e41;
+        }
+        .button-disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            overflow: auto;
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
+        .modal-header {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .modal-footer {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .modal-footer button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .modal-footer .cancel {
+            background-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>利用規約</h1>
+    </header>
+
+    <div class="container">
+        <h2>車両利用規約</h2>
+        <p id="termsText">本規約は、いるか電鉄の車両をご利用いただく際に適用される利用規約です。</p>
+
+        <h3>利用規約の内容</h3>
+        <ul id="termsList">
+            <li>本規約は、すべての公開物に適用されます。</li>
+            <li>都合により規約が変更される場合があります。</li>
+            <li>過去の規約と相違点が発生した場合、現在の規約が優先されます。</li>
+        </ul>
+
+        <h3>禁止事項</h3>
+        <ul>
+            <li>公衆風俗に反する行為、無断改造などは禁止されています。</li>
+            <li>規約違反が発覚した場合、処罰が行われることがあります。</li>
+            <li>SNSでの使用の場合、必ず申請を行ってください。</li>
+        </ul>
+
+        <h3>同意</h3>
+        <p>利用者は、パックをダウンロードした時点で以下の規約に同意したものとみなします。</p>
+
+        <footer>
+            <!-- 音読を開始するボタン -->
+            <button id="startReadingBtn">規約を音読してください</button>
+
+            <!-- 利用規約に同意して申請ボタン（最初は無効） -->
+            <button id="agreeBtn" class="button-disabled" disabled>利用規約に同意して申請</button>
+        </footer>
+    </div>
+
+    <!-- モーダルのHTML -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>確認</span>
+            </div>
+            <div class="modal-body">
+                <p>利用規約に同意しますか？</p>
+            </div>
+            
+            <div class="modal-footer">
+                <button id="confirmBtn">同意する</button>
+                <button id="cancelBtn" class="cancel">キャンセル</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 音声認識の設定
+        const startReadingBtn = document.getElementById("startReadingBtn");
+        const agreeBtn = document.getElementById("agreeBtn");
+        const confirmationModal = document.getElementById("confirmationModal");
+        const confirmBtn = document.getElementById("confirmBtn");
+        const cancelBtn = document.getElementById("cancelBtn");
+        const termsText = document.getElementById("termsText");
+    
+        let recognition;
+        if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = "ja-JP";
+            recognition.continuous = false;
+            recognition.interimResults = false;
+        }
+    
+        // 音声認識が終了したときの処理
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+    
+            // 音読された文章をコンソールに表示
+            console.log("音読された文章: ", transcript);
+    
+            // 規約の一部（仮にここでは「利用規約」に合致するか確認）
+            const validPhrase = "利用規約";
+    
+            // 規約のテキストに一致する部分を強調表示
+            highlightText(termsText, transcript);
+    
+            // 音読結果が規約に含まれる場合、同意ボタンを有効にする
+            if (transcript.includes(validPhrase)) {
+                agreeBtn.disabled = false;
+                agreeBtn.classList.remove("button-disabled");
+            } else {
+                // 合致しなかった場合、再度音読を促す
+                alert("規約を正しく音読してください。");
+            }
+        };
+    
+        // 音声認識が失敗した場合の処理
+        recognition.onerror = function(event) {
+            alert("音声認識に失敗しました。もう一度試してください。");
+        };
+    
+        // 規約の音読開始ボタン
+        startReadingBtn.onclick = function() {
+            recognition.start();
+        };
+    
+        // テキスト内で一致する部分をハイライトする関数
+        function highlightText(element, text) {
+            const regex = new RegExp(`(${text})`, "gi"); // 正規表現で一致部分を検索
+            element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+        }
+    
+        // 同意ボタンを押した際の動作
+        agreeBtn.onclick = function() {
+            confirmationModal.style.display = "block";
+        };
+    
+        // モーダル内の「同意する」ボタン
+        confirmBtn.onclick = function() {
+            window.location.href = 'https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAUnQ-bVUMTRVNEIzWFVIUE1aSEdUWURTTDVVV1FSMC4u';
+        };
+    
+        // モーダルの「キャンセル」ボタン
+        cancelBtn.onclick = function() {
+            confirmationModal.style.display = "none";
+        };
+    
+        // モーダル外をクリックした場合も閉じる
+        window.onclick = function(event) {
+            if (event.target === confirmationModal) {
+                confirmationModal.style.display = "none";
+            }
+        };
+    </script>
+    
+
+</body>
+</html>
