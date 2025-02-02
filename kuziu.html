@@ -127,7 +127,7 @@
         </div>
     </div>
 
-   <input type="text" id="userInput" placeholder="ここに入力" autocomplete="off" inputmode="latin" style="ime-mode: disabled;">
+    <input type="text" id="userInput" placeholder="ここに入力" autocomplete="off" inputmode="latin" style="ime-mode: disabled;">
     <br>
     <button onclick="checkAnswer()">答える</button>
     <div id="result"></div>
@@ -170,6 +170,7 @@
             document.getElementById("card").classList.remove("flipped");
             document.getElementById("result").textContent = "";
             document.getElementById("userInput").value = "";
+            document.getElementById("userInput").focus(); // 入力欄にフォーカス
 
             let word = await getRandomWord();
             if (word === "error") {
@@ -196,6 +197,19 @@
                 document.getElementById("result").style.color = "#ff0000";
             }
         }
+
+        document.getElementById("userInput").addEventListener("compositionstart", (event) => {
+            event.preventDefault(); // 日本語入力の変換を防ぐ
+        });
+
+        document.getElementById("userInput").addEventListener("keypress", (event) => {
+            if (event.key === "Enter") {
+                checkAnswer(); // Enterキーで回答
+            }
+        });
+
+        // 最初の単語を表示
+        showNext();
     </script>
 </body>
 </html>
