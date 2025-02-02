@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英語クイズ</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            margin-top: 30px;
+            font-size: 36px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #level-select {
+            margin: 20px;
+            font-size: 18px;
+            padding: 8px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .card-container {
+            width: 320px;
+            height: 180px;
+            margin: 30px auto;
+            perspective: 1000px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease-in-out;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        .flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: bold;
+            border-radius: 10px;
+        }
+
+        .front {
+            background: #ffffff;
+            color: #333;
+        }
+
+        .back {
+            background: #ff4b5c;
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        input {
+            font-size: 20px;
+            padding: 10px;
+            width: 250px;
+            text-align: center;
+            border: 2px solid white;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.8);
+            color: black;
+            outline: none;
+            ime-mode: disabled; /* 文字変換無効化 */
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: white;
+            background: #ff9800;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background: #ff5722;
+        }
+
+        #result {
+            font-size: 22px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>英語クイズ</h1>
+
+    <label for="level">レベル選択: </label>
+    <select id="level-select">
+        <option value="easy">簡単</option>
+        <option value="medium">普通</option>
+        <option value="hard">難しい</option>
+    </select>
+
+    <div class="card-container">
+        <div class="card" id="card">
+            <div class="card-face front" id="question">単語を表示</div>
+            <div class="card-face back" id="answer">日本語訳</div>
+        </div>
+    </div>
+
+    <input type="text" id="userInput" placeholder="ここに入力" autocomplete="off">
+    <br>
+    <button onclick="checkAnswer()">答える</button>
+    <div id="result"></div>
+    <br>
+    <button onclick="showNext()">次へ</button>
+
+    <script>
+        let currentWord = "";
+        let correctTranslation = "";
+
+        async function getRandomWord() {
+            try {
+                let response = await fetch(`https://random-word-api.herokuapp.com/word?number=1`);
+                let data = await response.json();
+                return data[0];
+            } catch (error) {
+                console.error("エラー:", error);
+                return "error";
+            }
+        }
+
+        async function getTranslation(word) {
+            try {
+                let res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ja&dt=t&q=${word}`);
+                let data = await res.json();
+                return data[0][0][0];
+            } catch (error) {
+                console.error("翻訳エラー:", error);
+                return "翻訳できませんでした";
+            }
+        }
+
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            speechSynthesis.speak(utterance);
+        }
+
+        async function showNext() {
+            document.getElementById("card").classList.remove("flipped");
+            document.getElementById("result").textContent = "";
+            document.getElementById("userInput").value = "";
+
+            let word = await getRandomWord();
+            if (word === "error") {
+                document.getElementById("question").textContent = "単語を取得できませんでした";
+                return;
+            }
+
+            currentWord = word;
+            document.getElementById("question").textContent = word;
+            speak(word);
+
+            correctTranslation = await getTranslation(word);
+            document.getElementById("answer").textContent = correctTranslation;
+        }
+
+        function checkAnswer() {
+            let userInput = document.getElementById("userInput").value.trim();
+            if (userInput === correctTranslation) {
+                document.getElementById("result").textContent = "正解！";
+                document.getElementById("result").style.color = "#00ff00";
+                document.getElementById("card").classList.add("flipped");
+            } else {
+                document.getElementById("result").textContent = "不正解…";
+                document.getElementById("result").style.color = "#ff0000";
+            }
+        }
+    </script>
+</body>
+</html>
