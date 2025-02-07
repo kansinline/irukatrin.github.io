@@ -3,112 +3,204 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>運行情報</title>
-  <link rel="stylesheet" href="trin.css">
+  <title>🚆 最強の運行情報</title>
   <style>
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-    }
-    .area {
-      margin: 10px;
-      padding: 10px;
-      border: 2px solid #ccc; /* 枠の太さを調整するための変更 */
-      border-radius: 5px;
-      width: 150px;
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+    /* ======== 全体設定 ======== */
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #fff;
       text-align: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      transition: background 0.5s;
+    }
+
+    /* ダークモード */
+    body.light-mode {
+      background: linear-gradient(135deg, #ffffff, #ddd);
+      color: #000;
+    }
+
+    /* ヘッダー */
+    header {
+      font-size: 2em;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.5);
+      box-shadow: 0px 4px 15px rgba(0, 255, 255, 0.4);
+      border-radius: 10px;
+      backdrop-filter: blur(5px);
+      width: 90%;
+      max-width: 800px;
+    }
+
+    .container {
+      display: grid;
+      gap: 15px;
+      padding: 20px;
+      width: 90%;
+      max-width: 1000px;
+    }
+
+    /* 運行ボックス */
+    .area {
       position: relative;
-      transition: border-color 0.3s;
-      cursor: pointer; /* クリック可能なエリアを示すカーソルの追加 */
+      padding: 20px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0px 0px 10px rgba(0, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
-    .area .status {
-      font-size: 1.5em;
-      font-weight: bold;
+
+    .area:hover {
+      transform: translateY(-5px);
+      box-shadow: 0px 0px 20px rgba(0, 255, 255, 0.7);
     }
-    .status.ontime {
-      color: green;
-    }
-    .status.delayed {
-      color: yellow;
-      border-color: #ffb900; /* 枠の色を黄色に */
-      background-color: #fffae3; /* Light yellow background for delayed */
-      border-width: 4px; /* 枠の太さを調整するための追加 */
-    }
-    .status.outOfService {
-      color: red;
-      border-color: red;
-      background-color: #ffe3e3; /* Light red background for out of service */
-    }
+
+    /* 運行ステータス */
     .status.normalOperation {
-      color: green;
-      border-color: green;
-      background-color: #e0f7e0; /* Light green background for normal operation */
+      color: #00ff00;
+    }
+
+    .status.delayed {
+      color: #ffcc00;
+    }
+
+    .status.outOfService {
+      color: #ff0033;
+    }
+
+    /* モーダルウィンドウ */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 400px;
+    }
+
+    /* フッター */
+    footer {
+      margin-top: 20px;
+    }
+
+    /* レスポンシブ */
+    @media (min-width: 320px) {
+      .container { grid-template-columns: 1fr; }
+    }
+
+    @media (min-width: 600px) {
+      .container { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (min-width: 900px) {
+      .container { grid-template-columns: repeat(3, 1fr); }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>運行情報・運休情報</h1>
+    <h1>🚆 最強の運行情報 🚆</h1>
+    <button onclick="toggleDarkMode()">🌙/☀️</button>
   </header>
 
   <main>
-    <div id="train-status-container" class="container">
-      <!-- エリアごとの運行情報を表示する場所 -->
-    </div>
+    <div id="train-status-container" class="container"></div>
+  </main>
 
   <footer>
-    <p>情報は定期的に更新されます。</p>
+    <p>情報は自動更新されます。</p>
   </footer>
 
+  <!-- モーダルウィンドウ -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h2 id="modal-title"></h2>
+      <p id="modal-status"></p>
+      <button onclick="closeModal()">閉じる</button>
+    </div>
+  </div>
+
   <script>
-    // APIから運行情報を取得して表示
-    fetch("https://marvelous-five-eel.glitch.me//trains")
-      .then(response => response.json())
-      .then(data => {
-        const container = document.getElementById('train-status-container');
-        container.innerHTML = ''; // 初期化
+    function fetchTrainData() {
+      fetch("https://marvelous-five-eel.glitch.me/trains")
+        .then(response => response.json())
+        .then(data => {
+          const container = document.getElementById('train-status-container');
+          container.innerHTML = ''; 
 
-        // 各エリアの情報を表示
-        data.forEach(train => {
-          const areaElement = document.createElement('div');
-          areaElement.classList.add('area');
+          data.forEach(train => {
+            const areaElement = document.createElement('div');
+            areaElement.classList.add('area');
 
-          const nameElement = document.createElement('h2');
-          nameElement.textContent = train.name;
+            const nameElement = document.createElement('h2');
+            nameElement.textContent = train.name;
 
-          const statusElement = document.createElement('p');
-          statusElement.classList.add('status');
-          const imgElement = document.createElement('img');
+            const statusElement = document.createElement('p');
+            statusElement.classList.add('status');
 
-          if (train.status === "通常運転中") {
-            statusElement.textContent = "●"; // 通常運転時の丸
-            areaElement.style.backgroundColor = '#e0f7e0'; // Green for normal operation
-            areaElement.style.borderColor = 'green';
-            statusElement.classList.add('normalOperation');
-          } else if (train.status === "遅延") {
-            statusElement.textContent = "⚠️"; // 遅延時のびっくりマーク
-            areaElement.style.backgroundColor = '#fffae3'; // Light yellow for delayed
-            areaElement.style.borderColor = '#ffb900'; // 太い黄色の枠
-            statusElement.classList.add('delayed');
-          } else if (train.status === "運休") {
-            statusElement.textContent = "×"; // 運休時の×マーク
-            areaElement.style.backgroundColor = '#ffe3e3'; // Light red for out of service
-            areaElement.style.borderColor = 'red';
-            statusElement.classList.add('outOfService');
-          }
+            if (train.status === "通常運転中") {
+              statusElement.textContent = "🟢 通常運転";
+              statusElement.classList.add('normalOperation');
+            } else if (train.status === "遅延") {
+              statusElement.textContent = "⚠️ 遅延";
+              statusElement.classList.add('delayed');
+            } else if (train.status === "運休") {
+              statusElement.textContent = "❌ 運休";
+              statusElement.classList.add('outOfService');
+            }
 
-          // クリック時の処理
-          areaElement.addEventListener('click', () => {
-            alert(`エリア名: ${train.name}\n状態: ${train.status}`);
+            areaElement.addEventListener('click', () => {
+              openModal(train.name, train.status);
+            });
+
+            areaElement.appendChild(nameElement);
+            areaElement.appendChild(statusElement);
+            container.appendChild(areaElement);
           });
+        })
+        .catch(error => console.error("🚨 エラー発生:", error));
+    }
 
-          areaElement.appendChild(nameElement);
-          areaElement.appendChild(statusElement);
-          areaElement.appendChild(imgElement);
-          container.appendChild(areaElement);
-        });
-      })
-      .catch(error => console.error("Error fetching train data:", error));
+    function openModal(name, status) {
+      document.getElementById('modal-title').textContent = name;
+      document.getElementById('modal-status').textContent = status;
+      document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("light-mode");
+    }
+
+    setInterval(fetchTrainData, 60000);
+    fetchTrainData();
   </script>
 </body>
 </html>
