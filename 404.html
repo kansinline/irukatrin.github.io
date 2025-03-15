@@ -1,175 +1,47 @@
-<!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - ページが見つかりません</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+ <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+   <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+	<style>*{
+	padding:0px;
+	margin:0px;
+}
+body{
+		background:black;
+	}
+.st0{font-family:'FootlightMTLight';}
+.st1{font-size:83.0285px;}
+.st2{fill:gray;}
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f1f1f1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .container {
-            text-align: center;
-        }
-
-        .error-box {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 40px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 2;
-        }
-
-        .error-title {
-            font-size: 120px;
-            color: #ff6347;
-            font-weight: bold;
-            animation: fadeIn 1s ease-out;
-        }
-
-        .error-message {
-            font-size: 18px;
-            margin-top: 20px;
-            color: #555;
-            animation: fadeIn 1s 0.5s ease-out;
-        }
-
-        .error-suggestion {
-            font-size: 16px;
-            color: #333;
-            margin-top: 10px;
-            animation: fadeIn 1s 1s ease-out;
-        }
-
-        .home-btn {
-            margin-top: 30px;
-            padding: 12px 25px;
-            background-color: #ff6347;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .home-btn:hover {
-            background-color: #e53d35;
-        }
-
-        .animation-box {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1;
-        }
-
-        .moving-objects {
-            display: flex;
-            gap: 20px;
-            animation: moveObjects 4s linear infinite;
-        }
-
-        .object {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: #ff6347;
-            animation: bounce 1.5s ease-in-out infinite;
-        }
-
-        .object:nth-child(1) {
-            animation-delay: 0s;
-        }
-
-        .object:nth-child(2) {
-            animation-delay: 0.3s;
-        }
-
-        .object:nth-child(3) {
-            animation-delay: 0.6s;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes moveObjects {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(100vw);
-            }
-        }
-
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-30px);
-            }
-        }
-    </style>
+svg{
+  width: 500px;
+    height: 400px;
+    text-align: center;
+    fill: #16a085;
+}
+path#XMLID_5_ {
+   
+    fill: #16a085;
+    filter: url(#blurFilter4);
+}
+path#XMLID_11_ ,path#XMLID_2_ {
+    fill: #16a085;
+}</style>
+  <title>404 pages</title>
 </head>
+
 <body>
-    <div class="container">
-        <div class="error-box">
-            <h1 class="error-title">404</h1>
-            <p class="error-message">お探しのページは見つかりませんでした。</p>
-            <p class="error-suggestion">どうぞ、下のボタンで戻ってください！</p>
-            <button class="home-btn">ホームへ戻る</button>
-        </div>
-        <div class="animation-box">
-            <div class="moving-objects">
-                <div class="object"></div>
-                <div class="object"></div>
-                <div class="object"></div>
-            </div>
-        </div>
-    </div>
 
-    <script>
-        // ホームボタンがクリックされたときにホームにリダイレクト
-        document.querySelector('.home-btn').addEventListener('click', function() {
-            window.location.href = '/'; // ホームページへのリンク
-        });
 
-        // スクロール時にエラーメッセージを動かす
-        window.addEventListener('scroll', function() {
-            const errorBox = document.querySelector('.error-box');
-            const scrollPosition = window.scrollY;
+<div id="container">
 
-            if (scrollPosition > 50) {
-                errorBox.style.transform = 'translateY(20px)';
-                errorBox.style.transition = 'transform 0.5s ease-out';
-            } else {
-                errorBox.style.transform = 'translateY(0)';
-            }
-        });
-    </script>
-</body>
-</html>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 200 82.7" style="enable-background:new 0 0 200 82.7;" xml:space="preserve">
+
+<g id="Calque_1">
+	<text id="XMLID_3_" transform="matrix(1.2187 0 0 1 13 75.6393)" class="st0 st1">4</text>
+	<text id="XMLID_4_" transform="matrix(1.2187 0 0 1 133.0003 73.6393)" class="st0 st1">4</text>
+</g>
+<g id="Calque_2">
+<g>
