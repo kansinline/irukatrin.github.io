@@ -295,6 +295,17 @@ input[type="password"] {
 </div>
 
 <script>
+    const channel = new BroadcastChannel("single_tab_control");
+    channel.postMessage("new-tab");
+
+// 他タブからの通知を受信
+channel.onmessage = (e) => {
+    if (e.data === "new-tab") {
+        // 自分（古いタブ）を閉じる
+        window.close();
+    }
+};
+
 // 言語切替
 function switchLanguage() {
     const lang = document.getElementById('lang').value;
