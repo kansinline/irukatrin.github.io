@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>氷鬼プラグイン完全ガイド / Ice Oni Plugin Complete Guide</title>
+<title>Korioni（氷鬼）プラグイン完全ガイド</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 /* 基本設定 */
 body {
     background-color: #1e1e1e;
-    font-family: 'Press Start 2', monospace;
+    font-family: 'Press Start 2', monospace; 
     color: #fff;
     margin: 0;
     padding: 20px;
@@ -18,7 +18,7 @@ body {
 
 /* コンテナ */
 .container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
     text-align: center;
 }
@@ -73,6 +73,7 @@ input[type="password"] {
     justify-content: center;
     align-items: center;
     margin: 0 auto;
+    margin-bottom: 10px;
 }
 
 .btn-green::before {
@@ -111,7 +112,7 @@ input[type="password"] {
 }
 
 .details h2 {
-    margin-top: 0;
+    margin-top: 20px;
     color: #A5FF5B;
 }
 
@@ -178,10 +179,10 @@ input[type="password"] {
     <!-- 合言葉フォーム -->
     <div class="form-container" id="form-container">
         <h1 id="title" 
-            data-ja="氷鬼プラグイン完全ガイド" 
-            data-en="Ice Oni Plugin Complete Guide" 
-            data-zh="冰鬼插件完全指南" 
-            data-ko="얼음 도깨비 플러그인 완전 가이드">氷鬼プラグイン完全ガイド</h1>
+            data-ja="Korioni（氷鬼）プラグイン完全ガイド" 
+            data-en="Korioni (Ice Oni) Plugin Complete Guide" 
+            data-zh="Korioni（冰鬼）插件完全指南" 
+            data-ko="Korioni(얼음 도깨비) 플러그인 완전 가이드">Korioni（氷鬼）プラグイン完全ガイド</h1>
         <input type="password" id="secretWord" 
                data-ja-placeholder="合言葉を入力してください" 
                data-en-placeholder="Enter the secret word" 
@@ -203,9 +204,7 @@ input[type="password"] {
                 data-en="Terms of Use" 
                 data-zh="使用条款" 
                 data-ko="이용약관">利用規約</h2>
-            <ol id="termsContent">
-                <!-- JavaScriptで切替 -->
-            </ol>
+            <ol id="termsContent"></ol>
         </div>
     </div>
 
@@ -219,93 +218,69 @@ input[type="password"] {
             data-zh="插件概述" 
             data-ko="플러그인 개요">プラグイン概要</span></button></h2>
         <div id="overview">
-            <p data-ja="「氷鬼」はMinecraftサーバー専用の協力型ミニゲームプラグインです。プレイヤーは鬼と逃げに分かれて遊びます。"
-               data-en="Ice Oni is a cooperative mini-game plugin for Minecraft servers. Players are divided into Oni and Runners."
-               data-zh="“冰鬼”是Minecraft服务器专用的合作小游戏插件。玩家分为鬼和逃跑者。"
-               data-ko="‘얼음 도깨비’는 Minecraft 서버 전용 협력 미니게임 플러그인입니다. 플레이어는 도깨비와 도망자로 나뉩니다。">「氷鬼」はMinecraftサーバー専用の協力型ミニゲームプラグインです。プレイヤーは鬼と逃げに分かれて遊びます。</p>
+            <p data-ja="Korioni（氷鬼）は、Minecraft上で遊べる鬼ごっこ系ミニゲーム『氷鬼』を実装できるサーバープラグインです。プレイヤーは『鬼』と『逃走者』に分かれ、鬼は逃走者を凍結させ、逃走者は協力して鬼から逃げつつ、凍った仲間を解放します。"
+               data-en="Korioni (Ice Oni) is a server plugin that implements the ice tag mini-game in Minecraft. Players are divided into Oni and Runners, where Oni freeze Runners, and Runners cooperate to escape and rescue frozen teammates."
+               data-zh="Korioni（冰鬼）是Minecraft服务器插件，实现冰鬼小游戏。玩家分为鬼和逃跑者，鬼冻结逃跑者，逃跑者合作逃脱并救援被冻结的队友。"
+               data-ko="Korioni(얼음 도깨비)는 Minecraft에서 얼음 도깨비 미니게임을 구현할 수 있는 서버 플러그인입니다. 플레이어는 도깨비와 도망자로 나뉘며, 도깨비는 도망자를 얼리고 도망자는 협력하여 도깨비를 피하고 얼린 팀원을 구합니다。">Korioni（氷鬼）は、Minecraft上で遊べる鬼ごっこ系ミニゲーム『氷鬼』を実装できるサーバープラグインです。プレイヤーは『鬼』と『逃走者』に分かれ、鬼は逃走者を凍結させ、逃走者は協力して鬼から逃げつつ、凍った仲間を解放します。</p>
+            
+            <h3 data-ja="主な機能" data-en="Main Features" data-zh="主要功能" data-ko="주요 기능">主な機能</h3>
             <ul>
-                <li data-ja="鬼は逃げをタッチで凍結可能" data-en="Oni can freeze runners by touching them" data-zh="鬼可以通过接触冻结逃跑者" data-ko="도깨비는 접촉으로 도망자를 얼릴 수 있습니다">鬼は逃げをタッチで凍結可能</li>
-                <li data-ja="逃げは仲間を助けられる" data-en="Runners can help their teammates" data-zh="逃跑者可以帮助队友" data-ko="도망자는 팀원을 도울 수 있습니다">逃げは仲間を助けられる</li>
-                <li data-ja="制限時間内に全員凍結で鬼勝利、時間切れで逃げ勝利" data-en="If all are frozen within the time limit, Oni wins; otherwise, Runners win" data-zh="在规定时间内全员冻结鬼胜利，超时逃跑者胜利" data-ko="제한 시간 내에 모두 얼리면 도깨비 승리, 시간 초과 시 도망자 승리">制限時間内に全員凍結で鬼勝利、時間切れで逃げ勝利</li>
+                <li data-ja="ゲーム開始・終了コマンド (/korioni start /korioni stop)" data-en="Start/Stop game commands (/korioni start /korioni stop)" data-zh="游戏开始/结束命令 (/korioni start /korioni stop)" data-ko="게임 시작/종료 명령 (/korioni start /korioni stop)">ゲーム開始・終了コマンド (/korioni start /korioni stop)</li>
+                <li data-ja="ロビーやスタート地点の設定 (/korioni setlobby /korioni setstart)" data-en="Set lobby/start positions (/korioni setlobby /korioni setstart)" data-zh="设置大厅和起点位置 (/korioni setlobby /korioni setstart)" data-ko="로비 및 시작 지점 설정 (/korioni setlobby /korioni setstart)">ロビーやスタート地点の設定 (/korioni setlobby /korioni setstart)</li>
+                <li data-ja="ゲーム時間やアイテム効果時間の変更 (/korioni setconfig)" data-en="Adjust game/item durations (/korioni setconfig)" data-zh="更改游戏时间和道具效果时间 (/korioni setconfig)" data-ko="게임 시간 및 아이템 효과 시간 변경 (/korioni setconfig)">ゲーム時間やアイテム効果時間の変更 (/korioni setconfig)</li>
+                <li data-ja="鬼・逃走者の自動割り当て" data-en="Automatic assignment of Oni/Runners" data-zh="鬼/逃跑者自动分配" data-ko="도깨비/도망자 자동 배정">鬼・逃走者の自動割り当て</li>
+                <li data-ja="逃走者による凍結解除やアイテム妨害機能" data-en="Runners can rescue and use items to hinder Oni" data-zh="逃跑者可解除冻结并使用道具妨碍鬼" data-ko="도망자가 얼린 팀원을 구하고 아이템으로 도깨비 방해">逃走者による凍結解除やアイテム妨害機能</li>
+                <li data-ja="ゲーム中スコアボード表示（残り時間・凍結人数など）" data-en="Scoreboard during game (time left, frozen players, etc.)" data-zh="游戏中显示计分板（剩余时间、冻结人数等）" data-ko="게임 중 점수판 표시(남은 시간, 얼린 플레이어 수 등)">ゲーム中スコアボード表示（残り時間・凍結人数など）</li>
+                <li data-ja="GUIによる設定変更（アイテム効果秒数など）" data-en="Settings GUI for item durations etc." data-zh="通过GUI更改设置（道具效果秒数等）" data-ko="GUI를 통한 설정 변경(아이템 효과 시간 등)">GUIによる設定変更（アイテム効果秒数など）</li>
             </ul>
-        </div>
 
-        <!-- 開発目的 -->
-        <h2><button class="btn-green" onclick="toggleSection('purpose')"><span 
-            data-ja="開発目的" data-en="Purpose" data-zh="开发目的" data-ko="개발 목적">開発目的</span></button></h2>
-        <div id="purpose">
-            <p data-ja="Minecraftサーバーに新しいミニゲームを追加し、プレイヤー同士の協力や戦略を楽しんでもらうことを目的としています。"
-               data-en="The goal is to add a new mini-game to Minecraft servers and allow players to enjoy cooperation and strategy."
-               data-zh="目的是向Minecraft服务器添加新的小游戏，让玩家享受合作和策略。"
-               data-ko="목적은 Minecraft 서버에 새로운 미니게임을 추가하고 플레이어들이 협력과 전략을 즐기도록 하는 것입니다。">Minecraftサーバーに新しいミニゲームを追加し、プレイヤー同士の協力や戦略を楽しんでもらうことを目的としています。</p>
-        </div>
-
-        <!-- 遊び方 -->
-        <h2><button class="btn-green" onclick="toggleSection('howto')"><span 
-            data-ja="遊び方" data-en="How to Play" data-zh="玩法" data-ko="게임 방법">遊び方</span></button></h2>
-        <div id="howto">
-            <p data-ja="<strong>ゲーム開始前:</strong>" data-en="<strong>Before starting:</strong>" data-zh="<strong>游戏开始前:</strong>" data-ko="<strong>게임 시작 전:</strong>"><strong>ゲーム開始前:</strong></p>
+            <!-- アイテム詳細 -->
+            <h3 data-ja="アイテム一覧" data-en="Item List" data-zh="道具列表" data-ko="아이템 목록">アイテム一覧</h3>
             <ul>
-                <li data-ja="サーバーに全員ログイン" data-en="All players log in to the server" data-zh="所有玩家登录服务器" data-ko="모든 플레이어가 서버에 로그인">サーバーに全員ログイン</li>
-                <li data-ja="管理者が /startgame で開始" data-en="Admin starts with /startgame" data-zh="管理员使用 /startgame 开始" data-ko="관리자가 /startgame로 시작">管理者が /startgame で開始</li>
-                <li data-ja="最低2人以上必要" data-en="At least 2 players required" data-zh="至少需要2人" data-ko="최소 2명 필요">最低2人以上必要</li>
+                <li data-ja="氷スティック: 触れたプレイヤーを一定時間凍結させる" data-en="Ice Stick: Freezes touched players for a short duration" data-zh="冰棒：触碰玩家使其冻结一段时间" data-ko="얼음 스틱: 닿은 플레이어를 일정 시간 얼림">氷スティック: 触れたプレイヤーを一定時間凍結させる</li>
+                <li data-ja="加速ポーション: 一定時間走る速度が上昇" data-en="Speed Potion: Increases running speed temporarily" data-zh="加速药水：暂时提高奔跑速度" data-ko="가속 포션: 일정 시간 이동 속도 증가">加速ポーション: 一定時間走る速度が上昇</li>
+                <li data-ja="凍結解除アイテム: 凍った仲間を即座に解放" data-en="Rescue Item: Immediately unfreeze a frozen teammate" data-zh="解除冻结道具：立即解冻队友" data-ko="해제 아이템: 얼린 팀원을 즉시 해제">凍結解除アイテム: 凍った仲間を即座に解放</li>
+                <li data-ja="妨害ブロック: 鬼の移動を妨げる" data-en="Obstacle Block: Hinders Oni movement" data-zh="妨碍方块：阻碍鬼的移动" data-ko="방해 블록: 도깨비 이동 방해">妨害ブロック: 鬼の移動を妨げる</li>
             </ul>
-            <p data-ja="<strong>役割:</strong>" data-en="<strong>Roles:</strong>" data-zh="<strong>角色:</strong>" data-ko="<strong>역할:</strong>"><strong>役割:</strong></p>
-            <ul>
-                <li data-ja="鬼：逃げを凍結、鉄剣装備、スピード効果あり" data-en="Oni: Freeze runners, equipped with iron sword, speed effect" data-zh="鬼：冻结逃跑者，装备铁剑，有加速效果" data-ko="도깨비: 도망자를 얼리고 철검 장비, 속도 효과 있음">鬼：逃げを凍結、鉄剣装備、スピード効果あり</li>
-                <li data-ja="逃げ：仲間を助ける、スティック装備" data-en="Runner: Help teammates, equipped with stick" data-zh="逃跑者：帮助队友，装备木棍" data-ko="도망자: 팀원을 돕고 스틱 장비">逃げ：仲間を助ける、スティック装備</li>
-            </ul>
-            <p data-ja="<strong>ゲームの流れ:</strong>" data-en="<strong>Game Flow:</strong>" data-zh="<strong>游戏流程:</strong>" data-ko="<strong>게임 흐름:</strong>"><strong>ゲームの流れ:</strong></p>
-            <ol>
-                <li data-ja="鬼が逃げを追う" data-en="Oni chases the runners" data-zh="鬼追逐逃跑者" data-ko="도깨비가 도망자를 추적">鬼が逃げを追う</li>
-                <li data-ja="逃げは協力して凍結回避" data-en="Runners cooperate to avoid freezing" data-zh="逃跑者合作避免冻结" data-ko="도망자들이 협력하여 얼림을 피함">逃げは協力して凍結回避</li>
-                <li data-ja="凍結されたら仲間に助けてもらう" data-en="If frozen, teammates can rescue" data-zh="被冻结时由队友救援" data-ko="얼리면 팀원이 구해줌">凍結されたら仲間に助けてもらう</li>
-                <li data-ja="制限時間内全員凍結で鬼勝利、時間切れで逃げ勝利" data-en="All frozen → Oni wins, Time up → Runners win" data-zh="全员冻结→鬼胜利，超时→逃跑者胜利" data-ko="모두 얼림 → 도깨비 승리, 시간 초과 → 도망자 승리">制限時間内全員凍結で鬼勝利、時間切れで逃げ勝利</li>
-            </ol>
-        </div>
 
-        <!-- コマンド一覧 -->
-        <h2><button class="btn-green" onclick="toggleSection('commands')"><span 
-            data-ja="コマンド一覧" data-en="Commands" data-zh="命令列表" data-ko="명령어 목록">コマンド一覧</span></button></h2>
-        <div id="commands">
+            <!-- 戦略 -->
+            <h3 data-ja="攻略・戦略" data-en="Strategy" data-zh="攻略策略" data-ko="전략">攻略・戦略</h3>
             <ul>
-                <li data-ja="/startgame : ゲーム開始" data-en="/startgame : Start game" data-zh="/startgame : 开始游戏" data-ko="/startgame : 게임 시작">/startgame : ゲーム開始</li>
-                <li data-ja="/resetgame : ゲームリセット" data-en="/resetgame : Reset game" data-zh="/resetgame : 重置游戏" data-ko="/resetgame : 게임 초기화">/resetgame : ゲームリセット</li>
-                <li data-ja="/settime <秒> : 制限時間設定" data-en="/settime <seconds> : Set time limit" data-zh="/settime <秒> : 设置时间限制" data-ko="/settime <초> : 제한 시간 설정">/settime <秒> : 制限時間設定</li>
-                <li data-ja="/rules : ルール表示" data-en="/rules : Show rules" data-zh="/rules : 显示规则" data-ko="/rules : 규칙 표시">/rules : ルール表示</li>
+                <li data-ja="逃走者は凍結されない距離を保ちつつ仲間を助ける" data-en="Runners keep distance and rescue teammates" data-zh="逃跑者保持距离并解救队友" data-ko="도망자는 거리를 유지하며 팀원 구하기">逃走者は凍結されない距離を保ちつつ仲間を助ける</li>
+                <li data-ja="鬼は氷スティックを使い、逃走者を分断する" data-en="Oni uses Ice Stick to split Runners" data-zh="鬼使用冰棒分裂逃跑者" data-ko="도깨비는 얼음 스틱으로 도망자 분리">鬼は氷スティックを使い、逃走者を分断する</li>
+                <li data-ja="妨害ブロックで逃走ルートを限定する" data-en="Use Obstacle Blocks to limit escape routes" data-zh="用妨碍方块限制逃跑路线" data-ko="방해 블록으로 탈출 경로 제한">妨害ブロックで逃走ルートを限定する</li>
+                <li data-ja="加速ポーションは仲間の救助タイミングで使用" data-en="Use Speed Potion for rescue timing" data-zh="加速药水用于队友解救时" data-ko="가속 포션은 팀원 구할 때 사용">加速ポーションは仲間の救助タイミングで使用</li>
             </ul>
-        </div>
 
-        <!-- 開発者情報 -->
-        <h2><button class="btn-green" onclick="toggleSection('dev')"><span 
-            data-ja="開発者情報" data-en="Developer Info" data-zh="开发者信息" data-ko="개발자 정보">開発者情報</span></button></h2>
-        <div id="dev">
+            <!-- コマンド一覧 -->
+            <h3 data-ja="コマンド一覧" data-en="Command List" data-zh="指令列表" data-ko="명령어 목록">コマンド一覧</h3>
             <ul>
-                <li data-ja="開発者: Iruka" data-en="Developer: Iruka" data-zh="开发者: Iruka" data-ko="개발자: Iruka">開発者: Iruka</li>
-                <li data-ja="対応バージョン: Paper 1.16.5" 
-    data-en="Compatible version: Paper 1.16.5" 
-    data-zh="兼容版本: Paper 1.16.5" 
-    data-ko="지원 버전: Paper 1.16.5">対応バージョン: Paper 1.16.5</li>
-                <li data-ja="プラグインバージョン: 1.0.0" data-en="Plugin version: 1.0.0" data-zh="插件版本: 1.0.0" data-ko="플러그인 버전: 1.0.0">プラグインバージョン: 1.0.0</li>
-                <li data-ja="更新日: 2025-09-20" data-en="Updated: 2025-09-20" data-zh="更新日期: 2025-09-20" data-ko="업데이트: 2025-09-20">更新日: 2025-09-20</li>
+                <li data-ja="/korioni start - ゲーム開始" data-en="/korioni start - Start Game" data-zh="/korioni start - 开始游戏" data-ko="/korioni start - 게임 시작">/korioni start - ゲーム開始</li>
+                <li data-ja="/korioni stop - ゲーム終了" data-en="/korioni stop - Stop Game" data-zh="/korioni stop - 结束游戏" data-ko="/korioni stop - 게임 종료">/korioni stop - ゲーム終了</li>
+                <li data-ja="/korioni setlobby - ロビー位置設定" data-en="/korioni setlobby - Set Lobby Position" data-zh="/korioni setlobby - 设置大厅位置" data-ko="/korioni setlobby - 로비 위치 설정">/korioni setlobby - ロビー位置設定</li>
+                <li data-ja="/korioni setstart - スタート地点設定" data-en="/korioni setstart - Set Start Position" data-zh="/korioni setstart - 设置起点" data-ko="/korioni setstart - 시작 지점 설정">/korioni setstart - スタート地点設定</li>
+                <li data-ja="/korioni setconfig - ゲーム設定変更" data-en="/korioni setconfig - Change Game Settings" data-zh="/korioni setconfig - 游戏设置修改" data-ko="/korioni setconfig - 게임 설정 변경">/korioni setconfig - ゲーム設定変更</li>
+                <li data-ja="/korioni reset - ゲームリセット" data-en="/korioni reset - Reset Game" data-zh="/korioni reset - 游戏重置" data-ko="/korioni reset - 게임 리셋">/korioni reset - ゲームリセット</li>
             </ul>
-        </div>
 
+            <!-- スコアボード -->
+            <h3 data-ja="スコアボード" data-en="Scoreboard" data-zh="计分板" data-ko="점수판">スコアボード</h3>
+            <p data-ja="ゲーム中は残り時間、凍結人数、アイテム残数などが表示され、戦略の参考にできます。" 
+               data-en="During the game, time left, frozen players, and item counts are displayed as strategic info." 
+               data-zh="游戏中显示剩余时间、冻结人数和道具数量，供策略参考。" 
+               data-ko="게임 중 남은 시간, 얼린 플레이어 수, 아이템 수 등이 표시되어 전략 참고 가능.">ゲーム中は残り時間、凍結人数、アイテム残数などが表示され、戦略の参考にできます。</p>
+
+            <!-- 開発者情報 -->
+            <h3 data-ja="開発者情報" data-en="Developer Info" data-zh="开发者信息" data-ko="개발자 정보">開発者情報</h3>
+            <p data-ja="Korioniプラグインは個人開発者によるMinecraft向けサーバープラグインです。使用時は公式ドキュメントを参考にしてください。" 
+               data-en="Korioni plugin is developed by an individual developer for Minecraft servers. Please refer to the official docs when using." 
+               data-zh="Korioni插件由个人开发者开发，请在使用时参考官方文档。" 
+               data-ko="Korioni 플러그인은 개인 개발자가 Minecraft 서버용으로 개발한 플러그인입니다. 사용 시 공식 문서 참고.">Korioniプラグインは個人開発者によるMinecraft向けサーバープラグインです。使用時は公式ドキュメントを参考にしてください。</p>
+        </div>
     </div>
 </div>
 
 <script>
-    const channel = new BroadcastChannel("single_tab_control");
-    channel.postMessage("new-tab");
-
-// 他タブからの通知を受信
-channel.onmessage = (e) => {
-    if (e.data === "new-tab") {
-        // 自分（古いタブ）を閉じる
-        window.close();
-    }
-};
-
 // 言語切替
 function switchLanguage() {
     const lang = document.getElementById('lang').value;
@@ -317,85 +292,56 @@ function switchLanguage() {
         else if(lang==='ko') el.textContent = el.getAttribute('data-ko');
     });
 
-    const input = document.getElementById('secretWord');
-    if(lang==='ja') input.placeholder = input.getAttribute('data-ja-placeholder');
-    else if(lang==='en') input.placeholder = input.getAttribute('data-en-placeholder');
-    else if(lang==='zh') input.placeholder = input.getAttribute('data-zh-placeholder');
-    else if(lang==='ko') input.placeholder = input.getAttribute('data-ko-placeholder');
-
-    const submitBtn = document.getElementById('submitBtn');
-    const termsBtn = document.getElementById('termsBtn');
-    const termsTitle = document.getElementById('termsTitle');
-    submitBtn.textContent = submitBtn.getAttribute(`data-${lang}`);
-    termsBtn.textContent = termsBtn.getAttribute(`data-${lang}`);
-    termsTitle.textContent = termsTitle.getAttribute(`data-${lang}`);
-
-    const termsContent = document.getElementById('termsContent');
-    if(lang==='ja') termsContent.innerHTML = `
-        <li><strong>第1条（目的）</strong> Minecraftサーバー上で「氷鬼」ゲームを楽しむこと。</li>
-        <li><strong>第2条（禁止事項）</strong>
-            <ul><li>暴言・迷惑行為</li><li>プラグインの無断配布・改変</li><li>他プレイヤーの妨害</li></ul>
-        </li>
-        <li><strong>第3条（自己責任）</strong> トラブルは利用者の責任です。</li>
-        <li><strong>第4条（免責）</strong> 現状有姿で提供し、開発者は損害責任を負いません。</li>
-        <li><strong>第5条（著作権）</strong> 本プラグインの著作権は開発者に帰属します。</li>
-        <li><strong>第6条（同意）</strong> 利用者は本規約を理解し、同意した上で使用してください。</li>
-    `;
-    else if(lang==='en') termsContent.innerHTML = `
-        <li><strong>Article 1 (Purpose)</strong> Enjoy the "Ice Oni" game on the Minecraft server.</li>
-        <li><strong>Article 2 (Prohibitions)</strong>
-            <ul><li>Abusive language or nuisance behavior</li><li>Unauthorized distribution/modification of plugin</li><li>Interfering with other players</li></ul>
-        </li>
-        <li><strong>Article 3 (Responsibility)</strong> Users are responsible for any troubles.</li>
-        <li><strong>Article 4 (Disclaimer)</strong> Provided as-is, developer holds no liability.</li>
-        <li><strong>Article 5 (Copyright)</strong> Copyright belongs to the developer.</li>
-        <li><strong>Article 6 (Agreement)</strong> Use only if you understand and agree to these terms.</li>
-    `;
-    else if(lang==='zh') termsContent.innerHTML = `
-        <li><strong>第1条（目的）</strong> 在Minecraft服务器上享受“冰鬼”游戏。</li>
-        <li><strong>第2条（禁止事项）</strong>
-            <ul><li>辱骂或捣乱行为</li><li>未经授权分发或修改插件</li><li>干扰其他玩家</li></ul>
-        </li>
-        <li><strong>第3条（责任）</strong> 用户自行承担任何问题责任。</li>
-        <li><strong>第4条（免责声明）</strong> 按现状提供，开发者不承担责任。</li>
-        <li><strong>第5条（版权）</strong> 本插件版权归开发者所有。</li>
-        <li><strong>第6条（同意）</strong> 理解并同意条款后使用。</li>
-    `;
-    else if(lang==='ko') termsContent.innerHTML = `
-        <li><strong>제1조 (목적)</strong> Minecraft 서버에서 "얼음 도깨비" 게임을 즐기는 것.</li>
-        <li><strong>제2조 (금지 사항)</strong>
-            <ul><li>욕설 또는 방해 행위</li><li>플러그인 무단 배포/변경</li><li>다른 플레이어 방해</li></ul>
-        </li>
-        <li><strong>제3조 (책임)</strong> 문제 발생 시 사용자가 책임을 집니다.</li>
-        <li><strong>제4조 (면책)</strong> 현 상태로 제공되며, 개발자는 책임을 지지 않습니다.</li>
-        <li><strong>제5조 (저작권)</strong> 본 플러그인의 저작권은 개발자에게 귀속됩니다.</li>
-        <li><strong>제6조 (동의)</strong> 이용자는 본 규약을 이해하고 동의한 후 사용합니다.</li>
-    `;
+    document.querySelectorAll('input[type="password"]').forEach(input => {
+        if(lang==='ja') input.placeholder = input.getAttribute('data-ja-placeholder');
+        else if(lang==='en') input.placeholder = input.getAttribute('data-en-placeholder');
+        else if(lang==='zh') input.placeholder = input.getAttribute('data-zh-placeholder');
+        else if(lang==='ko') input.placeholder = input.getAttribute('data-ko-placeholder');
+    });
 }
 
-// 合言葉チェック
-document.getElementById('submitBtn').addEventListener('click', function() {
-    const input = document.getElementById('secretWord').value;
-    const correct = "korioni123"; // 合言葉
-    if(input === correct){
+// 合言葉送信（ダミー）
+document.getElementById('submitBtn').addEventListener('click', ()=>{
+    const secret = document.getElementById('secretWord').value;
+    if(secret === "korioni2025") {
         document.getElementById('details').style.display = "block";
-        document.getElementById('form-container').style.display = "none";
+        alert("合言葉認証成功！");
     } else {
-        alert("合言葉が間違っています。");
+        alert("合言葉が違います");
     }
 });
 
-// 折りたたみ機能
-function toggleSection(id){
-    const el = document.getElementById(id);
-    el.style.display = (el.style.display === "none" || el.style.display === "") ? "block" : "none";
+// 利用規約モーダル
+const termsList = [
+    "本プラグインは個人開発によるものであり、サーバー管理者の責任において利用してください。",
+    "利用者はMinecraftの規約およびサーバー規約に従うものとします。",
+    "本プラグインの使用による問題や損害について、開発者は一切責任を負いません。"
+];
+
+document.getElementById('termsBtn').addEventListener('click', ()=>{
+    const termsContent = document.getElementById('termsContent');
+    termsContent.innerHTML = "";
+    termsList.forEach(item=>{
+        const li = document.createElement('li');
+        li.textContent = item;
+        termsContent.appendChild(li);
+    });
+    document.getElementById('termsModal').style.display = 'block';
+});
+
+function closeTerms() {
+    document.getElementById('termsModal').style.display = 'none';
 }
 
-// 利用規約モーダル
-document.getElementById('termsBtn').addEventListener('click', function(){document.getElementById('termsModal').style.display='block';});
-function closeTerms(){document.getElementById('termsModal').style.display='none';}
-
-switchLanguage(); // 初期言語
+// セクション折りたたみ
+function toggleSection(id) {
+    const section = document.getElementById(id);
+    if(section.style.display === 'none' || section.style.display === '') {
+        section.style.display = 'block';
+    } else {
+        section.style.display = 'none';
+    }
+}
 </script>
 </body>
 </html>
