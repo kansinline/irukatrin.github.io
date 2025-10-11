@@ -1,0 +1,477 @@
+body {
+  margin: 0;
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+  background-color: #fff;
+}
+
+
+/* 全体のリセットとフォント */
+body {
+  margin: 0;
+  font-family: 'Helvetica Neue', sans-serif;
+  background-color: #f5f5f5;
+}
+
+/* ヘッダー全体 */
+#header {
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.header_inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+/* ロゴ */
+.header_logo img {
+  height: 40px;
+}
+
+/* メニュー */
+.header_menu ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header_menu li {
+  margin: 0 10px;
+}
+
+.header_menu a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+/* ヘッダーアイコン */
+.header_icon ul {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+}
+
+.header_icon li {
+  margin-left: 15px;
+}
+
+.header_icon img {
+  width: 20px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+/* ハンバーガーボタン */
+.hamburger {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hamburger div {
+  width: 24px;
+  height: 2px;
+  background-color: #333;
+  margin: 4px 0;
+}
+
+.hm_open,
+.hm_close {
+  font-size: 12px;
+  display: none;
+}
+
+/* メニュー開閉 */
+#hamburger_menu {
+  display: none;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+  padding: 20px;
+  z-index: 999;
+}
+
+#hamburger_menu.open {
+  display: block;
+}
+
+/* 検索フォーム */
+.menu_input {
+  margin-bottom: 20px;
+}
+
+.menu_input input[type="search"] {
+  padding: 5px;
+  width: 80%;
+}
+
+.menu_input button {
+  background-color: #444;
+  border: none;
+  color: #fff;
+  padding: 6px 10px;
+}
+
+/* アコーディオンメニュー */
+.accordion_menu .menu-item {
+  margin-bottom: 10px;
+}
+
+.menu-item-label {
+  font-weight: bold;
+  cursor: pointer;
+  display: block;
+}
+
+.menu-item__inner {
+  display: none;
+  padding-left: 10px;
+}
+
+.menu-item__inner ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.menu-item__inner li {
+  margin: 5px 0;
+}
+
+.menu-item__inner a {
+  text-decoration: none;
+  color: #555;
+}
+
+/* アクティブ時の表示 */
+.menu-item.open .menu-item__inner {
+  display: block;
+}
+
+/* モバイル対応 */
+@media screen and (max-width: 768px) {
+  .header_menu {
+    display: none;
+  }
+}
+
+/* ヘッダー */
+.railinfo-header {
+  background-color: #7a0019; /* 阪急レッド */
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 56px;
+  padding: 0 15px;
+}
+
+.logo {
+  height: 30px;
+}
+
+/* メニューボタン */
+.menu-toggle {
+  background: none;
+  color: white;
+  font-size: 24px;
+  border: none;
+  cursor: pointer;
+}
+
+/* ナビゲーションメニュー（モバイル） */
+.nav-menu {
+  background-color: #7a0019;
+  display: none;
+  flex-direction: column;
+}
+
+.nav-menu.open {
+  display: flex;
+}
+
+.nav-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-menu li {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.nav-menu li a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 15px;
+  font-weight: bold;
+}
+
+/* ボタンエリア */
+.button-area {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  background-color: white;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+.rail-button {
+  background-color: #7a0019;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  flex: 1;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.rail-button:hover {
+  background-color: #a00026;
+}
+
+/* レスポンシブ調整 */
+@media screen and (min-width: 768px) {
+  .nav-menu {
+    flex-direction: row;
+    justify-content: center;
+  }
+  .nav-menu li {
+    border-top: none;
+  }
+  .menu-toggle {
+    display: none;
+  }
+  .railinfo-header {
+    justify-content: center;
+  }
+}
+
+
+
+
+/* トップ画像 */
+.topimag img {
+  width: 100%;
+  max-width: 1100px;
+  height: auto;
+}
+
+/* 検索バー付きの画像エリア */
+.image-container {
+  position: relative;
+  width: 100%;
+  max-width: 2100px;
+  height: 500px;
+  background-image: url('https://cdn.glitch.global/222e2a02-bde1-49d3-9324-5d9cc0f0d234/%E4%BB%8A%E6%97%A5%E3%81%BE%E3%81%A7%E3%82%82%E3%80%81%20%E3%81%9D%E3%81%97%E3%81%A6%E3%81%93%E3%82%8C%E3%81%8B%E3%82%89%E3%82%82%E3%80%82.png?v=1744875970396');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: 0 auto;
+}
+
+.search-form {
+  position: relative;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  z-index: 2;
+}
+
+.search-form input {
+  padding: 20px 200px;
+  border-radius: 3px 0 0 3px;
+  border: none;
+  outline: none;
+}
+
+.search-form button {
+  padding: 6px 12px;
+  background-color: #005bac;
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+/* 黒い透過オーバーレイ */
+.color {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+/* タブ */
+.info-tabs {
+  width: 100%;
+  background: #fff;
+  font-family: sans-serif;
+}
+
+.tab-buttons {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 15px 0;
+  background: #fff;
+  border: none;
+  border-bottom: 4px solid transparent;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+  transition: border-bottom 0.3s, background 0.3s;
+}
+
+.tab-button:hover {
+  background: #f2f2f2;
+}
+
+.tab-button.active {
+  border-bottom: 4px solid #7c2c3b;
+  background: #fff;
+  color: #000;
+}
+
+.tab-content {
+  display: none;
+  padding: 20px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* 特徴セクション */
+.feature-section {
+  background-color: #f5f5f5;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.feature-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #005bac;
+  position: relative;
+  display: inline-block;
+}
+
+.feature-title::after {
+  content: "";
+  display: block;
+  height: 4px;
+  width: 100%;
+  background-color: #7c2c3b;
+  margin-top: 8px;
+}
+
+.feature-content {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.feature-box {
+  width: 250px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+}
+
+.feature-box img {
+  width: 100%;
+  height: auto;
+  border-radius: 3px;
+}
+
+.feature-box p {
+  margin-top: 10px;
+  font-weight: bold;
+  color: black;
+}
+
+.feature-box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.feature-box:focus {
+  outline: none;
+}
+
+/* SNSセクション（阪急風） */
+.sns-hankyu {
+  padding: 40px 20px;
+  text-align: center;
+  background: #f8f5f0;
+  font-family: "Hiragino Mincho ProN", "游明朝", serif;
+}
+
+.sns-hankyu h2 {
+  font-size: 24px;
+  margin-bottom: 30px;
+  color: black;
+}
+
+.sns-cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.sns-card {
+  background-color: #ffffff;
+  border: 2px solid #d8cbc0;
+  border-radius: 20px;
+  width: 160px;
+  padding: 20px;
+  text-decoration: none;
+  color: #5c2d2d;
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(90, 70, 60, 0.1);
+  transition: all 0.2s ease;
+}
+
+.sns-card:hover {
+  background-color: #f3ece7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(90, 70, 60, 0.15);
+}
