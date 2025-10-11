@@ -1,73 +1,471 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>いるか電鉄 - トップページ</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>いるか電鉄</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* === ヘッダー === */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: white;
+      padding: 10px 20px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .site-name {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .header-right a {
+      text-decoration: none;
+      color: #0055aa;
+      margin-left: 10px;
+    }
+
+    /* === 駅名検索 === */
+    .suggestions {
+      position: absolute;
+      background-color: white;
+      border: 1px solid #ccc;
+      width: calc(100% - 20px);
+      max-height: 150px;
+      overflow-y: auto;
+      z-index: 999;
+    }
+
+    .suggestions div {
+      padding: 8px;
+      cursor: pointer;
+    }
+
+    .suggestions div:hover {
+      background-color: #f0f0f0;
+    }
+
+    /* === スライダー === */
+    .slider {
+      position: relative;
+      max-width: 900px;
+      margin: auto;
+      overflow: hidden;
+    }
+
+    .slider-track {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .slider-track img {
+      width: 100%;
+      max-width: 900px;
+      height: 500px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 18px;
+      z-index: 1;
+    }
+
+    .prev-btn { left: 10px; }
+    .next-btn { right: 10px; }
+
+    /* === タブ切り替え === */
+    .tab-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .tab-button {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #eee;
+      border: none;
+    }
+
+    .tab-button.active {
+      background-color: white;
+      color: black;
+    }
+
+    .tab-content {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* === 特集 === */
+    .feature-section {
+      margin: 40px 0;
+      text-align: center;
+    }
+
+    .feature-content {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .feature-box {
+      border: none;
+      background: none;
+      text-align: center;
+    }
+
+    .feature-box img {
+      height: 100px;
+    }
+
+    /* === SNSカード === */
+    .sns-hankyu {
+      margin-top: 40px;
+    }
+
+    .sns-cards {
+      
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .sns-card {
+      text-decoration: none;
+      background-color: #eeeeee;
+      padding: 10px 20px;
+      border-radius: 5px;
+      color: black;
+    }
+.railinfo-alert {
+    background-color: #f8f8f8;  /* 背景色 */
+    border-radius: 8px;         /* 角を丸める */
+    padding: 10px 20px;         /* 内側の余白 */
+    display: flex;              /* フレックスボックスで並べる */
+    align-items: center;        /* アイテムを縦に中央揃え */
+    justify-content: space-between; /* アイテムを左右に配置 */
+    border: 2px solid #e4e4e4;  /* 枠線の色 */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 軽い影 */
+}
+
+.railinfo-alert p {
+    font-size: 16px;          /* フォントサイズ */
+    color: #333333;           /* 文字色 */
+    margin: 0;                /* パラグラフの余白をリセット */
+    display: flex;            /* 画像とテキストを横並びにする */
+    align-items: center;      /* 画像とテキストを中央揃え */
+}
+
+.railinfo-alert img {
+    width: 24px;              /* アイコンのサイズ */
+    height: 24px;             /* アイコンのサイズ */
+    margin-right: 10px;       /* アイコンとテキストの間隔 */
+}
+
+.railinfo-alert .time {
+    font-size: 14px;          /* 時刻のフォントサイズ */
+    color: #666666;           /* 時刻の文字色 */
+    font-weight: bold;        /* 時刻の文字を太字に */
+}
+.KV_inner.cont {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+}
+
+.KV_inner_cnt {
+    position: relative;
+    text-align: right;
+}
+
+.KV_inner_cnt img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.KV_inner_cnt .sp {
+    display: none;
+}
+
+.KV_inner_cnt .pc {
+    display: block;
+}
+
+@media screen and (max-width: 768px) {
+    .KV_inner_cnt .sp {
+        display: block;
+    }
+
+    .KV_inner_cnt .pc {
+        display: none;
+    }
+}
+
+
+    
+  </style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo">いるか電鉄</div>
-        <nav class="nav">
-            <ul>
-                <li><a href="route-map.html">路線図</a></li>
-                <li><a href="schedule.html">時刻表</a></li>
-                <li><a href="info.html">運行情報</a></li>
-                <li><a href="special.html">特設ページ</a></li>
-            </ul>
-        </nav>
-    </header>
+  
 
-    <main class="main">
-        <section class="hero">
-            <h1>ようこそ、いるか電鉄へ</h1>
-            <p>あなたの旅を快適にする安心の鉄道サービス</p>
-            <a href="info.html" class="btn">最新の運行情報を見る</a>
-        </section>
+<!-- ヘッダー -->
+<header class="header">
+  <div class="header-left">
+    <img src="logo.png" alt="ロゴ" class="logo" />
+    <span class="site-name">いるか電鉄</span>
+  </div>
+  <div class="menu-toggle" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <nav class="header-right" id="menu">
+    <a href="#">ホーム</a>
+    <a href="unkou">運行情報</a>
+    <a href="#">駅情報</a>
+    <a href="#">チケット</a>
+    <a href="#">会社概要</a>
+  </nav>
+</header>
+  
+<div class="railinfo-alert">
+    <p><img src="https://cdn.glitch.global/222e2a02-bde1-49d3-9324-5d9cc0f0d234/%E5%90%8D%E7%A7%B0%E6%9C%AA%E8%A8%AD%E5%AE%9A%E3%81%AE%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%20(5).png?v=1744802974338" alt="Delay Icon"> 現在の時間運行していません。。</p>
+    <span class="time" id="current-time"></span>
+</div>
 
-        <section class="features">
-            <div class="feature" data-animate="slide-in">
-                <h2>路線図</h2>
-                <p>全駅の詳細情報を確認できます。</p>
-                <a href="route-map.html" class="btn">路線図を見る</a>
-            </div>
-            <div class="feature" data-animate="slide-in">
-                <h2>時刻表</h2>
-                <p>平日・休日の運行スケジュールをチェック。</p>
-                <a href="schedule.html" class="btn">時刻表を見る</a>
-            </div>
-            <div class="feature" data-animate="slide-in">
-                <h2>特設ページ</h2>
-                <p>イベントやお得な情報をお届けします。</p>
-                <a href="special.html" class="btn">詳細を見る</a>
-            </div>
-            <div class="feature" data-animate="slide-in">
-                    <h2>親会社との関係</h2>
-                    <p>いるか電鉄いがいのことを紹介しています。</p>
-                    <a href="oyagaisya.html" class="btn">詳細を見る</a>
-            </div>
-                        <div class="feature" data-animate="slide-in">
-                <h2>いるか電鉄車両使用申請サイト</h2>
-                <p>いるか電鉄のSNSなどに使用するときにこちらから入力してください</p>
-                <a href="irukaSNS.html" class="btn">詳細を見る</a>
-        </div>
-                   <div class="feature" data-animate="slide-in">
-            <h2>いるか電鉄の制作物の公開</h2>
-            <p>いるか電鉄の制作中のものです</p>
-            <a href="creaft.html" class="btn">詳細を見る</a>
-            </div>
-            <div class="feature" data-animate="slide-in">
-            <h2>英単語クイズ</h2>
-            <p>英単語クイズです</p>
-            <a href="kuziu.html" class="btn">詳細を見る</a>
-            </div>
-    </main>
 
-    <footer class="footer">
-        <p>&copy; 2024 いるか電鉄. All rights reserved.</p>
-    </footer>
+<!-- 駅名検索フォーム -->
+<div class="topimage">
+  <div class="image-container">
+    <form class="search-form" id="stationSearchForm" autocomplete="off">
+      <input type="text" id="stationInput" placeholder="駅名検索　対応kamui鉄道ささ電鉄いるか電鉄" />
+      <div id="suggestions" class="suggestions"></div>
+      <button type="submit">駅名</button>
+    </form>
+  </div>
+</div>
+  
+  
 
-    <script src="Script.js"></script>
+<!-- スライダー -->
+<div class="slider" id="slider">
+  <div class="slider-track" id="sliderTrack">
+    <img src="https://cdn.glitch.global/222e2a02-bde1-49d3-9324-5d9cc0f0d234/IMG_0405.png?v=1744841755284" alt="画像1">
+    <img src="https://cdn.glitch.global/222e2a02-bde1-49d3-9324-5d9cc0f0d234/%E5%BA%83%E5%91%8A%E5%8B%9F%E9%9B%86%E4%B8%AD.png?v=1744493391338" alt="画像2">
+    <img src="https://cdn.glitch.global/222e2a02-bde1-49d3-9324-5d9cc0f0d234/%E5%BA%83%E5%91%8A%E5%8B%9F%E9%9B%86%E4%B8%AD.png?v=1744493391338" alt="画像3">
+  </div>
+  <button class="slider-btn prev-btn" onclick="slidePrev()">‹</button>
+  <button class="slider-btn next-btn" onclick="slideNext()">›</button>
+</div>
+
+<!-- タブ切り替え -->
+<div class="info-tabs">
+  <div class="tab-buttons">
+    <button class="tab-button active" data-tab="news">お知らせ</button>
+    <button class="tab-button" data-tab="release">ニュースリリース</button>
+  </div>
+
+  <div class="tab-content active" id="news">
+    <ul>
+      <li>2025/04/01 - ダイヤ改正のお知らせ</li>
+      <li>2025/03/25 - 車両点検による運休情報</li>
+    </ul>
+  </div>
+
+  <div class="tab-content" id="release">
+    <ul>
+      <li>いるか電鉄デザイン改正</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 特集 -->
+<section class="feature-section">
+  <h2 class="feature-title">いるか電鉄を知る・楽しむ</h2>
+  <div class="feature-content">
+    <button class="feature-box">
+      <img src="img/logo.png" alt="特徴1">
+      <p>いるか電鉄の魅力</p>
+    </button>
+    <button class="feature-box">
+      <img src="img/logo.png" alt="特徴2">
+      <p>観光列車・体験</p>
+    </button>
+    <button class="feature-box">
+      <img src="sample3.jpg" alt="特徴3">
+      <p>イベント情報</p>
+    </button>
+  </div>
+</section>
+  
+
+<!-- SNS一覧 -->
+<section class="sns-hankyu">
+  <h2>公式サイト・SNS一覧</h2>
+  <div class="sns-cards">
+    <a href="https://example.com" class="sns-card" target="_blank">公式サイト</a>
+    <a href="https://twitter.com" class="sns-card" target="_blank">X（旧Twitter）</a>
+    <a href="https://instagram.com" class="sns-card" target="_blank">Instagram</a>
+  </div>
+</section>
+
+<!-- JavaScript -->
+<script>
+  window.onload = function() {
+    var currentTime = new Date();
+    var formattedTime = currentTime.getFullYear() + "年" +
+                        (currentTime.getMonth() + 1) + "月" +
+                        currentTime.getDate() + "日 " +
+                        currentTime.getHours() + "時" +
+                        currentTime.getMinutes() + "分 現在";
+    document.getElementById('current-time').textContent = formattedTime;
+};
+  // 駅名とローマ字のマップ
+  const stationRomajiMap = {
+    "いるか岬": "irukamisaki",
+    "マハル村(いるか電鉄)": "maharumura_iruka",
+    "マハル村(ささ電鉄)": "maharumura_sasa",
+    "新拠点東": "shinkyotenhigashi",
+    "拠点": "kyoten_kamui",
+    "畑山": "hatayeyama",
+    "平野": "heiya",
+    "海崎": "umisaki",
+    "出島": "dezima",
+    "沼地": "numati",
+    "新拠点(峰川線)":"Sinkyoten_minekawa",
+    "沼春":"numaharu",
+    "沼里":"numazato",
+    "山谷森中":"yamatanisintyu",
+    "峯川":"minekawa",
+    "拠点(佐田海洋鉄道)":"kyoten_sada",
+    "高野(佐田海洋鉄道)":"takano",
+    "新拠点(佐田海洋鉄道)":"sinkyoten_sada",
+    "マハル村":"maharumura_sada",
+    "新拠点(kamui)":"Sinkyoten-kamui"
+  };
+
+  const input = document.getElementById("stationInput");
+  const suggestions = document.getElementById("suggestions");
+
+  // 入力時のサジェスト表示
+  input.addEventListener("input", function () {
+    const value = this.value.toLowerCase();
+    suggestions.innerHTML = "";
+    if (value === "") return;
+
+    const stationList = Object.keys(stationRomajiMap);
+    const filtered = stationList.filter(station =>
+      station.toLowerCase().includes(value)
+    );
+
+    filtered.forEach(station => {
+      const div = document.createElement("div");
+      div.textContent = station;
+      div.addEventListener("click", function () {
+        input.value = station;
+        suggestions.innerHTML = "";
+      });
+      suggestions.appendChild(div);
+    });
+  });
+
+  // 外部クリックでサジェスト非表示
+  document.addEventListener("click", function (e) {
+    if (!document.getElementById("stationSearchForm").contains(e.target)) {
+      suggestions.innerHTML = "";
+    }
+  });
+
+  // 駅名検索送信イベント
+  const form = document.getElementById('stationSearchForm');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const stationName = input.value.trim();
+    const romaji = stationRomajiMap[stationName];
+
+    if (romaji) {
+      window.location.href = `https://diligent-mirage-melody.glitch.me/station/${romaji}`;
+    } else {
+      alert("入力された駅名が見つかりません。");
+    }
+  });
+
+  // スライダー機能
+  const track = document.getElementById('sliderTrack');
+  const slides = track.querySelectorAll('img');
+  let currentIndex = 0;
+  let intervalId;
+
+  function updateSlide() {
+    const slideWidth = slides[0].clientWidth;
+    track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
+  }
+
+  function slideNext() {
+    currentIndex = (currentIndex + 1) % slides.length;
+    updateSlide();
+  }
+
+  function slidePrev() {
+    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+    updateSlide();
+  }
+
+  function startAutoSlide() {
+    intervalId = setInterval(slideNext, 3000);
+  }
+
+  function stopAutoSlide() {
+    clearInterval(intervalId);
+  }
+
+  startAutoSlide();
+  document.getElementById('slider').addEventListener('mouseenter', stopAutoSlide);
+  document.getElementById('slider').addEventListener('mouseleave', startAutoSlide);
+  window.addEventListener('resize', updateSlide);
+
+  // タブ切り替え
+  const buttons = document.querySelectorAll('.tab-button');
+  const contents = document.querySelectorAll('.tab-content');
+
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      const target = button.dataset.tab;
+      buttons.forEach(btn => btn.classList.remove('active'));
+      contents.forEach(content => content.classList.remove('active'));
+      button.classList.add('active');
+      document.getElementById(target).classList.add('active');
+    });
+  });
+</script>
+
 </body>
 </html>
