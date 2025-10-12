@@ -1,153 +1,158 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width" />
-  <title>403</title>
-  <style>@import url("https://fonts.googleapis.com/css?family=Comfortaa");
-* {
-  box-sizing: border-box;
-}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>403 Forbidden - いるか電鉄</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Noto+Sans+JP:wght@700&display=swap');
 
-body,
-html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-}
-
-body {
-  background-color: #a74006;
-  font-family: sans-serif;
-}
-
-.container {
-  z-index: 1;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  padding: 10px;
-  min-width: 300px;
-}
-.container div {
-  display: inline-block;
-}
-.container .lock {
-  opacity: 1;
-}
-.container h1 {
-  font-family: "Comfortaa", cursive;
-  font-size: 100px;
-  text-align: center;
-  color: #eee;
-  font-weight: 100;
-  margin: 0;
-}
-.container p {
-  color: #fff;
-}
-
-.lock {
-  transition: 0.5s ease;
-  position: relative;
-  overflow: hidden;
-  opacity: 0;
-}
-.lock.generated {
-  transform: scale(0.5);
-  position: absolute;
-  -webkit-animation: 2s move linear;
-          animation: 2s move linear;
-  -webkit-animation-fill-mode: forwards;
-          animation-fill-mode: forwards;
-}
-.lock ::after {
-  content: "";
-  background: #a74006;
-  opacity: 0.3;
-  display: block;
-  position: absolute;
-  height: 100%;
-  width: 50%;
-  top: 0;
-  left: 0;
-}
-.lock .bottom {
-  background: #D68910;
-  height: 40px;
-  width: 60px;
-  display: block;
-  position: relative;
-  margin: 0 auto;
-}
-.lock .top {
-  height: 60px;
-  width: 50px;
-  border-radius: 50%;
-  border: 10px solid #fff;
-  display: block;
-  position: relative;
-  top: 30px;
-  margin: 0 auto;
-}
-.lock .top::after {
-  padding: 10px;
-  border-radius: 50%;
-}
-
-@-webkit-keyframes move {
-  to {
-    top: 100%;
-  }
-}
-
-@keyframes move {
-  to {
-    top: 100%;
-  }
-}
-@media (max-width: 420px) {
-  .container {
-    transform: translate(-50%, -50%) scale(0.8);
+  body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #001f3f, #003366);
+    overflow: hidden;
+    font-family: 'Noto Sans JP', sans-serif;
+    color: #fff;
   }
 
-  .lock.generated {
-    transform: scale(0.3);
+  /* --- ヘッダー --- */
+  header {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 30, 0.6);
+    backdrop-filter: blur(6px);
+    padding: 0 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
   }
-}</style>
+
+  .logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    color: #00bfff;
+    text-shadow: 0 0 15px #00ffff;
+  }
+
+  .home-btn {
+    background: none;
+    border: 2px solid #00bfff;
+    border-radius: 5px;
+    padding: 8px 16px;
+    color: #00bfff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1rem;
+  }
+
+  .home-btn:hover {
+    background: #00bfff;
+    color: #001f3f;
+    box-shadow: 0 0 20px #00ffff;
+  }
+
+  /* --- コンテンツ --- */
+  .title {
+    text-align: center;
+    margin-top: 130px;
+    font-size: 2.5rem;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 10px #00bfff;
+  }
+
+  .title span {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    color: #00bfff;
+    text-shadow: 0 0 20px #00ffff;
+  }
+
+  .main {
+    position: relative;
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10vw;
+    margin-top: 5vh;
+    color: #fff;
+    text-shadow: 0 0 20px #00bfff, 0 0 40px #0077ff;
+  }
+
+  /* --- 線路 --- */
+  .rail {
+    position: relative;
+    width: 100%;
+    height: 8px;
+    background: repeating-linear-gradient(
+      90deg,
+      #888 0px,
+      #888 20px,
+      #555 20px,
+      #555 40px
+    );
+    margin-top: 60px;
+  }
+
+  /* --- 電車 --- */
+  .train {
+    position: absolute;
+    bottom: 100px;
+    left: -1500px;
+    width: 1900px;
+    height: 2000;
+    animation: trainMove 8s linear infinite;
+    filter: drop-shadow(0 0 10px #00bfff);
+  }
+
+  @keyframes trainMove {
+    0% { left: -150px; }
+    100% { left: 110%; }
+  }
+
+  /* --- メッセージ --- */
+  .message {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 1.2rem;
+    color: #ddd;
+  }
+
+  /* --- レスポンシブ --- */
+  @media (max-width: 600px) {
+    header {
+      flex-direction: column;
+      height: auto;
+      padding: 10px 0;
+    }
+
+    .logo { font-size: 1.4rem; margin-bottom: 5px; }
+    .home-btn { font-size: 0.9rem; }
+    .title { font-size: 1.6rem; margin-top: 100px; }
+    .title span { font-size: 2rem; }
+    .main { font-size: 16vw; }
+    .train { width: 90px; }
+  }
+</style>
 </head>
 <body>
-<div class="container">
-  <h1>4<div class="lock"><div class="top"></div><div class="bottom"></div>
-    </div>3</h1><p>Access denied</p>
-</div>-
-  <script>const interval = 500;
 
-function generateLocks() {
-  const lock = document.createElement('div'),
-        position = generatePosition();
-  lock.innerHTML = '<div class="top"></div><div class="bottom"></div>';
-  lock.style.top = position[0];
-  lock.style.left = position[1];
-  lock.classList = 'lock'// generated';
-  document.body.appendChild(lock);
-  setTimeout(()=>{
-    lock.style.opacity = '1';
-    lock.classList.add('generated');
-  },100);
-  setTimeout(()=>{
-    lock.parentElement.removeChild(lock);
-  }, 2000);
-}
-function generatePosition() {
-  const x = Math.round((Math.random() * 100) - 10) + '%';
-  const y = Math.round(Math.random() * 100) + '%';
-  return [x,y];
-}
-setInterval(generateLocks,interval);
-generateLocks();</script>
+  <header>
+    <div class="logo">🚋 いるか電鉄</div>
+    <button class="home-btn" onclick="location.href='/'">ホームへ戻る</button>
+  </header>
+
+  <div class="title"><span>いるか電鉄</span> セキュリティシステム</div>
+  <div class="main">403</div>
+  <div class="rail"></div>
+  <img src="https://cdn.discordapp.com/attachments/1170302146491711510/1426538188381491310/eeeeeeeeeeeeeeeeeee.png?ex=68ec3f77&is=68eaedf7&hm=ae982a0ad62f060c5a545a236c85b5aa172b7a95fa6215b1e18e307207c9e652&" class="train" alt="Train">
+  <div class="message">アクセスが拒否されました。<br>この線路は立入禁止です。</div>
+
 </body>
 </html>
