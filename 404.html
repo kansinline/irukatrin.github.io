@@ -35,12 +35,12 @@
     to { background-position: -10000px 8000px; }
   }
 
-  /* 線路っぽい光 */
+  /* 線路の光 */
   .rails {
     position: absolute;
-    bottom: 15%;
+    bottom: 12%;
     width: 200%;
-    height: 4px;
+    height: 3px;
     background: linear-gradient(90deg, transparent, #00ffff, transparent);
     animation: moveRail 3s linear infinite;
     opacity: 0.4;
@@ -54,16 +54,17 @@
   /* 列車画像 */
   .train {
     position: absolute;
-    bottom: 8%;
+    bottom: 6%;
     left: -400px;
-    width: 1400px;
+    width: 80vw;
+    max-width: 1400px;
     animation: trainMove 6s ease-in-out forwards;
     z-index: 2;
   }
   @keyframes trainMove {
     0% { transform: translateX(-400px) scale(1); opacity: 0; }
     10% { opacity: 1; }
-    50% { transform: translateX(50vw) scale(1.1); }
+    50% { transform: translateX(50vw) scale(1.05); }
     100% { transform: translateX(120vw) scale(1); opacity: 0; }
   }
 
@@ -72,12 +73,13 @@
     text-align: center;
     opacity: 0;
     animation: fadeIn 2s ease forwards;
-    animation-delay: 6s; /* 列車が通過してから */
+    animation-delay: 6s;
     z-index: 3;
+    padding: 0 20px;
   }
 
   .title {
-    font-size: 2rem;
+    font-size: clamp(1.4rem, 3vw, 2rem);
     color: #00eaff;
     letter-spacing: 0.3em;
     text-shadow: 0 0 10px #00eaff, 0 0 20px #00aaff;
@@ -85,7 +87,7 @@
 
   h1 {
     position: relative;
-    font-size: 8rem;
+    font-size: clamp(4rem, 15vw, 8rem);
     margin: 20px 0;
     color: #fff;
     text-shadow: 0 0 15px #00ffff, 0 0 40px #0077ff;
@@ -116,7 +118,7 @@
   }
 
   p {
-    font-size: 1.2rem;
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
     color: #aaa;
     letter-spacing: 2px;
   }
@@ -124,13 +126,13 @@
   .btn {
     margin-top: 30px;
     display: inline-block;
-    padding: 14px 40px;
+    padding: 12px 32px;
     border: 2px solid #00eaff;
     color: #00eaff;
     text-decoration: none;
     border-radius: 30px;
     transition: 0.4s;
-    font-size: 1.1rem;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
     letter-spacing: 1px;
   }
   .btn:hover {
@@ -148,7 +150,7 @@
   .cursor {
     position: fixed;
     top: 0; left: 0;
-    width: 40px; height: 40px;
+    width: 30px; height: 30px;
     border: 2px solid #00ffff;
     border-radius: 50%;
     pointer-events: none;
@@ -156,6 +158,21 @@
     transition: 0.08s;
     z-index: 10;
     opacity: 0.8;
+  }
+
+  /* スマホ向け調整 */
+  @media (max-width: 600px) {
+    .train {
+      bottom: 10%;
+      width: 100vw;
+    }
+    .rails {
+      bottom: 10%;
+      height: 2px;
+    }
+    .cursor {
+      display: none;
+    }
   }
 </style>
 </head>
@@ -166,7 +183,7 @@
   <!-- 列車の画像 -->
   <img src="https://raw.githubusercontent.com/kansinline/irukatrin.github.io/refs/heads/main/eeeeeeeeeeeeeeeeeee.png" alt="いるか電鉄列車" class="train">
 
-  <!-- メインコンテンツ（列車通過後に表示） -->
+  <!-- メインコンテンツ -->
   <div class="content">
     <div class="title">🐬 いるか電鉄</div>
     <h1>404</h1>
