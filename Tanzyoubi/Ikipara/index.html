@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Happy Birthday — いきものパラダイス</title>
+<style>
+  :root{
+    --bg1:#FFF8EE;
+    --bg2:#E8FFF7;
+    --accent:#FF6B6B;
+    --accent2:#6BCBFF;
+    --card:#ffffff;
+    --glass: rgba(255,255,255,0.75);
+    --shadow: 0 8px 30px rgba(27,38,53,0.12);
+    --font-sans: "Noto Sans JP", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  }
+  html,body{height:100%;margin:0;font-family:var(--font-sans);background:linear-gradient(135deg,var(--bg1) 0%, var(--bg2) 100%);-webkit-font-smoothing:antialiased;}
+  .wrap{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px;
+    box-sizing:border-box;
+  }
+
+  .card{
+    width:980px;
+    max-width:96%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.85));
+    border-radius:18px;
+    padding:28px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* 左のイラスト領域 */
+  .hero{
+    display:flex;
+    gap:20px;
+    align-items:center;
+  }
+  .left{
+    flex:0 0 360px;
+    max-width:38%;
+    min-width:220px;
+    position:relative;
+  }
+
+  /* いきものアイコン群（SVGで可愛く） */
+  .creatures{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+  }
+  .creature{
+    background:var(--glass);
+    border-radius:12px;
+    padding:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 6px 18px rgba(0,0,0,0.06);
+    transform-origin:center;
+    animation:float 6s ease-in-out infinite;
+  }
+  .creature:nth-child(2){ animation-delay: -1s; }
+  .creature:nth-child(3){ animation-delay: -2s; }
+  .creature:nth-child(4){ animation-delay: -3s; }
+
+  @keyframes float{
+    0%{ transform: translateY(0px) }
+    50%{ transform: translateY(-12px) rotate(-2deg) }
+    100%{ transform: translateY(0px) }
+  }
+
+  svg{ width:74px; height:74px; display:block; }
+
+  /* 右のメッセージ領域 */
+  .right{ flex:1; padding:10px 20px; min-width:220px; }
+  h1{
+    font-size:34px;
+    margin:0 0 6px 0;
+    letter-spacing:1px;
+    color:#213547;
+  }
+  .subtitle{
+    margin:0 0 18px 0;
+    color:#556B7A;
+  }
+  .message{
+    background:linear-gradient(180deg,#fff 0%, #fffefc 100%);
+    border-radius:12px;
+    padding:14px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.04);
+    color:#213547;
+    line-height:1.6;
+  }
+
+  .controls{
+    display:flex;
+    gap:10px;
+    margin-top:14px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    border:0;
+    background:var(--accent);
+    color:white;
+    padding:10px 14px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:700;
+    box-shadow:0 6px 16px rgba(255,107,107,0.18);
+  }
+  .btn.secondary{
+    background:transparent;
+    border:2px solid rgba(33,53,71,0.06);
+    color:#213547;
+    box-shadow:none;
+    font-weight:600;
+  }
+
+  /* バルーン */
+  .balloon{
+    position:absolute;
+    bottom:-40px;
+    left:12%;
+    width:160px;
+    height:220px;
+    pointer-events:none;
+    opacity:0.95;
+    transform-origin:center bottom;
+    animation:rise 9s linear infinite;
+  }
+  .balloon:nth-child(2){ left:68%; width:120px; animation-duration:8s; animation-delay:-2s; }
+  @keyframes rise{
+    0%{ transform: translateY(0) rotate(0deg); opacity:0 }
+    10%{ opacity:1 }
+    50%{ transform: translateY(-420px) rotate(6deg) }
+    100%{ transform: translateY(-800px) rotate(12deg); opacity:0 }
+  }
+
+  /* confetti canvas 全画面 */
+  #confettiCanvas{
+    position:fixed;
+    left:0; top:0; width:100%; height:100%;
+    pointer-events:none;
+    z-index:9999;
+  }
+
+  /* footer */
+  .footer{
+    margin-top:14px;
+    font-size:13px;
+    color:#6B7D8E;
+    text-align:right;
+  }
+
+  /* モーダル（メッセージ編集） */
+  .modal{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background: rgba(12,18,28,0.35);
+    z-index:10000;
+  }
+  .modal .box{
+    width:92%;
+    max-width:560px;
+    background:white;
+    border-radius:12px;
+    padding:16px;
+  }
+  .modal textarea{
+    width:100%;
+    min-height:120px;
+    border-radius:8px;
+    border:1px solid #e6eef3;
+    padding:10px;
+    box-sizing:border-box;
+    font-family:var(--font-sans);
+  }
+
+  /* レスポンシブ調整 */
+  @media (max-width:720px){
+    .hero{ flex-direction:column; align-items:center; }
+    .left{ max-width:unset; width:100%; }
+    .right{ width:100%; }
+    h1{ font-size:28px; text-align:center; }
+    .footer{text-align:center;}
+  }
+</style>
+</head>
+<body>
+<canvas id="confettiCanvas" aria-hidden="true"></canvas>
+
+<div class="wrap">
+  <div class="card" role="main" aria-labelledby="title">
+    <div class="hero">
+      <div class="left" aria-hidden="false">
+        <div class="creatures" aria-hidden="true">
+          <!-- いきものアイコン（好きなものに差し替えてOK） -->
+          <div class="creature" title="小さな魚">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <g fill="none" stroke="none">
+                <ellipse cx="34" cy="32" rx="22" ry="14" fill="#6BCBFF"/>
+                <circle cx="46" cy="24" r="3" fill="#fff"/>
+                <path d="M8 18 C18 26, 18 38, 8 46" fill="#FFCE6B"/>
+              </g>
+            </svg>
+          </div>
+          <div class="creature" title="ことり">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <g fill="none" stroke="none">
+                <circle cx="28" cy="28" r="12" fill="#FF6B6B"/>
+                <path d="M36 34 L48 30 C52 28, 56 24, 56 20 C56 28, 48 40, 36 34 Z" fill="#FFD6A5"/>
+              </g>
+            </svg>
+          </div>
+          <div class="creature" title="カメ">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <g fill="none" stroke="none">
+                <ellipse cx="34" cy="34" rx="18" ry="12" fill="#8BE9A8"/>
+                <circle cx="24" cy="30" r="3" fill="#2B2B2B"/>
+              </g>
+            </svg>
+          </div>
+          <div class="creature" title="たぬき">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <g fill="none" stroke="none">
+                <circle cx="32" cy="30" r="12" fill="#F7A3A3"/>
+                <path d="M20 36 C26 44, 38 44, 44 36" fill="#fff"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 浮遊バルーン（デコ） -->
+        <svg class="balloon" viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs><linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#FFB6B9"/><stop offset="1" stop-color="#FF6B6B"/></linearGradient></defs>
+          <ellipse cx="100" cy="80" rx="64" ry="86" fill="url(#g1)" opacity="0.95"/>
+          <rect x="96" y="158" width="8" height="60" rx="4" fill="#B77C7C"/>
+        </svg>
+      </div>
+
+      <div class="right">
+        <h1 id="title">Happy Birthday — いきものパラダイス 🎉</h1>
+        <p class="subtitle">素敵な一日になりますように。心を込めて。</p>
+
+        <div class="message" id="mainMessage" aria-live="polite">
+          <strong>いきものパラダイスさん、</strong><br>
+          お誕生日おめでとうございます！今日はあなたの特別な日 — たくさん笑って、好きないきものたちに囲まれて、最高の時間を過ごしてね 🐟🦜🐢🦝
+        </div>
+
+        <div class="controls" role="group" aria-label="controls">
+          <button class="btn" id="playConfetti">お祝い！(コンフェッティ)</button>
+          <button class="btn secondary" id="editMessage">メッセージ編集</button>
+          <button class="btn secondary" id="toggleMusic">BGM を再生</button>
+          <a class="btn secondary" id="downloadBtn" href="#" download="birthday_ikimono.html">保存（HTML）</a>
+        </div>
+
+        <div class="footer">作成者：あなたのともだちより — カスタマイズ自由</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- メッセージ編集モーダル -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="メッセージ編集">
+  <div class="box">
+    <h3>メッセージを編集</h3>
+    <textarea id="messageInput"></textarea>
+    <div style="text-align:right;margin-top:8px;">
+      <button class="btn secondary" id="cancelModal">キャンセル</button>
+      <button class="btn" id="saveModal">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 簡易BGM（フリー曲のURLに差し替え可能） -->
+<audio id="bgm" loop crossorigin="anonymous">
+  <!-- デフォルトは空。使いたいMP3のURLを下記のdata-music属性に入れておくと切り替え可能 -->
+</audio>
+
+<script>
+/* ========== カスタマイズしやすい箇所 ==========
+  ページ内の "いきものパラダイス" を別の名前に変えるには、HTML内のタイトル箇所と
+  mainMessage の中身を書き換えてください。
+  BGMを入れる場合は、下の dataMusic にMP3のURLをセットするか、
+  ブラウザのサポートするファイルを同ディレクトリに置いて <audio> に直接指定してください。
+============================================ */
+
+const nameDisplay = "いきものパラダイス"; // 必要ならここを変えてください
+document.title = `Happy Birthday — ${nameDisplay}`;
+
+/* ----- コンフェッティ（簡易） ----- */
+const canvas = document.getElementById('confettiCanvas');
+const ctx = canvas.getContext('2d');
+let W = canvas.width = innerWidth;
+let H = canvas.height = innerHeight;
+let pieces = [];
+const colors = ["#FF6B6B","#FFD166","#6BCBFF","#8BE9A8","#C39BFF","#FF9CE6"];
+
+function rand(min,max){ return Math.random()*(max-min)+min; }
+function makePiece(x,y){
+  return {
+    x:x, y:y,
+    vx: rand(-2,2),
+    vy: rand(-6,-2),
+    r: rand(6,12),
+    color: colors[Math.floor(rand(0,colors.length))],
+    rot: rand(0,Math.PI*2),
+    vr: rand(-0.08,0.08),
+    life: 0,
+    ttl: rand(80,140)
+  };
+}
+function spawnConfetti(count){
+  for(let i=0;i<count;i++){
+    pieces.push(makePiece(rand(W*0.2,W*0.8), H*0.75));
+  }
+  if(pieces.length>120) pieces = pieces.slice(pieces.length-120);
+}
+function update(){
+  ctx.clearRect(0,0,W,H);
+  for(let i=pieces.length-1;i>=0;i--){
+    const p = pieces[i];
+    p.vy += 0.12; // gravity
+    p.x += p.vx;
+    p.y += p.vy;
+    p.rot += p.vr;
+    p.life++;
+    const fade = 1 - (p.life / p.ttl);
+    ctx.save();
+    ctx.translate(p.x,p.y);
+    ctx.rotate(p.rot);
+    ctx.globalAlpha = Math.max(0, fade);
+    ctx.fillStyle = p.color;
+    ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r * 0.6);
+    ctx.restore();
+    if(p.y > H + 40 || p.life > p.ttl){
+      pieces.splice(i,1);
+    }
+  }
+  requestAnimationFrame(update);
+}
+update();
+
+/* ボタンで発射 */
+document.getElementById('playConfetti').addEventListener('click', ()=>{
+  spawnConfetti(60);
+  // ちょっと連続で増やして楽しく
+  setTimeout(()=>spawnConfetti(40), 250);
+  setTimeout(()=>spawnConfetti(30), 500);
+});
+
+/* 画面サイズ対応 */
+addEventListener('resize', ()=>{
+  W = canvas.width = innerWidth;
+  H = canvas.height = innerHeight;
+});
+
+/* ========== メッセージ編集モーダル ========== */
+const modal = document.getElementById('modal');
+const editBtn = document.getElementById('editMessage');
+const cancelModal = document.getElementById('cancelModal');
+const saveModal = document.getElementById('saveModal');
+const messageInput = document.getElementById('messageInput');
+const mainMessage = document.getElementById('mainMessage');
+
+editBtn.addEventListener('click', ()=>{
+  messageInput.value = mainMessage.innerHTML.replace(/<br>/g,"\n");
+  modal.style.display = 'flex';
+  messageInput.focus();
+});
+cancelModal.addEventListener('click', ()=> modal.style.display='none');
+saveModal.addEventListener('click', ()=>{
+  let val = messageInput.value.replace(/\n/g,"<br>");
+  if(!val.trim()) val = `<strong>${nameDisplay}さん、</strong><br>お誕生日おめでとう！`;
+  mainMessage.innerHTML = val;
+  modal.style.display = 'none';
+});
+
+/* ESCで閉じる */
+addEventListener('keydown', (e)=>{
+  if(e.key==='Escape') modal.style.display='none';
+});
+
+/* ========== BGM 制御（空の場合は外部URLをセットして使ってください） ========== */
+const bgm = document.getElementById('bgm');
+const toggleMusic = document.getElementById('toggleMusic');
+
+// デフォルトでBGMを指定したい場合はここにURLを入れてください（例: "https://example.com/music.mp3"）
+const dataMusic = ""; // ここにmp3のURLを入れるとボタンで再生できます
+
+if(dataMusic){
+  bgm.src = dataMusic;
+  toggleMusic.style.display = 'inline-block';
+} else {
+  // BGMがない場合、表示はするけど押すと音声ファイルを選べるようにする
+  toggleMusic.textContent = "BGM を選択（任意）";
+}
+toggleMusic.addEventListener('click', async ()=>{
+  if(!bgm.src){
+    // ユーザーにファイル選択させる（ブラウザで許可があれば）
+    const input = document.createElement('input');
+    input.type='file';
+    input.accept='audio/*';
+    input.onchange = () => {
+      const f = input.files[0];
+      if(!f) return;
+      const url = URL.createObjectURL(f);
+      bgm.src = url;
+      bgm.play();
+      toggleMusic.textContent = "BGM 停止";
+    };
+    input.click();
+    return;
+  }
+  if(bgm.paused){
+    try{
+      await bgm.play();
+      toggleMusic.textContent = "BGM 停止";
+    }catch(e){
+      alert("自動再生はブラウザで制限される場合があります。再生ボタンをもう一度押してください。");
+    }
+  }else{
+    bgm.pause();
+    toggleMusic.textContent = "BGM を再生";
+  }
+});
+
+/* ========== ダウンロードボタン（HTML保存の簡易処理） ========== */
+const downloadBtn = document.getElementById('downloadBtn');
+downloadBtn.addEventListener('click', (e)=>{
+  // 現在のDOMをシリアライズしてダウンロードさせる（スタイルはインラインで埋めてないが、元のHTMLそのまま保存）
+  const doc = '<!doctype html>\n' + document.documentElement.outerHTML;
+  const blob = new Blob([doc], {type: 'text/html'});
+  const url = URL.createObjectURL(blob);
+  downloadBtn.href = url;
+  // ダウンロードはリンクの href を更新してブラウザに任せる
+});
+
+/* 小さなアクセント：ページ読み込み時に軽くコンフェッティ */
+window.addEventListener('load', ()=> spawnConfetti(36) );
+</script>
+</body>
+</html>
