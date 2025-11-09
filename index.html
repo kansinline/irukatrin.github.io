@@ -342,6 +342,34 @@
 
 <!-- JavaScript -->
 <script>
+    async function checkTrainStatus() {
+    try {
+      // あなたのAPIから運行データを取得
+      const response = await fetch("https://irukarailway.onrender.com/trains");
+      const trains = await response.json();
+
+      // 表示するターゲットを選択（「現在の時間運行していません。。」がある部分）
+      const target = document.querySelector(".railinfo-alert:nth-of-type(2) p");
+
+      // ターゲットが存在しなければ終了
+      if (!target) return;
+
+      // 運休が含まれているか確認
+      const hasCancel = trains.some(train => train.status && train.status.includes("運休"));
+
+      // 運休が出たときだけテキスト更新
+      if (hasCancel) {
+        target.textContent = "❌ 一部の列車が運休しています。";
+      }
+
+    } catch (err) {
+      console.error("運行情報の取得に失敗しました:", err);
+      // エラー時は何も変更しない（デザイン保持）
+    }
+  }
+
+  // 初回チェック＋定期チェック（1分ごと）
+  checkTrainStatus();
   window.onload = function() {
     var currentTime = new Date();
     var formattedTime = currentTime.getFullYear() + "年" +
