@@ -201,6 +201,7 @@
         const termsText = document.getElementById("termsText");
     
         let recognition;
+        let currentTranscript = "";
         if (window.SpeechRecognition || window.webkitSpeechRecognition) {
             recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.lang = "ja-JP";
@@ -210,27 +211,23 @@
     
         // 音声認識が終了したときの処理
         recognition.onresult = function(event) {
-            const transcript = event.results[event.results.length - 1][0].transcript;
+           currentTranscript = "";
+
+for (let i = 0; i < event.results.length; i++) {
+    currentTranscript += event.results[i][0].transcript;
+}
+
 
     
-            // 音読された文章をコンソールに表示
-            console.log("音読された文章: ", transcript);
-    
-            // 規約の一部（仮にここでは「利用規約」に合致するか確認）
-            const validPhrase = "利用規約";
-    
-            // 規約のテキストに一致する部分を強調表示
-            highlightText(termsText, transcript);
-    
-            // 音読結果が規約に含まれる場合、同意ボタンを有効にする
-            if (transcript.includes(validPhrase)) {
-                agreeBtn.disabled = false;
-                agreeBtn.classList.remove("button-disabled");
-            } else {
-                // 合致しなかった場合、再度音読を促す
-                alert("規約を正しく音読してください。");
-            }
-        };
+          console.log("音読された文章: ", currentTranscript);
+
+highlightText(termsText, currentTranscript);
+
+if (currentTranscript.includes(validPhrase)) {
+    agreeBtn.disabled = false;
+    agreeBtn.classList.remove("button-disabled");
+}
+
     
         // 音声認識が失敗した場合の処理
         recognition.onerror = function(event) {
@@ -274,6 +271,7 @@
 
 </body>
 </html>
+
 
 
 
