@@ -192,94 +192,99 @@
     </div>
 
     <script>
-        // 音声認識の設定
-        const startReadingBtn = document.getElementById("startReadingBtn");
-        const agreeBtn = document.getElementById("agreeBtn");
-        const confirmationModal = document.getElementById("confirmationModal");
-        const confirmBtn = document.getElementById("confirmBtn");
-        const cancelBtn = document.getElementById("cancelBtn");
-        const termsText = document.getElementById("termsText");
-    
-        let recognition;
-        let currentTranscript = "";
-        if (window.SpeechRecognition || window.webkitSpeechRecognition) {
-            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.lang = "ja-JP";
-            recognition.continuous = true;
-            recognition.interimResults = true;
-        }
-    
-        // 音声認識が終了したときの処理
-        recognition.onresult = function(event) {
-           currentTranscript = "";
+    // 音声認識の設定
+    const startReadingBtn = document.getElementById("startReadingBtn");
+    const agreeBtn = document.getElementById("agreeBtn");
+    const confirmationModal = document.getElementById("confirmationModal");
+    const confirmBtn = document.getElementById("confirmBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const termsText = document.getElementById("termsText");
 
-for (let i = 0; i < event.results.length; i++) {
-    currentTranscript += event.results[i][0].transcript;
-}
+    const validPhrase = "利用規約";
 
+    let recognition;
+    let currentTranscript = "";
 
-    
-const validPhrase = "利用規約";
-
-recognition.onresult = function(event) {
-    currentTranscript = "";
-
-    for (let i = 0; i < event.results.length; i++) {
-        currentTranscript += event.results[i][0].transcript;
+    if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = "ja-JP";
+        recognition.continuous = true;
+        recognition.interimResults = true;
+    } else {
+        alert("このブラウザは音声認識に対応していません。");
     }
 
-    console.log("音読された文章: ", currentTranscript);
-    highlightText(termsText, currentTranscript);
+    // 音声認識結果（リアルタイム上書き）
+    recognition.onresult = function (event) {
+        currentTranscript = "";
 
-    if (currentTranscript.includes(validPhrase)) {
-        agreeBtn.disabled = false;
-        agreeBtn.classList.remove("button-disabled");
-    }
-};
-
-    
-        // 音声認識が失敗した場合の処理
-        recognition.onerror = function(event) {
-            alert("音声認識に失敗しました。もう一度試してください。");
-        };
-    
-        // 規約の音読開始ボタン
-        startReadingBtn.onclick = function() {
-            recognition.start();
-        };
-    
-        // テキスト内で一致する部分をハイライトする関数
-        function highlightText(element, text) {
-            const regex = new RegExp(`(${text})`, "gi"); // 正規表現で一致部分を検索
-            element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+        for (let i = 0; i < event.results.length; i++) {
+            currentTranscript += event.results[i][0].transcript;
         }
-    
-        // 同意ボタンを押した際の動作
-        agreeBtn.onclick = function() {
-            confirmationModal.style.display = "block";
-        };
-    
-        // モーダル内の「同意する」ボタン
-        confirmBtn.onclick = function() {
-            window.location.href = 'https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAUnQ-bVUMTRVNEIzWFVIUE1aSEdUWURTTDVVV1FSMC4u';
-        };
-    
-        // モーダルの「キャンセル」ボタン
-        cancelBtn.onclick = function() {
+
+        console.log("音読された文章:", currentTranscript);
+
+        highlightText(termsText, currentTranscript);
+
+        if (currentTranscript.includes(validPhrase)) {
+            agreeBtn.disabled = false;
+            agreeBtn.classList.remove("button-disabled");
+        }
+    };
+
+    // 音声認識エラー
+    recognition.onerror = function (event) {
+        alert("音声認識に失敗しました。もう一度試してください。");
+    };
+
+    // 規約の音読開始ボタン
+    startReadingBtn.onclick = function () {
+        currentTranscript = "";
+        recognition.start();
+    };
+
+    // テキスト内で一致する部分をハイライト
+    function highlightText(element, text) {
+        const originalText = element.textContent;
+        if (!text) {
+            element.innerHTML = originalText;
+            return;
+        }
+
+        const escapedText = text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const regex = new RegExp("(" + escapedText + ")", "gi");
+        element.innerHTML = originalText.replace(regex, '<span class="highlight">$1</span>');
+    }
+
+    // 同意ボタン
+    agreeBtn.onclick = function () {
+        confirmationModal.style.display = "block";
+    };
+
+    // モーダル内「同意する」
+    confirmBtn.onclick = function () {
+        window.location.href =
+            "https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAUnQ-bVUMTRVNEIzWFVIUE1aSEdUWURTTDVVV1FSMC4u";
+    };
+
+    // モーダル「キャンセル」
+    cancelBtn.onclick = function () {
+        confirmationModal.style.display = "none";
+    };
+
+    // モーダル外クリックで閉じる
+    window.onclick = function (event) {
+        if (event.target === confirmationModal) {
             confirmationModal.style.display = "none";
-        };
-    
-        // モーダル外をクリックした場合も閉じる
-        window.onclick = function(event) {
-            if (event.target === confirmationModal) {
-                confirmationModal.style.display = "none";
-            }
-        };
-    </script>
+        }
+    };
+</script>
+
     
 
 </body>
 </html>
+
 
 
 
