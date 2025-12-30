@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>利用規約</title>
     <style>
+         .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: white;
+      padding: 10px 20px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
         /* スタイル設定 */
         body {
             font-family: Arial, sans-serif;
@@ -12,12 +25,7 @@
             padding: 0;
             background-color: #f4f4f4;
         }
-        header {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 10px;
-        }
+
         .container {
             max-width: 800px;
             margin: 20px auto;
@@ -98,9 +106,25 @@
 </head>
 <body>
 
-    <header>
-        <h1>利用規約</h1>
-    </header>
+<header class="header">
+  <div class="header-left">
+    <img src="https://irukatrin.dolphin.f5.si/favicon.ico" alt="ロゴ" class="logo" />
+    <span class="site-name">いるか電鉄</span>
+  </div>
+  <div class="menu-toggle" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <nav class="header-right" id="menu">
+    <a href="#">ホーム</a>
+    <a href="unkou">運行情報</a>
+    <a href="irukaSNS.html">車両利用</>
+    <a href="#">チケット</a>
+    <a href="#">会社概要</a>
+    
+  </nav>
+</header>
 
     <div class="container">
         <h2>車両利用規約</h2>
@@ -232,3 +256,4 @@
 
 </body>
 </html>
+
