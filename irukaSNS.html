@@ -219,14 +219,23 @@ for (let i = 0; i < event.results.length; i++) {
 
 
     
-          console.log("音読された文章: ", currentTranscript);
+const validPhrase = "利用規約";
 
-highlightText(termsText, currentTranscript);
+recognition.onresult = function(event) {
+    currentTranscript = "";
 
-if (currentTranscript.includes(validPhrase)) {
-    agreeBtn.disabled = false;
-    agreeBtn.classList.remove("button-disabled");
-}
+    for (let i = 0; i < event.results.length; i++) {
+        currentTranscript += event.results[i][0].transcript;
+    }
+
+    console.log("音読された文章: ", currentTranscript);
+    highlightText(termsText, currentTranscript);
+
+    if (currentTranscript.includes(validPhrase)) {
+        agreeBtn.disabled = false;
+        agreeBtn.classList.remove("button-disabled");
+    }
+};
 
     
         // 音声認識が失敗した場合の処理
@@ -271,6 +280,7 @@ if (currentTranscript.includes(validPhrase)) {
 
 </body>
 </html>
+
 
 
 
