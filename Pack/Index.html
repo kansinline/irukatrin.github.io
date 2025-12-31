@@ -5,6 +5,155 @@
   <title>いるか電鉄-クレジット</title>
   <link rel="stylesheet" href="style.css">
   <style>
+/* フッター（コピーライト） */
+.site-footer {
+  margin-top: 60px;
+  padding: 20px 10px;
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+  border-top: 1px solid #ddd;
+  background: #fafafa;
+}
+/* 全体 */
+.credit-vehicle-split {
+  display: flex;
+  width: 100%;
+  max-width: 800px;
+  height: 140px;
+  margin: 20px auto;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
+
+/* 左：車両画像 */
+.vehicle-image {
+  width: 50%;
+  background-image: url("https://raw.githubusercontent.com/kansinline/irukatrin.github.io/refs/heads/main/eeeeeeeeeeeeeeeeeee.png");
+  background-size: cover;
+  background-position: left center; /* ← 左端（1両目側） */
+}
+
+/* 右：ボタン部分 */
+.vehicle-info {
+  width: 50%;
+  border: none;
+  cursor: pointer;
+  background: #f7f9fc;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 15px;
+  text-align: left;
+}
+
+/* 車両名 */
+.vehicle-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: #0055aa;
+}
+
+/* 製作者 */
+.vehicle-author {
+  font-size: 14px;
+  color: #555;
+  margin-top: 4px;
+}
+
+/* ホバー */
+.vehicle-info:hover {
+  background: #eaf1fb;
+}
+.vehicle-button {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  background: #0055aa;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.vehicle-button img {
+  width: 120px;
+  height: auto;
+  border-radius: 4px;
+}
+
+.vehicle-button span {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.vehicle-button:hover {
+  background: #003f80;
+}
+/* === クレジット === */
+.credit {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 20px;
+}
+
+.credit h2 {
+  font-size: 22px;
+  border-left: 6px solid #0055aa;
+  padding-left: 10px;
+  margin-bottom: 20px;
+}
+
+.credit-box {
+  background: #f7f9fc;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.credit-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.credit-item:last-child {
+  border-bottom: none;
+}
+
+.credit-item.image {
+  justify-content: flex-start;
+  gap: 15px;
+}
+
+.credit-item img {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.credit-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.credit-title {
+  font-weight: bold;
+  color: #333;
+}
+
+.credit-name {
+  color: #555;
+  font-size: 14px;
+}
+
     /* === ヘッダー === */
     .header {
       display: flex;
@@ -55,6 +204,60 @@
     
   </nav>
 </header>
-  
+
+<section class="credit">
+  <h2>クレジット</h2>
+
+  <div class="credit-box">
+
+    <div class="credit-item image">
+      <img src="https://irukatrin.dolphin.f5.si/favicon.ico" alt="いるか電鉄ロゴ">
+      <div class="credit-text">
+        <span class="credit-title">サイト制作</span>
+        <span class="credit-name">いるか電鉄</span>
+      </div>
+    </div>
+
+    <div class="credit-item image">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRKzF7LNekSGeNV8WxWB2asclkN2CIt2UWlf_WA39pOg&s" alt="デザイナー">
+      <div class="credit-text">
+        <span class="credit-title">デザイン</span>
+        <span class="credit-name">いるか</span>
+      </div>
+    </div>
+
+    <div class="credit-item image">
+      <img src="icon.png" alt="アイコン">
+      <div class="credit-text">
+        <span class="credit-title">ロゴ・アイコン</span>
+        <span class="credit-name">okutetsu_eisen</span>
+      </div>
+    </div>
+
+    <div class="credit-item">
+      <span class="credit-title">制作年</span>
+      <span class="credit-name">2025</span>
+    </div>
+<div class="credit-vehicle-split">
+  <!-- 左：車両画像 -->
+  <div class="vehicle-image"></div>
+
+  <!-- 右：リンクボタン -->
+  <a
+    class="vehicle-info"
+    href="https://x.com/MahuyuYukiyuki"
+    target="_blank"
+  >
+    <span class="vehicle-name">I 6000</span>
+    <span class="vehicle-author">製作者　ゆきゆきさん</span>
+  </a>
+</div>
+
+  </a>
+  </div>
+</section>
+<footer class="site-footer">
+  <p>©2025- iruka Railway. All right Reserved.</p>
+</footer>
 </body>
 
