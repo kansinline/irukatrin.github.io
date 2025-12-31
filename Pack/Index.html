@@ -1,432 +1,386 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>いるか電鉄-クレジット</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-/* この会社について */
-.about-company {
-  max-width: 900px;
-  margin: 60px auto;
-  padding: 20px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iruka Railway - Credit</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: "Noto Sans JP", sans-serif;
+  background: #f2f4f8;
 }
 
-.about-company h2 {
-  font-size: 22px;
-  border-left: 6px solid #0055aa;
-  padding-left: 10px;
-  margin-bottom: 20px;
-}
-
-.about-box {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-}
-
-.about-text {
-  margin-bottom: 20px;
-  color: #444;
-  line-height: 1.7;
-}
-
-.about-list .about-row {
-  display: flex;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.about-list .about-row:last-child {
-  border-bottom: none;
-}
-
-.about-list .label {
-  width: 120px;
-  font-weight: bold;
-  color: #333;
-}
-
-.about-list .value {
-  color: #555;
-}
-/* 車両情報セクション */
-.vehicle-info-section1 {
-  max-width: 900px;
-  margin: 60px auto;
-  padding: 20px;
-}
-
-.vehicle-info-section h2 {
-  font-size: 22px;
-  border-left: 6px solid #0055aa;
-  padding-left: 10px;
-  margin-bottom: 20px;
-}
-
-.vehicle-info-box {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-}
-
-.vehicle-info-row {
-  display: flex;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.vehicle-info-row:last-child {
-  border-bottom: none;
-}
-
-.label {
-  width: 120px;
-  font-weight: bold;
-  color: #333;
-}
-
-.value {
-  color: #555;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* フッター（コピーライト） */
-.site-footer {
-  margin-top: 60px;
-  padding: 20px 10px;
-  text-align: center;
-  font-size: 13px;
-  color: #666;
-  border-top: 1px solid #ddd;
-  background: #fafafa;
-}
-/* 全体 */
-.credit-vehicle-split {
-  display: flex;
-  width: 100%;
-  max-width: 800px;
-  height: 140px;
-  margin: 20px auto;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid #ddd;
-}
-
-/* 左：車両画像 */
-.vehicle-image {
-  width: 50%;
-  background-image: url("https://raw.githubusercontent.com/kansinline/irukatrin.github.io/refs/heads/main/eeeeeeeeeeeeeeeeeee.png");
-  background-size: cover;
-  background-position: left center; /* ← 左端（1両目側） */
-}
-
-/* 右：ボタン部分 */
-.vehicle-info {
-  width: 50%;
-  border: none;
-  cursor: pointer;
-  background: #f7f9fc;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 15px;
-  text-align: left;
-}
-
-/* 車両名 */
-.vehicle-name {
-  font-size: 20px;
-  font-weight: bold;
-  color: #0055aa;
-}
-
-/* 製作者 */
-.vehicle-author {
-  font-size: 14px;
-  color: #555;
-  margin-top: 4px;
-}
-
-/* ホバー */
-.vehicle-info:hover {
-  background: #eaf1fb;
-}
-.vehicle-button {
+/* ===== ヘッダー ===== */
+.header {
   display: flex;
   align-items: center;
-  gap: 15px;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 12px 16px;
-  background: #0055aa;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  position: relative;
 }
 
-.vehicle-button img {
-  width: 120px;
-  height: auto;
-  border-radius: 4px;
+.header-left {
+  display: flex;
+  align-items: center;
 }
 
-.vehicle-button span {
-  font-size: 16px;
+.logo {
+  height: 36px;
+  margin-right: 10px;
+}
+
+.site-name {
+  font-size: 18px;
   font-weight: bold;
 }
 
-.vehicle-button:hover {
-  background: #003f80;
+/* ===== ナビ ===== */
+.header-right {
+  display: flex;
+  gap: 14px;
 }
-/* === クレジット === */
-.credit {
+
+.header-right a {
+  text-decoration: none;
+  color: #0055aa;
+  font-size: 14px;
+}
+
+/* ===== 言語ドロップダウン ===== */
+.lang-select {
+  margin-left: 10px;
+}
+
+.lang-select select {
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid #0055aa;
+  color: #0055aa;
+  font-size: 12px;
+  background: #fff;
+}
+
+/* ===== ハンバーガー ===== */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  width: 24px;
+  height: 3px;
+  background: #0055aa;
+  border-radius: 2px;
+}
+
+/* ===== セクション ===== */
+section {
   max-width: 900px;
-  margin: 60px auto;
+  margin: 50px auto;
   padding: 20px;
 }
 
-.credit h2 {
+h2 {
   font-size: 22px;
   border-left: 6px solid #0055aa;
   padding-left: 10px;
   margin-bottom: 20px;
 }
 
-.credit-box {
-  background: #f7f9fc;
+.box {
+  background: #fff;
   border-radius: 8px;
   padding: 20px;
 }
 
+/* ===== クレジット ===== */
 .credit-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 15px;
   padding: 12px 0;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #eee;
 }
 
 .credit-item:last-child {
   border-bottom: none;
 }
 
-.credit-item.image {
-  justify-content: flex-start;
-  gap: 15px;
-}
-
 .credit-item img {
   width: 48px;
   height: 48px;
   border-radius: 6px;
-  object-fit: cover;
-}
-
-.credit-text {
-  display: flex;
-  flex-direction: column;
 }
 
 .credit-title {
   font-weight: bold;
-  color: #333;
 }
 
 .credit-name {
-  color: #555;
   font-size: 14px;
+  color: #555;
 }
 
-    /* === ヘッダー === */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: white;
-      padding: 10px 20px;
-    }
+/* ===== 車両ボタン ===== */
+.credit-vehicle-split {
+  display: flex;
+  margin-top: 25px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+}
 
-    .header-left {
-      display: flex;
-      align-items: center;
-    }
+.vehicle-image {
+  width: 50%;
+  background-image: url("https://raw.githubusercontent.com/kansinline/irukatrin.github.io/refs/heads/main/eeeeeeeeeeeeeeeeeee.png");
+  background-size: cover;
+  background-position: left center;
+}
 
-    .logo {
-      height: 40px;
-      margin-right: 10px;
-    }
+.vehicle-info {
+  width: 50%;
+  padding: 16px;
+  text-decoration: none;
+  background: #f7f9fc;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
-    .site-name {
-      font-size: 20px;
-      font-weight: bold;
-    }
+.vehicle-info:hover {
+  background: #eaf1fb;
+}
 
-    .header-right a {
-      text-decoration: none;
-      color: #0055aa;
-      margin-left: 10px;
-    }
-    </style>
-    <body>
+.vehicle-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #0055aa;
+}
+
+.vehicle-author {
+  font-size: 14px;
+  color: #555;
+}
+
+/* ===== 情報行 ===== */
+.info-row {
+  display: flex;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.label {
+  width: 120px;
+  font-weight: bold;
+}
+
+/* ===== フッター ===== */
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 13px;
+  color: #666;
+  background: #fafafa;
+  border-top: 1px solid #ddd;
+}
+
+/* ===== スマホ ===== */
+@media (max-width: 600px) {
+  .menu-toggle {
+    display: flex;
+  }
+
+  .header-right {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border-top: 1px solid #ddd;
+  }
+
+  .header-right.open {
+    display: flex;
+  }
+
+  .header-right a {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .credit-vehicle-split {
+    flex-direction: column;
+  }
+
+  .vehicle-image,
+  .vehicle-info {
+    width: 100%;
+    height: 120px;
+  }
+
+  .info-row {
+    flex-direction: column;
+  }
+
+  .label {
+    width: auto;
+    margin-bottom: 4px;
+  }
+}
+</style>
+</head>
+
+<body>
+
 <header class="header">
   <div class="header-left">
-    <img src="https://irukatrin.dolphin.f5.si/favicon.ico" alt="ロゴ" class="logo" />
-    <span class="site-name">いるか電鉄</span>
+    <img src="https://irukatrin.dolphin.f5.si/favicon.ico" class="logo">
+    <span class="site-name">Iruka Railway</span>
   </div>
+
   <div class="menu-toggle" onclick="toggleMenu()">
-    <span></span>
-    <span></span>
-    <span></span>
+    <span></span><span></span><span></span>
   </div>
-  <nav class="header-right" id="menu">
-    <a href="#">ホーム</a>
-    <a href="unkou">運行情報</a>
-    <a href="#/irukaSNS.html">車両利用</>
-    <a href="#">チケット</a>
-    <a href="#">会社概要</a>
-    
-  </nav>
+
+  <nav class="header-right" id="menu"></nav>
+
+  <div class="lang-select">
+    <select id="langSelect">
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="en">🇺🇸 English</option>
+    </select>
+  </div>
 </header>
 
-<section class="credit">
-  <h2>クレジット</h2>
-
-  <div class="credit-box">
-
-    <div class="credit-item image">
-      <img src="https://irukatrin.dolphin.f5.si/favicon.ico" alt="いるか電鉄ロゴ">
-      <div class="credit-text">
-        <span class="credit-title">サイト制作</span>
-        <span class="credit-name">いるか電鉄</span>
-      </div>
-    </div>
-
-    <div class="credit-item image">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRKzF7LNekSGeNV8WxWB2asclkN2CIt2UWlf_WA39pOg&s" alt="デザイナー">
-      <div class="credit-text">
-        <span class="credit-title">デザイン</span>
-        <span class="credit-name">いるか</span>
-      </div>
-    </div>
-
-    <div class="credit-item image">
-      <img src="icon.png" alt="アイコン">
-      <div class="credit-text">
-        <span class="credit-title">ロゴ・アイコン</span>
-        <span class="credit-name">okutetsu_eisen</span>
-      </div>
-    </div>
-
-    <div class="credit-item image">
-      <img src="icon.png" alt="アイコン">
-      <div class="credit-text">
-        <span class="credit-title">車両アナウンス(使用予定)</span>
-    
-<a href="https://vidweb.co.jp/" target="_blank" rel="noreferrer noopener">動画制作会社VIDWEB</a>
-
-      </div>
-    </div>
-
-
-    <div class="credit-item">
-      <span class="credit-title">制作年</span>
-      <span class="credit-name">2025</span>
-    </div>
-<div class="credit-vehicle-split">
-  <!-- 左：車両画像 -->
-  <div class="vehicle-image"></div>
-
-  <!-- 右：リンクボタン -->
-  <a
-    class="vehicle-info"
-    href="https://x.com/MahuyuYukiyuki"
-    target="_blank"
-  >
-    <span class="vehicle-name">I 6000</span>
-    <span class="vehicle-author">製作者　ゆきゆきさん</span>
-  </a>
-</div>
-  </div>
-</section>
-<section class="vehicle-info-section">
-  <h2>車両情報</h2>
-
-  <div class="vehicle-info-box">
-    <div class="vehicle-info-row">
-      <span class="label">形式</span>
-      <span class="value">I 6000</span>
-    </div>
-
-    <div class="vehicle-info-row">
-      <span class="label">製造年</span>
-      <span class="value">2024年</span>
-    </div>
-
-    <div class="vehicle-info-row">
-      <span class="label">製作者</span>
-      <span class="value">ゆきゆきさん</span>
-    </div>
-
-    <div class="vehicle-info-row">
-      <span class="label">備考</span>
-      <span class="value">架空車両</span>
-    </div>
-  </div>
+<section>
+  <h2 id="creditTitle"></h2>
+  <div class="box" id="creditBox"></div>
 </section>
 
-<section class="about-company">
-  <h2>この会社について</h2>
-
-  <div class="about-box">
-    <p class="about-text">
-      いるか電鉄は、鉄道をモチーフとした創作・企画を中心に活動する
-      個人制作プロジェクトです。実在の鉄道事業者とは関係ありません。
-    </p>
-
-    <div class="about-list">
-      <div class="about-row">
-        <span class="label">名称</span>
-        <span class="value">いるか電鉄</span>
-      </div>
-
-      <div class="about-row">
-        <span class="label">設立</span>
-        <span class="value">2024年</span>
-      </div>
-
-      <div class="about-row">
-        <span class="label">活動内容</span>
-        <span class="value">kamuiさん(yotube)でRTMを使用して活動しております。</span>
-      </div>
-
-      <div class="about-row">
-        <span class="label">注意⚠️</span>
-        <span class="value">あくまで架空の鉄道であるため現実の企業などとは一切関係ありません。</span>
-      </div>
-    </div>
-  </div>
+<section>
+  <h2 id="vehicleTitle"></h2>
+  <div class="box" id="vehicleInfo"></div>
 </section>
-<footer class="site-footer">
-  <p>©2025- iruka Railway. All right Reserved.</p>
-</footer>
+
+<section>
+  <h2 id="aboutTitle"></h2>
+  <div class="box" id="aboutBox"></div>
+</section>
+
+<footer id="footerText"></footer>
+
+<script>
+function toggleMenu() {
+  document.getElementById("menu").classList.toggle("open");
+}
+
+const data = {
+  ja: {
+    menu: ["ホーム","運行情報","車両利用","チケット","会社概要"],
+    creditTitle: "クレジット",
+    vehicleTitle: "車両情報",
+    aboutTitle: "この会社について",
+    footer: "©2025- iruka Railway. All right Reserved.",
+    credits: [
+      { title:"サイト制作", name:"いるか電鉄", img:"https://irukatrin.dolphin.f5.si/favicon.ico" },
+      { title:"デザイン", name:"いるか" },
+      { title:"車両アナウンス（使用予定）", name:"動画制作会社VIDWEB", link:"https://vidweb.co.jp/" },      { title:"ロゴ", name:"okutetsu_eisen"}
+
+    ],
+    vehicle: {
+      name:"I 6000",
+      author:"製作者 ゆきゆきさん",
+      info:{ "形式":"I 6000","製造年":"2024年","備考":"架空車両" }
+    },
+    about:{ "名称":"いるか電鉄","設立":"2024年","注意":"架空の鉄道プロジェクトです" }
+  },
+  en: {
+    menu: ["Home","Operation","Vehicles","Tickets","About"],
+    creditTitle: "Credits",
+    vehicleTitle: "Vehicle Information",
+    aboutTitle: "About This Project",
+    footer: "©2025- Iruka Railway. All Rights Reserved.",
+    credits: [
+      { title:"Website", name:"Iruka Railway" , img:"https://irukatrin.dolphin.f5.si/favicon.ico"},
+      { title:"Design", name:"Iruka" },
+      { title:"Train Announcement (Planned)", name:"VIDWEB", link:"https://vidweb.co.jp/" },
+ {title:"logo", name:"okutetsu_eisen"}
+    ],
+    vehicle: {
+      name:"I 6000",
+      author:"Created by Yukiyuki",
+      info:{ "Model":"I 6000","Year":"2024","Note":"Fictional vehicle" }
+    },
+    about:{ "Name":"Iruka Railway","Founded":"2024","Note":"Fictional railway project" }
+  }
+};
+
+let lang = "ja";
+
+function render() {
+  const d = data[lang];
+
+  const menu = document.getElementById("menu");
+  menu.innerHTML = "";
+  d.menu.forEach(m => {
+    menu.innerHTML += `<a href="#">${m}</a>`;
+  });
+
+  creditTitle.textContent = d.creditTitle;
+  vehicleTitle.textContent = d.vehicleTitle;
+  aboutTitle.textContent = d.aboutTitle;
+  footerText.textContent = d.footer;
+
+  creditBox.innerHTML = "";
+  d.credits.forEach(c => {
+    creditBox.innerHTML += `
+      <div class="credit-item">
+        ${c.img ? `<img src="${c.img}">` : ""}
+        <div>
+          <div class="credit-title">${c.title}</div>
+          ${c.link ? `<a href="${c.link}" target="_blank">${c.name}</a>` : `<div class="credit-name">${c.name}</div>`}
+        </div>
+      </div>`;
+  });
+
+  creditBox.innerHTML += `
+    <div class="credit-vehicle-split">
+      <div class="vehicle-image"></div>
+      <a class="vehicle-info" href="https://x.com/MahuyuYukiyuki" target="_blank">
+        <div class="vehicle-name">${d.vehicle.name}</div>
+        <div class="vehicle-author">${d.vehicle.author}</div>
+      </a>
+    </div>`;
+
+  vehicleInfo.innerHTML = "";
+  Object.entries(d.vehicle.info).forEach(([k,v])=>{
+    vehicleInfo.innerHTML += `<div class="info-row"><span class="label">${k}</span><span>${v}</span></div>`;
+  });
+
+  aboutBox.innerHTML = "";
+  Object.entries(d.about).forEach(([k,v])=>{
+    aboutBox.innerHTML += `<div class="info-row"><span class="label">${k}</span><span>${v}</span></div>`;
+  });
+}
+
+document.getElementById("langSelect").addEventListener("change", e => {
+  lang = e.target.value;
+  render();
+});
+
+render();
+</script>
+
 </body>
-
+</html>
