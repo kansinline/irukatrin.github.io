@@ -285,6 +285,24 @@ function toggleMenu() {
   document.getElementById("menu").classList.toggle("open");
 }
 
+/* ===== メニューURL設定 ===== */
+const menuLinks = {
+  ja: [
+    "https://irukatrin.dolphin.f5.si",
+    "unkou",
+    "#vehicle",
+    "#ticket",
+    "#about"
+  ],
+  en: [
+    "https://irukatrin.dolphin.f5.si",
+    "unkou",
+    "#vehicle",
+    "#ticket",
+    "#about"
+  ]
+};
+
 const data = {
   ja: {
     menu: ["ホーム","運行情報","車両利用","チケット","会社概要"],
@@ -295,8 +313,8 @@ const data = {
     credits: [
       { title:"サイト制作", name:"いるか電鉄", img:"https://irukatrin.dolphin.f5.si/favicon.ico" },
       { title:"デザイン", name:"いるか" },
-      { title:"車両アナウンス（使用予定）", name:"動画制作会社VIDWEB", link:"https://vidweb.co.jp/" },      { title:"ロゴ", name:"okutetsu_eisen"}
-
+      { title:"車両アナウンス（使用予定）", name:"動画制作会社VIDWEB", link:"https://vidweb.co.jp/" },
+      { title:"ロゴ", name:"okutetsu_eisen"}
     ],
     vehicle: {
       name:"I 6000",
@@ -312,10 +330,10 @@ const data = {
     aboutTitle: "About This Project",
     footer: "©2025- Iruka Railway. All Rights Reserved.",
     credits: [
-      { title:"Website", name:"Iruka Railway" , img:"https://irukatrin.dolphin.f5.si/favicon.ico"},
+      { title:"Website", name:"Iruka Railway", img:"https://irukatrin.dolphin.f5.si/favicon.ico" },
       { title:"Design", name:"Iruka" },
       { title:"Train Announcement (Planned)", name:"VIDWEB", link:"https://vidweb.co.jp/" },
- {title:"logo", name:"okutetsu_eisen"}
+      { title:"Logo", name:"okutetsu_eisen"}
     ],
     vehicle: {
       name:"I 6000",
@@ -330,11 +348,12 @@ let lang = "ja";
 
 function render() {
   const d = data[lang];
+  const links = menuLinks[lang];
 
   const menu = document.getElementById("menu");
   menu.innerHTML = "";
-  d.menu.forEach(m => {
-    menu.innerHTML += `<a href="#">${m}</a>`;
+  d.menu.forEach((m, i) => {
+    menu.innerHTML += `<a href="${links[i]}">${m}</a>`;
   });
 
   creditTitle.textContent = d.creditTitle;
