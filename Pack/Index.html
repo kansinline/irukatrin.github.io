@@ -179,8 +179,22 @@ h2 {
 }
 
 .label {
-  width: 120px;
+  width: 140px;
   font-weight: bold;
+}
+
+/* ===== Kamui鯖 ===== */
+.kamui-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 15px;
+}
+
+.kamui-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  background: #fafafa;
 }
 
 /* ===== フッター ===== */
@@ -195,9 +209,7 @@ footer {
 
 /* ===== スマホ ===== */
 @media (max-width: 600px) {
-  .menu-toggle {
-    display: flex;
-  }
+  .menu-toggle { display: flex; }
 
   .header-right {
     display: none;
@@ -210,9 +222,7 @@ footer {
     border-top: 1px solid #ddd;
   }
 
-  .header-right.open {
-    display: flex;
-  }
+  .header-right.open { display: flex; }
 
   .header-right a {
     padding: 12px;
@@ -226,7 +236,7 @@ footer {
   .vehicle-image,
   .vehicle-info {
     width: 100%;
-    height: 120px;
+    height: 140px;
   }
 
   .info-row {
@@ -278,6 +288,18 @@ footer {
   <div class="box" id="aboutBox"></div>
 </section>
 
+<section>
+  <h2 id="parentTitle"></h2>
+  <div class="box" id="parentBox"></div>
+</section>
+
+<section>
+  <h2 id="kamuiTitle"></h2>
+  <div class="box">
+    <div class="kamui-list" id="kamuiList"></div>
+  </div>
+</section>
+
 <footer id="footerText"></footer>
 
 <script>
@@ -285,7 +307,6 @@ function toggleMenu() {
   document.getElementById("menu").classList.toggle("open");
 }
 
-/* ===== メニューURL設定 ===== */
 const menuLinks = {
   ja: [
     "https://irukatrin.dolphin.f5.si",
@@ -309,6 +330,8 @@ const data = {
     creditTitle: "クレジット",
     vehicleTitle: "車両情報",
     aboutTitle: "この会社について",
+    parentTitle: "親会社",
+    kamuiTitle: "Kamui鯖鉄道一覧",
     footer: "©2025- iruka Railway. All right Reserved.",
     credits: [
       { title:"サイト制作", name:"いるか電鉄", img:"https://irukatrin.dolphin.f5.si/favicon.ico" },
@@ -321,13 +344,17 @@ const data = {
       author:"製作者 ゆきゆきさん※改造されています。",
       info:{ "形式":"I 6000","製造年":"2024年","備考":"架空車両" }
     },
-    about:{ "名称":"いるか電鉄","設立":"2024年","注意":"架空の鉄道プロジェクトです" }
+    about:{ "名称":"いるか電鉄","設立":"2024年","注意":"架空の鉄道プロジェクトです" },
+    parent:{ "親会社名":"ささいるかホールディングス","事業内容":"創作・架空鉄道プロジェクト","備考":"実在しません" },
+    kamui:["ささ電鉄","kamui鉄道","佐田海洋鉄道","赤城産交電鉄","ささいるか電気軌道(ささいるかホールディングス)","茶ノ川電気鉄道","出島高速鉄道"]
   },
   en: {
     menu: ["Home","Operation","Vehicles","Tickets","About"],
     creditTitle: "Credits",
     vehicleTitle: "Vehicle Information",
     aboutTitle: "About This Project",
+    parentTitle: "Parent Company",
+    kamuiTitle: "Kamui Server Railways",
     footer: "©2025- Iruka Railway. All Rights Reserved.",
     credits: [
       { title:"Website", name:"Iruka Railway", img:"https://irukatrin.dolphin.f5.si/favicon.ico" },
@@ -337,10 +364,12 @@ const data = {
     ],
     vehicle: {
       name:"I 6000",
-      author:"Created by Yukiyuki*It has been modified",
+      author:"Created by Yukiyuki (Modified)",
       info:{ "Model":"I 6000","Year":"2024","Note":"Fictional vehicle" }
     },
-    about:{ "Name":"Iruka Railway","Founded":"2024","Note":"Fictional railway project" }
+    about:{ "Name":"Iruka Railway","Founded":"2024","Note":"Fictional railway project" },
+    parent:{ "Company":"sasairuka HD","Business":"Creative railway projects","Note":"Fictional" },
+    kamui:["Sasa Railway","Kamui Railway","Sada Marine Railway","Akagi Sanko Electric Railway","Sasairuka Electric Tramway (Sasairuka Holdings)","Chanagawa Electric Railway","Dejima Rapid Railway"]
   }
 };
 
@@ -350,7 +379,6 @@ function render() {
   const d = data[lang];
   const links = menuLinks[lang];
 
-  const menu = document.getElementById("menu");
   menu.innerHTML = "";
   d.menu.forEach((m, i) => {
     menu.innerHTML += `<a href="${links[i]}">${m}</a>`;
@@ -359,6 +387,8 @@ function render() {
   creditTitle.textContent = d.creditTitle;
   vehicleTitle.textContent = d.vehicleTitle;
   aboutTitle.textContent = d.aboutTitle;
+  parentTitle.textContent = d.parentTitle;
+  kamuiTitle.textContent = d.kamuiTitle;
   footerText.textContent = d.footer;
 
   creditBox.innerHTML = "";
@@ -391,9 +421,19 @@ function render() {
   Object.entries(d.about).forEach(([k,v])=>{
     aboutBox.innerHTML += `<div class="info-row"><span class="label">${k}</span><span>${v}</span></div>`;
   });
+
+  parentBox.innerHTML = "";
+  Object.entries(d.parent).forEach(([k,v])=>{
+    parentBox.innerHTML += `<div class="info-row"><span class="label">${k}</span><span>${v}</span></div>`;
+  });
+
+  kamuiList.innerHTML = "";
+  d.kamui.forEach(r=>{
+    kamuiList.innerHTML += `<div class="kamui-item">${r}</div>`;
+  });
 }
 
-document.getElementById("langSelect").addEventListener("change", e => {
+langSelect.addEventListener("change", e => {
   lang = e.target.value;
   render();
 });
