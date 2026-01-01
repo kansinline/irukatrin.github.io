@@ -216,8 +216,9 @@ button:active { background-color: #3e8e41; }
 </div>
 
 <script>
-// ================= 言語切替 =================
-let lang = "ja";
+// ================= 言語設定 =================
+let lang = "ja"; // デフォルトは日本語
+
 const texts = {
   ja: {
     siteName:"いるか電鉄",
@@ -285,44 +286,53 @@ const texts = {
   }
 };
 
+// ================= 言語レンダリング =================
 function renderLanguage(){
-  document.getElementById("siteName").textContent = texts[lang].siteName;
-  document.getElementById("menuHome").textContent = texts[lang].menuHome;
-  document.getElementById("menuOp").textContent = texts[lang].menuOp;
-  document.getElementById("menuVeh").textContent = texts[lang].menuVeh;
-  document.getElementById("menuTicket").textContent = texts[lang].menuTicket;
-  document.getElementById("menuAbout").textContent = texts[lang].menuAbout;
-  document.getElementById("termsHeader").textContent = texts[lang].termsHeader;
-  document.getElementById("termsText").textContent = texts[lang].termsText;
-  document.getElementById("contentHeader").textContent = texts[lang].contentHeader;
-  document.getElementById("term1").textContent = texts[lang].term1;
-  document.getElementById("term2").textContent = texts[lang].term2;
-  document.getElementById("term3").textContent = texts[lang].term3;
-  document.getElementById("prohibitHeader").textContent = texts[lang].prohibitHeader;
-  document.getElementById("prohibit1").textContent = texts[lang].prohibit1;
-  document.getElementById("prohibit2").textContent = texts[lang].prohibit2;
-  document.getElementById("prohibit3").textContent = texts[lang].prohibit3;
-  document.getElementById("agreeHeader").textContent = texts[lang].agreeHeader;
-  document.getElementById("agreeText").textContent = texts[lang].agreeText;
-  document.getElementById("liveHeader").textContent = texts[lang].liveHeader;
-  startReadingBtn.textContent = texts[lang].startBtn;
-  agreeBtn.textContent = texts[lang].agreeBtn;
-  document.getElementById("confirmHeader").textContent = texts[lang].confirmHeader;
-  document.getElementById("confirmText").textContent = texts[lang].confirmText;
-  document.getElementById("voiceConsentHeader").textContent = texts[lang].voiceConsentHeader;
-  document.getElementById("voiceConsentText").textContent = texts[lang].voiceConsentText
-  document.getElementById("voice1").textContent = texts[lang].voice1;
-  document.getElementById("voice2").textContent = texts[lang].voice2;
-  document.getElementById("voice3").textContent = texts[lang].voice3;
-  document.getElementById("voice4").textContent = texts[lang].voice4;
-  document.getElementById("voice5").textContent = texts[lang].voice5;
+    document.getElementById("siteName").textContent = texts[lang].siteName;
+    document.getElementById("menuHome").textContent = texts[lang].menuHome;
+    document.getElementById("menuOp").textContent = texts[lang].menuOp;
+    document.getElementById("menuVeh").textContent = texts[lang].menuVeh;
+    document.getElementById("menuTicket").textContent = texts[lang].menuTicket;
+    document.getElementById("menuAbout").textContent = texts[lang].menuAbout;
+    document.getElementById("termsHeader").textContent = texts[lang].termsHeader;
+    document.getElementById("termsText").textContent = texts[lang].termsText;
+    document.getElementById("contentHeader").textContent = texts[lang].contentHeader;
+    document.getElementById("term1").textContent = texts[lang].term1;
+    document.getElementById("term2").textContent = texts[lang].term2;
+    document.getElementById("term3").textContent = texts[lang].term3;
+    document.getElementById("prohibitHeader").textContent = texts[lang].prohibitHeader;
+    document.getElementById("prohibit1").textContent = texts[lang].prohibit1;
+    document.getElementById("prohibit2").textContent = texts[lang].prohibit2;
+    document.getElementById("prohibit3").textContent = texts[lang].prohibit3;
+    document.getElementById("agreeHeader").textContent = texts[lang].agreeHeader;
+    document.getElementById("agreeText").textContent = texts[lang].agreeText;
+    document.getElementById("liveHeader").textContent = texts[lang].liveHeader;
+    startReadingBtn.textContent = texts[lang].startBtn;
+    agreeBtn.textContent = texts[lang].agreeBtn;
+    document.getElementById("confirmHeader").textContent = texts[lang].confirmHeader;
+    document.getElementById("confirmText").textContent = texts[lang].confirmText;
+    document.getElementById("voiceConsentHeader").textContent = texts[lang].voiceConsentHeader;
+    document.getElementById("voiceConsentText").textContent = texts[lang].voiceConsentText;
+    document.getElementById("voice1").textContent = texts[lang].voice1;
+    document.getElementById("voice2").textContent = texts[lang].voice2;
+    document.getElementById("voice3").textContent = texts[lang].voice3;
+    document.getElementById("voice4").textContent = texts[lang].voice4;
+    document.getElementById("voice5").textContent = texts[lang].voice5;
 }
 
-document.getElementById("langSelect").addEventListener("change", (e)=>{
-  lang = e.target.value; renderLanguage();
-});
-document.getElementById("langSelectModal").addEventListener("change",(e)=>{
-  lang = e.target.value; renderLanguage();
+// ================= 共通ドロップダウン =================
+function setLanguage(newLang){
+    lang = newLang;
+    renderLanguage();
+    // 両方のドロップダウンを同期
+    document.getElementById("langSelect").value = lang;
+    document.getElementById("langSelectModal").value = lang;
+}
+
+["langSelect","langSelectModal"].forEach(id=>{
+    document.getElementById(id).addEventListener("change",(e)=>{
+        setLanguage(e.target.value);
+    });
 });
 
 // ================= 音声利用規約モーダル =================
@@ -336,85 +346,74 @@ document.addEventListener("DOMContentLoaded", function(){
     voiceConsentModal.style.display = "block";
     mainContainer.style.filter = "blur(4px)";
 
+    // スクロールで同意ボタン有効化
     voiceConsentBody.addEventListener("scroll", function(){
         if(voiceConsentBody.scrollTop + voiceConsentBody.clientHeight >= voiceConsentBody.scrollHeight){
             consentAgreeBtn.disabled = false;
         }
     });
 
+    // 同意ボタン
     consentAgreeBtn.addEventListener("click", function(){
         voiceConsentModal.style.display = "none";
         mainContainer.style.filter = "none";
     });
 
+    // 同意しないボタン
     consentDeclineBtn.addEventListener("click", function(){
         alert(lang==="ja"?"同意しない場合はページを利用できません。ページを閉じます。":"If you do not agree, you cannot use this page. The page will be closed.");
         window.location.href="about:blank";
     });
 });
 
-// ================= 音声認識（日本語＋英語対応） =================
+// ================= 音声認識 =================
 const startReadingBtn = document.getElementById("startReadingBtn");
 const agreeBtn = document.getElementById("agreeBtn");
 const liveTranscript = document.getElementById("liveTranscript");
 
-let recognitionJA, recognitionEN;
+let recognition;
 
 startReadingBtn.addEventListener("click", ()=>{
-  if(!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)){
-    alert("このブラウザは音声認識に対応していません / Your browser does not support speech recognition");
-    return;
-  }
-
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-  // 日本語認識
-  recognitionJA = new SpeechRecognition();
-  recognitionJA.lang = "ja-JP";
-  recognitionJA.interimResults = true;
-  recognitionJA.continuous = true;
-
-  // 英語認識
-  recognitionEN = new SpeechRecognition();
-  recognitionEN.lang = "en-US";
-  recognitionEN.interimResults = true;
-  recognitionEN.continuous = true;
-
-  liveTranscript.style.display = "block";
-  liveTranscript.textContent = "";
-
-  // 共通処理
-  function handleResult(event){
-    let interim = "";
-    for(let i=event.resultIndex; i<event.results.length; ++i){
-      let transcript = event.results[i][0].transcript;
-      if(event.results[i].isFinal){
-        liveTranscript.textContent += transcript + "\n";
-      } else {
-        interim += transcript;
-      }
+    if(!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)){
+        alert("このブラウザは音声認識に対応していません");
+        return;
     }
-    liveTranscript.textContent += interim;
 
-    // 「同意する」検知でボタン有効化
-    if(interim.includes("同意する") || interim.toLowerCase().includes("agree")){
-      agreeBtn.disabled = false;
-      agreeBtn.classList.remove("button-disabled");
-    }
-  }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = (lang==="ja")?"ja-JP":"en-US";
+    recognition.interimResults = true;
+    recognition.continuous = true;
 
-  recognitionJA.onresult = handleResult;
-  recognitionEN.onresult = handleResult;
+    liveTranscript.style.display = "block";
+    liveTranscript.textContent = "";
 
-  recognitionJA.start();
-  recognitionEN.start();
+    recognition.onresult = (event)=>{
+        let interimTranscript = "";
+        for(let i=event.resultIndex;i<event.results.length;i++){
+            let transcript = event.results[i][0].transcript;
+            if(event.results[i].isFinal){
+                liveTranscript.textContent += transcript + "\n";
+            } else {
+                interimTranscript += transcript;
+            }
+        }
+        liveTranscript.textContent += interimTranscript;
+
+        // 「同意する」「agree」でボタン有効化
+        if(interimTranscript.includes("同意する") || interimTranscript.toLowerCase().includes("agree")){
+            agreeBtn.disabled = false;
+            agreeBtn.classList.remove("button-disabled");
+        }
+    };
+
+    recognition.start();
 });
 
-// 同意ボタンクリック
+// 同意ボタン
 agreeBtn.addEventListener("click", ()=>{
-  alert(lang==="ja"?"利用規約に同意しました":"You agreed to the terms.");
-  if(recognitionJA) recognitionJA.stop();
-  if(recognitionEN) recognitionEN.stop();
+    alert(lang==="ja"?"利用規約に同意しました":"You agreed to the terms.");
+    if(recognition) recognition.stop();
 });
 </script>
 </body>
