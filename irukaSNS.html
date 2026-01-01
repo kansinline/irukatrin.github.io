@@ -310,7 +310,7 @@ function renderLanguage(){
   document.getElementById("confirmHeader").textContent = texts[lang].confirmHeader;
   document.getElementById("confirmText").textContent = texts[lang].confirmText;
   document.getElementById("voiceConsentHeader").textContent = texts[lang].voiceConsentHeader;
-  document.getElementById("voiceConsentText").textContent = texts[lang].voiceConsentText;
+  document.getElementById("voiceConsentText").textContent = texts[lang].voiceConsentText
   document.getElementById("voice1").textContent = texts[lang].voice1;
   document.getElementById("voice2").textContent = texts[lang].voice2;
   document.getElementById("voice3").textContent = texts[lang].voice3;
@@ -336,75 +336,86 @@ document.addEventListener("DOMContentLoaded", function(){
     voiceConsentModal.style.display = "block";
     mainContainer.style.filter = "blur(4px)";
 
-    // スクロールで同意ボタン有効化
     voiceConsentBody.addEventListener("scroll", function(){
         if(voiceConsentBody.scrollTop + voiceConsentBody.clientHeight >= voiceConsentBody.scrollHeight){
             consentAgreeBtn.disabled = false;
         }
     });
 
-    // 同意ボタン
     consentAgreeBtn.addEventListener("click", function(){
         voiceConsentModal.style.display = "none";
         mainContainer.style.filter = "none";
     });
 
-    // 同意しないボタン
     consentDeclineBtn.addEventListener("click", function(){
         alert(lang==="ja"?"同意しない場合はページを利用できません。ページを閉じます。":"If you do not agree, you cannot use this page. The page will be closed.");
         window.location.href="about:blank";
     });
 });
 
-// ================= 音声認識（ブラウザ対応） =================
+// ================= 音声認識（日本語＋英語対応） =================
 const startReadingBtn = document.getElementById("startReadingBtn");
 const agreeBtn = document.getElementById("agreeBtn");
 const liveTranscript = document.getElementById("liveTranscript");
 
-let recognition;
+let recognitionJA, recognitionEN;
+
 startReadingBtn.addEventListener("click", ()=>{
   if(!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)){
-    alert("このブラウザは音声認識に対応していません");
+    alert("このブラウザは音声認識に対応していません / Your browser does not support speech recognition");
     return;
   }
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  recognition = new SpeechRecognition();
-  recognition.lang = (lang==="ja")?"ja-JP":"en-US";
-  recognition.interimResults = true;
-  recognition.continuous = true;
+
+  // 日本語認識
+  recognitionJA = new SpeechRecognition();
+  recognitionJA.lang = "ja-JP";
+  recognitionJA.interimResults = true;
+  recognitionJA.continuous = true;
+
+  // 英語認識
+  recognitionEN = new SpeechRecognition();
+  recognitionEN.lang = "en-US";
+  recognitionEN.interimResults = true;
+  recognitionEN.continuous = true;
 
   liveTranscript.style.display = "block";
   liveTranscript.textContent = "";
 
-  recognition.onresult = (event)=>{
-    let interimTranscript = "";
+  // 共通処理
+  function handleResult(event){
+    let interim = "";
     for(let i=event.resultIndex; i<event.results.length; ++i){
       let transcript = event.results[i][0].transcript;
       if(event.results[i].isFinal){
         liveTranscript.textContent += transcript + "\n";
       } else {
-        interimTranscript += transcript;
+        interim += transcript;
       }
     }
-    liveTranscript.textContent += interimTranscript;
-    
-    // 「同意する」発言でボタン有効化
-    if(interimTranscript.includes("同意する") || interimTranscript.includes("agree")){
-        agreeBtn.disabled = false;
-        agreeBtn.classList.remove("button-disabled");
-    }
-  };
+    liveTranscript.textContent += interim;
 
-  recognition.start();
+    // 「同意する」検知でボタン有効化
+    if(interim.includes("同意する") || interim.toLowerCase().includes("agree")){
+      agreeBtn.disabled = false;
+      agreeBtn.classList.remove("button-disabled");
+    }
+  }
+
+  recognitionJA.onresult = handleResult;
+  recognitionEN.onresult = handleResult;
+
+  recognitionJA.start();
+  recognitionEN.start();
 });
 
 // 同意ボタンクリック
 agreeBtn.addEventListener("click", ()=>{
   alert(lang==="ja"?"利用規約に同意しました":"You agreed to the terms.");
-  if(recognition) recognition.stop();
+  if(recognitionJA) recognitionJA.stop();
+  if(recognitionEN) recognitionEN.stop();
 });
 </script>
-
 </body>
 </html>
