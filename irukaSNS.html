@@ -1,137 +1,112 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>利用規約</title>
-    <style>
-   /* === ヘッダー === */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: white;
-      padding: 10px 20px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>利用規約</title>
+<style>
+/* === ヘッダー === */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 10px 20px;
+}
+.header-left {
+  display: flex;
+  align-items: center;
+}
+.logo {
+  height: 40px;
+  margin-right: 10px;
+}
+.site-name {
+  font-size: 20px;
+  font-weight: bold;
+}
+.header-right a {
+  text-decoration: none;
+  color: #0055aa;
+  margin-left: 10px;
+}
 
-    .header-left {
-      display: flex;
-      align-items: center;
-    }
+/* スタイル設定 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: filter 0.3s ease;
+}
+h2 { color: #333; }
+footer { text-align: center; margin-top: 20px; }
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+button:hover { background-color: #45a049; }
+button:active { background-color: #3e8e41; }
+.button-disabled { background-color: #ccc; cursor: not-allowed; }
+.highlight { background-color: yellow; font-weight: bold; }
 
-    .logo {
-      height: 40px;
-      margin-right: 10px;
-    }
+/* モーダル共通 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    overflow: auto;
+    padding-top: 60px;
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+}
+.modal-header { font-size: 20px; font-weight: bold; }
+.modal-footer { text-align: right; margin-top: 20px; }
+.modal-footer button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+.modal-footer .cancel { background-color: #f44336; }
 
-    .site-name {
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    .header-right a {
-      text-decoration: none;
-      color: #0055aa;
-      margin-left: 10px;
-    }
-
-        /* スタイル設定 */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            color: #333;
-        }
-        footer {
-            text-align: center;
-            margin-top: 20px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        button:active {
-            background-color: #3e8e41;
-        }
-        .button-disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-        .highlight {
-            background-color: yellow;
-            font-weight: bold;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-            overflow: auto;
-            padding-top: 60px;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-        }
-        .modal-header {
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .modal-footer {
-            text-align: right;
-            margin-top: 20px;
-        }
-        .modal-footer button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-        .modal-footer .cancel {
-            background-color: #f44336;
-        }
-
-        /* リアルタイム文字表示用 */
-        #liveTranscript {
-            padding:10px;
-            background-color:#eef;
-            min-height:50px;
-            border:1px solid #ccc;
-            border-radius:5px;
-            overflow-y:auto;
-            max-height:150px;
-            display:none; /* 初期は非表示 */
-        }
-    </style>
+/* リアルタイム文字表示用 */
+#liveTranscript {
+    padding:10px;
+    background-color:#eef;
+    min-height:50px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    overflow-y:auto;
+    max-height:150px;
+    display:none;
+}
+</style>
 </head>
 <body>
 
@@ -141,20 +116,18 @@
     <span class="site-name">いるか電鉄</span>
   </div>
   <div class="menu-toggle" onclick="toggleMenu()">
-    <span></span>
-    <span></span>
-    <span></span>
+    <span></span><span></span><span></span>
   </div>
   <nav class="header-right" id="menu">
     <a href="index.html">ホーム</a>
     <a href="unkou">運行情報</a>
     <a href="irukaSNS.html">車両利用</a>
     <a href="#">チケット</a>
-    <a href="Pack">会社概要</a>
+    <a href="#">会社概要</a>
   </nav>
 </header>
 
-<div class="container">
+<div class="container" id="mainContainer">
     <h2>車両利用規約</h2>
     <p id="termsText">本規約は、いるか電鉄の車両をご利用いただく際に適用される利用規約です。</p>
 
@@ -175,7 +148,6 @@
     <h3>同意</h3>
     <p>利用者は、パックをダウンロードした時点で以下の規約に同意したものとみなします。</p>
 
-    <!-- リアルタイム文字表示セクション -->
     <h3>音声認識中の文字</h3>
     <div id="liveTranscript"></div>
 
@@ -185,16 +157,31 @@
     </footer>
 </div>
 
-<!-- モーダル -->
+<!-- 音声利用規約モーダル -->
+<div id="voiceConsentModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header"><span>音声利用規約</span></div>
+    <div class="modal-body" style="max-height:400px; overflow-y:auto;" id="voiceConsentBody">
+      <p>本規約は、本サービスにおける音声認識機能の利用に関して、利用者といるか電鉄株式会社（以下「当社」という）との間で適用されます。</p>
+      <p><strong>第1条（目的）</strong><br>本規約は、利用者が本サービスを通じて音声認識機能を利用する際の条件を定めることを目的とします。</p>
+      <p><strong>第2条（音声の取扱い）</strong><br>1. 利用者の発話する音声は、音声認識処理のためにのみ一時的に利用されます。<br>2. 音声はサーバーに送信されず、当社による保存は行われません。<br>3. 音声認識の結果はリアルタイムで表示されますが、記録・保存はされません。</p>
+      <p><strong>第3条（禁止事項）</strong><br>利用者は以下の行為を行ってはなりません。<br>1. 他人の音声を無断で使用すること。<br>2. 違法行為、他者への迷惑行為、著作権侵害等の目的で音声を使用すること。<br>3. 未成年者の場合、保護者の同意を得ずに利用すること。</p>
+      <p><strong>第4条（責任）</strong><br>当社は、音声認識の精度や結果の内容について一切の責任を負いません。利用者は自己責任において本機能を使用するものとします。</p>
+      <p><strong>第5条（同意の条件）</strong><br>利用者は、本規約を確認の上、「同意する」を押した場合に限り、本サービスの音声認識機能を利用できます。同意しない場合は、本サービスを利用できません。</p>
+      <p>上記を理解し、同意する場合のみ「同意する」を押してください。</p>
+    </div>
+    <div class="modal-footer">
+      <button id="voiceConsentAgreeBtn" disabled>同意する</button>
+      <button id="voiceConsentDeclineBtn" class="cancel">同意しない</button>
+    </div>
+  </div>
+</div>
+
+<!-- 既存の確認モーダル -->
 <div id="confirmationModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <span>確認</span>
-        </div>
-        <div class="modal-body">
-            <p>利用規約に同意しますか？</p>
-        </div>
-        
+        <div class="modal-header"><span>確認</span></div>
+        <div class="modal-body"><p>利用規約に同意しますか？</p></div>
         <div class="modal-footer">
             <button id="confirmBtn">同意する</button>
             <button id="cancelBtn" class="cancel">キャンセル</button>
@@ -210,6 +197,7 @@ const confirmBtn = document.getElementById("confirmBtn");
 const cancelBtn = document.getElementById("cancelBtn");
 const termsText = document.getElementById("termsText");
 const liveTranscript = document.getElementById("liveTranscript");
+const mainContainer = document.getElementById("mainContainer");
 
 const validPhrase = "利用規約";
 let recognition;
@@ -220,77 +208,65 @@ if (window.SpeechRecognition || window.webkitSpeechRecognition) {
     recognition.lang = "ja-JP";
     recognition.continuous = true;
     recognition.interimResults = true;
-} else {
-    alert("このブラウザは音声認識に対応していません。");
-}
+} else { alert("このブラウザは音声認識に対応していません。"); }
 
-// 音声認識結果
 if (recognition) {
     recognition.onresult = function (event) {
         currentTranscript = "";
-        for (let i = 0; i < event.results.length; i++) {
-            currentTranscript += event.results[i][0].transcript;
-        }
-
+        for (let i = 0; i < event.results.length; i++) currentTranscript += event.results[i][0].transcript;
         highlightText(termsText, currentTranscript);
-
-        // 話している間だけ表示
         liveTranscript.textContent = currentTranscript;
         liveTranscript.scrollTop = liveTranscript.scrollHeight;
-
         if (currentTranscript.includes(validPhrase)) {
             agreeBtn.disabled = false;
             agreeBtn.classList.remove("button-disabled");
         }
     };
-
-    // 話し始め
-    recognition.onspeechstart = function() {
-        liveTranscript.style.display = "block";
-    };
-
-    // 話し終わり
-    recognition.onspeechend = function() {
-        liveTranscript.style.display = "none";
-        currentTranscript = "";
-    };
+    recognition.onspeechstart = () => liveTranscript.style.display="block";
+    recognition.onspeechend = () => { liveTranscript.style.display="none"; currentTranscript=""; };
 }
+startReadingBtn.onclick = () => { currentTranscript=""; recognition.start(); };
 
-// 規約音読開始
-startReadingBtn.onclick = function () {
-    currentTranscript = "";
-    recognition.start();
-};
-
-// ハイライト
 function highlightText(element, text) {
     const originalText = element.textContent;
-    if (!text) {
-        element.innerHTML = originalText;
-        return;
-    }
-    const escapedText = text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const regex = new RegExp("(" + escapedText + ")", "gi");
-    element.innerHTML = originalText.replace(regex, '<span class="highlight">$1</span>');
+    if(!text){ element.innerHTML=originalText; return; }
+    const escapedText = text.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+    const regex = new RegExp("("+escapedText+")","gi");
+    element.innerHTML = originalText.replace(regex,'<span class="highlight">$1</span>');
 }
 
-// 同意ボタン
-agreeBtn.onclick = function () {
-    confirmationModal.style.display = "block";
-};
-confirmBtn.onclick = function () {
-    window.location.href =
-        "https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAUnQ-bVUMTRVNEIzWFVIUE1aSEdUWURTTDVVV1FSMC4u";
-};
-cancelBtn.onclick = function () {
-    confirmationModal.style.display = "none";
-};
-window.onclick = function (event) {
-    if (event.target === confirmationModal) {
-        confirmationModal.style.display = "none";
-    }
+agreeBtn.onclick = () => confirmationModal.style.display="block";
+confirmBtn.onclick = () => window.location.href="https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAUnQ-bVUMTRVNEIzWFVIUE1aSEdUWURTTDVVV1FSMC4u";
+cancelBtn.onclick = () => confirmationModal.style.display="none";
+window.onclick = (event)=>{if(event.target===confirmationModal) confirmationModal.style.display="none";};
+
+// ================= 音声利用規約モーダル =================
+const voiceConsentModal = document.getElementById("voiceConsentModal");
+const voiceConsentBody = document.getElementById("voiceConsentBody");
+const consentAgreeBtn = document.getElementById("voiceConsentAgreeBtn");
+const consentDeclineBtn = document.getElementById("voiceConsentDeclineBtn");
+
+window.onload = function(){
+    voiceConsentModal.style.display="block";
+    mainContainer.style.filter="blur(4px)";
+
+    // スクロールで同意ボタン有効化
+    voiceConsentBody.addEventListener("scroll", function(){
+        if(voiceConsentBody.scrollTop + voiceConsentBody.clientHeight >= voiceConsentBody.scrollHeight){
+            consentAgreeBtn.disabled=false;
+        }
+    });
+
+    consentAgreeBtn.onclick = function(){
+        voiceConsentModal.style.display="none";
+        mainContainer.style.filter="none";
+    };
+    consentDeclineBtn.onclick = function(){
+        alert("同意しない場合はページを利用できません。ページを閉じます。");
+        window.location.href="about:blank";
+    };
+    window.onclick = function(event){ if(event.target===voiceConsentModal){ } };
 };
 </script>
-
 </body>
 </html>
