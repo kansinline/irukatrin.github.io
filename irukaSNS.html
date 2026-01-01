@@ -119,6 +119,18 @@
         .modal-footer .cancel {
             background-color: #f44336;
         }
+
+        /* リアルタイム文字表示用 */
+        #liveTranscript {
+            padding:10px;
+            background-color:#eef;
+            min-height:50px;
+            border:1px solid #ccc;
+            border-radius:5px;
+            overflow-y:auto;
+            max-height:150px;
+            display:none; /* 初期は非表示 */
+        }
     </style>
 </head>
 <body>
@@ -136,95 +148,95 @@
   <nav class="header-right" id="menu">
     <a href="index.html">ホーム</a>
     <a href="unkou">運行情報</a>
-    <a href="irukaSNS.html">車両利用</>
+    <a href="irukaSNS.html">車両利用</a>
     <a href="#">チケット</a>
-    <a href="#">会社概要</a>
-    
+    <a href="Pack">会社概要</a>
   </nav>
 </header>
 
-    <div class="container">
-        <h2>車両利用規約</h2>
-        <p id="termsText">本規約は、いるか電鉄の車両をご利用いただく際に適用される利用規約です。</p>
+<div class="container">
+    <h2>車両利用規約</h2>
+    <p id="termsText">本規約は、いるか電鉄の車両をご利用いただく際に適用される利用規約です。</p>
 
-        <h3>利用規約の内容</h3>
-        <ul id="termsList">
-            <li>本規約は、すべての公開物に適用されます。</li>
-            <li>都合により規約が変更される場合があります。</li>
-            <li>過去の規約と相違点が発生した場合、現在の規約が優先されます。</li>
-        </ul>
+    <h3>利用規約の内容</h3>
+    <ul id="termsList">
+        <li>本規約は、すべての公開物に適用されます。</li>
+        <li>都合により規約が変更される場合があります。</li>
+        <li>過去の規約と相違点が発生した場合、現在の規約が優先されます。</li>
+    </ul>
 
-        <h3>禁止事項</h3>
-        <ul>
-            <li>公衆風俗に反する行為、無断改造などは禁止されています。</li>
-            <li>規約違反が発覚した場合、処罰が行われることがあります。</li>
-            <li>SNSでの使用の場合、必ず申請を行ってください。</li>
-        </ul>
-      
+    <h3>禁止事項</h3>
+    <ul>
+        <li>公衆風俗に反する行為、無断改造などは禁止されています。</li>
+        <li>規約違反が発覚した場合、処罰が行われることがあります。</li>
+        <li>SNSでの使用の場合、必ず申請を行ってください。</li>
+    </ul>
 
-        <h3>同意</h3>
-        <p>利用者は、パックをダウンロードした時点で以下の規約に同意したものとみなします。</p>
+    <h3>同意</h3>
+    <p>利用者は、パックをダウンロードした時点で以下の規約に同意したものとみなします。</p>
 
-        <footer>
-            <!-- 音読を開始するボタン -->
-            <button id="startReadingBtn">規約を音読してください</button>
+    <!-- リアルタイム文字表示セクション -->
+    <h3>音声認識中の文字</h3>
+    <div id="liveTranscript"></div>
 
-            <!-- 利用規約に同意して申請ボタン（最初は無効） -->
-            <button id="agreeBtn" class="button-disabled" disabled>利用規約に同意して申請</button>
-        </footer>
-    </div>
+    <footer>
+        <button id="startReadingBtn">規約を音読してください</button>
+        <button id="agreeBtn" class="button-disabled" disabled>利用規約に同意して申請</button>
+    </footer>
+</div>
 
-    <!-- モーダルのHTML -->
-    <div id="confirmationModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span>確認</span>
-            </div>
-            <div class="modal-body">
-                <p>利用規約に同意しますか？</p>
-            </div>
-            
-            <div class="modal-footer">
-                <button id="confirmBtn">同意する</button>
-                <button id="cancelBtn" class="cancel">キャンセル</button>
-            </div>
+<!-- モーダル -->
+<div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span>確認</span>
+        </div>
+        <div class="modal-body">
+            <p>利用規約に同意しますか？</p>
+        </div>
+        
+        <div class="modal-footer">
+            <button id="confirmBtn">同意する</button>
+            <button id="cancelBtn" class="cancel">キャンセル</button>
         </div>
     </div>
+</div>
 
-    <script>
-    // 音声認識の設定
-    const startReadingBtn = document.getElementById("startReadingBtn");
-    const agreeBtn = document.getElementById("agreeBtn");
-    const confirmationModal = document.getElementById("confirmationModal");
-    const confirmBtn = document.getElementById("confirmBtn");
-    const cancelBtn = document.getElementById("cancelBtn");
-    const termsText = document.getElementById("termsText");
+<script>
+const startReadingBtn = document.getElementById("startReadingBtn");
+const agreeBtn = document.getElementById("agreeBtn");
+const confirmationModal = document.getElementById("confirmationModal");
+const confirmBtn = document.getElementById("confirmBtn");
+const cancelBtn = document.getElementById("cancelBtn");
+const termsText = document.getElementById("termsText");
+const liveTranscript = document.getElementById("liveTranscript");
 
-    const validPhrase = "利用規約";
+const validPhrase = "利用規約";
+let recognition;
+let currentTranscript = "";
 
-    let recognition;
-    let currentTranscript = "";
+if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+    recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = "ja-JP";
+    recognition.continuous = true;
+    recognition.interimResults = true;
+} else {
+    alert("このブラウザは音声認識に対応していません。");
+}
 
-    if (window.SpeechRecognition || window.webkitSpeechRecognition) {
-        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = "ja-JP";
-        recognition.continuous = true;
-        recognition.interimResults = true;
-    } else {
-        alert("このブラウザは音声認識に対応していません。");
-    }
-
-    // 音声認識結果（リアルタイム上書き）
+// 音声認識結果
+if (recognition) {
     recognition.onresult = function (event) {
         currentTranscript = "";
-
         for (let i = 0; i < event.results.length; i++) {
             currentTranscript += event.results[i][0].transcript;
         }
 
-        console.log("音読された文章:", currentTranscript);
-
         highlightText(termsText, currentTranscript);
+
+        // 話している間だけ表示
+        liveTranscript.textContent = currentTranscript;
+        liveTranscript.scrollTop = liveTranscript.scrollHeight;
 
         if (currentTranscript.includes(validPhrase)) {
             agreeBtn.disabled = false;
@@ -232,63 +244,53 @@
         }
     };
 
-    // 音声認識エラー
-    recognition.onerror = function (event) {
-        alert("音声認識に失敗しました。もう一度試してください。");
+    // 話し始め
+    recognition.onspeechstart = function() {
+        liveTranscript.style.display = "block";
     };
 
-    // 規約の音読開始ボタン
-    startReadingBtn.onclick = function () {
+    // 話し終わり
+    recognition.onspeechend = function() {
+        liveTranscript.style.display = "none";
         currentTranscript = "";
-        recognition.start();
     };
+}
 
-    // テキスト内で一致する部分をハイライト
-    function highlightText(element, text) {
-        const originalText = element.textContent;
-        if (!text) {
-            element.innerHTML = originalText;
-            return;
-        }
+// 規約音読開始
+startReadingBtn.onclick = function () {
+    currentTranscript = "";
+    recognition.start();
+};
 
-        const escapedText = text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        const regex = new RegExp("(" + escapedText + ")", "gi");
-        element.innerHTML = originalText.replace(regex, '<span class="highlight">$1</span>');
+// ハイライト
+function highlightText(element, text) {
+    const originalText = element.textContent;
+    if (!text) {
+        element.innerHTML = originalText;
+        return;
     }
+    const escapedText = text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp("(" + escapedText + ")", "gi");
+    element.innerHTML = originalText.replace(regex, '<span class="highlight">$1</span>');
+}
 
-    // 同意ボタン
-    agreeBtn.onclick = function () {
-        confirmationModal.style.display = "block";
-    };
-
-    // モーダル内「同意する」
-    confirmBtn.onclick = function () {
-        window.location.href =
-            "https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAUnQ-bVUMTRVNEIzWFVIUE1aSEdUWURTTDVVV1FSMC4u";
-    };
-
-    // モーダル「キャンセル」
-    cancelBtn.onclick = function () {
+// 同意ボタン
+agreeBtn.onclick = function () {
+    confirmationModal.style.display = "block";
+};
+confirmBtn.onclick = function () {
+    window.location.href =
+        "https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAUnQ-bVUMTRVNEIzWFVIUE1aSEdUWURTTDVVV1FSMC4u";
+};
+cancelBtn.onclick = function () {
+    confirmationModal.style.display = "none";
+};
+window.onclick = function (event) {
+    if (event.target === confirmationModal) {
         confirmationModal.style.display = "none";
-    };
-
-    // モーダル外クリックで閉じる
-    window.onclick = function (event) {
-        if (event.target === confirmationModal) {
-            confirmationModal.style.display = "none";
-        }
-    };
+    }
+};
 </script>
-
-    
 
 </body>
 </html>
-
-
-
-
-
-
-
-
