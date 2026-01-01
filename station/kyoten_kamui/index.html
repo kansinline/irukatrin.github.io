@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iruka Railway - Station</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: "Noto Sans JP", sans-serif;
+  background: #f2f4f8;
+}
+
+/* ===== ヘッダー ===== */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  position: relative;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 36px;
+  margin-right: 10px;
+}
+
+.site-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.header-right {
+  display: flex;
+  gap: 14px;
+}
+
+.header-right a {
+  text-decoration: none;
+  color: #0055aa;
+  font-size: 14px;
+}
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  width: 24px;
+  height: 3px;
+  background: #0055aa;
+}
+
+/* ===== 言語セレクト ===== */
+.lang-select select {
+  padding: 4px 6px;
+}
+
+/* ===== メイン ===== */
+main {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+/* ===== 駅写真 ===== */
+.station-image {
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.station-image img {
+  width: 100%;
+  display: block;
+}
+
+/* ===== セクション ===== */
+.section {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 20px;
+  border-left: 6px solid var(--line-color, #0055aa);
+  padding-left: 10px;
+  margin-bottom: 15px;
+}
+
+/* ===== 情報行 ===== */
+.info-row {
+  display: flex;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.label {
+  width: 160px;
+  font-weight: bold;
+}
+
+/* ===== 路線タグ ===== */
+.line-tag {
+  display: inline-block;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  margin-right: 5px;
+}
+
+/* ===== 隣駅 ===== */
+.adjacent div {
+  margin-bottom: 8px;
+}
+
+/* ===== 車両 ===== */
+.vehicle-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.vehicle-table th,
+.vehicle-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+.vehicle-table th {
+  background: #f0f3f8;
+}
+
+/* ===== スマホ ===== */
+@media (max-width: 600px) {
+  .menu-toggle { display: flex; }
+
+  .header-right {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border-top: 1px solid #ddd;
+  }
+
+  .header-right.open { display: flex; }
+
+  .header-right a {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .info-row {
+    flex-direction: column;
+  }
+
+  .label {
+    width: auto;
+    margin-bottom: 4px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <img src="https://irukatrin.dolphin.f5.si/favicon.ico" class="logo">
+    <span class="site-name">Iruka Railway</span>
+  </div>
+
+  <div class="menu-toggle" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+
+  <nav class="header-right" id="menu"></nav>
+
+  <div class="lang-select">
+    <select id="langSelect">
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="en">🇺🇸 English</option>
+    </select>
+  </div>
+</header>
+
+<main>
+
+  <!-- 駅写真 -->
+  <div class="station-image">
+    <img id="stationImg">
+  </div>
+
+  <!-- 駅情報 -->
+  <div class="section">
+    <div class="section-title" id="infoTitle"></div>
+    <div id="infoBox"></div>
+  </div>
+
+  <!-- 隣駅 -->
+  <div class="section">
+    <div class="section-title" id="adjacentTitle"></div>
+    <div class="adjacent" id="adjacentBox"></div>
+  </div>
+
+  <!-- 車両 -->
+  <div class="section">
+    <div class="section-title" id="vehicleTitle"></div>
+    <table class="vehicle-table">
+      <thead>
+        <tr>
+          <th id="vehicleCol1"></th>
+          <th id="vehicleCol2"></th>
+        </tr>
+      </thead>
+      <tbody id="vehicleBody"></tbody>
+    </table>
+  </div>
+
+</main>
+
+<script>
+function toggleMenu() {
+  document.getElementById("menu").classList.toggle("open");
+}
+
+const station = {
+  ja: {
+    menu:["ホーム","運行情報","駅一覧","車両","会社概要"],
+    menuLinks:["https://irukatrin.dolphin.f5.si","#","#","#","#"],
+    infoTitle:"駅情報",
+    adjacentTitle:"隣の駅",
+    vehicleTitle:"対応車両",
+    vehicleCol1:"形式",
+    vehicleCol2:"備考",
+    data:{
+      name:"拠点",
+      kana:"きょてん",
+      operator:"kamui鉄道、ささ電鉄、佐田海洋線",
+      lines: ["kamui鉄道線", "黒水環状線", "佐田海洋鉄道線"],
+      lineColors: ["orange", "#0078d7", "pink"],
+      opened:"調査中",
+      structure:"地上駅",
+      platforms:"調査中",
+      address:"不明",
+      image:"https://raw.githubusercontent.com/kansinline/irukatrin.github.io/refs/heads/main/eeeeeeeeeeeeeeeeeee.png",
+      adjacent:[
+        { line:"kamui鉄道線", color:"orange", prev:"平野", next:"" },
+        { line:"黒水環状線", color:"#0078d7", prev:"虎渓", next:"" },
+        { line:"佐田海洋鉄道線", color:"pink", prev:"", next:"" }
+      ],
+      vehicles:[
+        {name:"KM(kamui鉄道)", note:"主力車両"},
+        {name:"KD(kamui鉄道)", note:"事業者向け"},
+        {name:"S100(ささ電鉄)", note:"主力車両"},
+      ]
+    }
+  },
+  en: {
+    menu:["Home","Operation","Stations","Vehicles","About"],
+    menuLinks:["https://irukatrin.dolphin.f5.si","#","#","#","#"],
+    infoTitle:"Station Information",
+    adjacentTitle:"Adjacent Stations",
+    vehicleTitle:"Supported Vehicles",
+    vehicleCol1:"Model",
+    vehicleCol2:"Note",
+    data:{
+      name:"Sinkyoten",
+      kana:"Sinkyoten",
+      operator:"kamuiRailway",
+      lines:["kamuiRailway Line","Kuromizu loop line","Sadakaiyou line"],
+      lineColors:["orange", "#0078d7","pink"],
+      opened:"Under investigation",
+      structure:"Ground Station",
+      platforms:"Under investigation",
+      address:"Unknown",
+      image:"https://raw.githubusercontent.com/kansinline/irukatrin.github.io/refs/heads/main/eeeeeeeeeeeeeeeeeee.png",
+      adjacent:[
+        { line:"kamuiRailway Line", color:"orange", prev:"Hirano", next:"" },
+        { line:"Kuromizu loop line", color:"#0078d7", prev:"kokokei", next:"" },
+        { line:"Sadakaiyou line", color:"pink", prev:"", next:"" }
+      ],
+      vehicles:[
+        {name:"KM", note:"Main fleet"},
+        {name:"KD", note:"For businesses"},
+{name:"S100(SasaRailway)", note:"Main fleet"},
+      ]
+    }
+  }
+};
+
+let lang="ja";
+
+function render(){
+  const d = station[lang];
+
+  // ヘッダー
+  menu.innerHTML="";
+  d.menu.forEach((m,i)=>{
+    menu.innerHTML += `<a href="${d.menuLinks[i]}">${m}</a>`;
+  });
+
+  // 駅画像
+  stationImg.src = d.data.image;
+
+  // セクションタイトル
+  infoTitle.textContent = d.infoTitle;
+  adjacentTitle.textContent = d.adjacentTitle;
+  vehicleTitle.textContent = d.vehicleTitle;
+  vehicleCol1.textContent = d.vehicleCol1;
+  vehicleCol2.textContent = d.vehicleCol2;
+
+  // 駅情報
+  infoBox.innerHTML = `
+    <div class="info-row"><div class="label">駅名</div>${d.data.name}</div>
+    <div class="info-row"><div class="label">よみ</div>${d.data.kana}</div>
+    <div class="info-row"><div class="label">運営</div>${d.data.operator}</div>
+    <div class="info-row"><div class="label">路線</div>
+      <div>
+        ${d.data.lines.map((line,i)=>`<span class="line-tag" style="background:${d.data.lineColors[i] || '#0055aa'}">${line}</span>`).join('')}
+      </div>
+    </div>
+    <div class="info-row"><div class="label">開業</div>${d.data.opened}</div>
+    <div class="info-row"><div class="label">構造</div>${d.data.structure}</div>
+    <div class="info-row"><div class="label">番線</div>${d.data.platforms}</div>
+    <div class="info-row"><div class="label">所在地</div>${d.data.address}</div>
+  `;
+
+  // 隣駅
+  adjacentBox.innerHTML = d.data.adjacent.map(adj =>
+    `<div>
+       <span class="line-tag" style="background:${adj.color}">${adj.line}</span><br>
+       ← ${adj.prev}  |  ${adj.next} →
+     </div>`
+  ).join('');
+
+  // 車両対応
+  vehicleBody.innerHTML = "";
+  d.data.vehicles.forEach(v=>{
+    vehicleBody.innerHTML += `<tr><td>${v.name}</td><td>${v.note}</td></tr>`;
+  });
+}
+
+langSelect.addEventListener("change", e=>{
+  lang = e.target.value;
+  render();
+});
+
+render();
+</script>
+
+</body>
+</html>
