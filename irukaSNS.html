@@ -126,9 +126,6 @@ button:active { background-color: #3e8e41; }
     <img src="https://irukatrin.dolphin.f5.si/favicon.ico" alt="ロゴ" class="logo" />
     <span class="site-name" id="siteName">いるか電鉄</span>
   </div>
-  <div class="menu-toggle" onclick="toggleMenu()">
-    <span></span><span></span><span></span>
-  </div>
   <nav class="header-right" id="menu">
     <a href="index.html" id="menuHome">ホーム</a>
     <a href="unkou" id="menuOp">運行情報</a>
@@ -189,11 +186,11 @@ button:active { background-color: #3e8e41; }
 
     <div class="modal-body" style="max-height:400px; overflow-y:auto;" id="voiceConsentBody">
       <p id="voiceConsentText">本規約は、本サービスにおける音声認識機能の利用に関して、利用者といるか電鉄（以下「当社」という）との間で適用されます。</p>
-      <p id="voice1"><strong>第1条（目的）</strong><br>本規約は、利用者が本サービスを通じて音声認識機能を利用する際の条件を定めることを目的とします。</p>
-      <p id="voice2"><strong>第2条（音声の取扱い）</strong><br>1. 利用者の発話する音声は、音声認識処理のためにのみ一時的に利用されます。<br>2. 音声はサーバーに送信されず、当社による保存は行われません。<br>3. 音声認識の結果はリアルタイムで表示されますが、記録・保存はされません。</p>
-      <p id="voice3"><strong>第3条（禁止事項）</strong><br>利用者は以下の行為を行ってはなりません。<br>1. 他人の音声を無断で使用すること。<br>2. 違法行為、他者への迷惑行為、著作権侵害等の目的で音声を使用すること。<br>3. 未成年者の場合、保護者の同意を得ずに利用すること。</p>
-      <p id="voice4"><strong>第4条（責任）</strong><br>当社は、音声認識の精度や結果の内容について一切の責任を負いません。利用者は自己責任において本機能を使用するものとします。</p>
-      <p id="voice5"><strong>第5条（同意の条件）</strong><br>利用者は、本規約を確認の上、「同意する」を押した場合に限り、本サービスの音声認識機能を利用できます。同意しない場合は、本サービスを利用できません。</p>
+      <p id="voice1"><strong>第1条（目的）</strong> 本規約は、利用者が本サービスを通じて音声認識機能を利用する際の条件を定めることを目的とします。</p>
+      <p id="voice2"><strong>第2条（音声の取扱い）</strong> 1. 利用者の発話する音声は、音声認識処理のためにのみ一時的に利用されます。 2. 音声はサーバーに送信されず、当社による保存は行われません。 3. 音声認識の結果はリアルタイムで表示されますが、記録・保存はされません。</p>
+      <p id="voice3"><strong>第3条（禁止事項）</strong> 利用者は以下の行為を行ってはなりません。 1. 他人の音声を無断で使用すること。 2. 違法行為、他者への迷惑行為、著作権侵害等の目的で音声を使用すること。 3. 未成年者の場合、保護者の同意を得ずに利用すること。</p>
+      <p id="voice4"><strong>第4条（責任）</strong> 当社は、音声認識の精度や結果の内容について一切の責任を負いません。利用者は自己責任において本機能を使用するものとします。</p>
+      <p id="voice5"><strong>第5条（同意の条件）</strong> 利用者は、本規約を確認の上、「同意する」を押した場合に限り、本サービスの音声認識機能を利用できます。同意しない場合は、本サービスを利用できません。</p>
     </div>
 
     <div class="modal-footer">
@@ -216,9 +213,8 @@ button:active { background-color: #3e8e41; }
 </div>
 
 <script>
-// ================= 言語設定 =================
-let lang = "ja"; // デフォルトは日本語
-
+// ================= 言語切替 =================
+let lang = "ja";
 const texts = {
   ja: {
     siteName:"いるか電鉄",
@@ -286,54 +282,42 @@ const texts = {
   }
 };
 
-// ================= 言語レンダリング =================
+// 言語切替反映
 function renderLanguage(){
-    document.getElementById("siteName").textContent = texts[lang].siteName;
-    document.getElementById("menuHome").textContent = texts[lang].menuHome;
-    document.getElementById("menuOp").textContent = texts[lang].menuOp;
-    document.getElementById("menuVeh").textContent = texts[lang].menuVeh;
-    document.getElementById("menuTicket").textContent = texts[lang].menuTicket;
-    document.getElementById("menuAbout").textContent = texts[lang].menuAbout;
-    document.getElementById("termsHeader").textContent = texts[lang].termsHeader;
-    document.getElementById("termsText").textContent = texts[lang].termsText;
-    document.getElementById("contentHeader").textContent = texts[lang].contentHeader;
-    document.getElementById("term1").textContent = texts[lang].term1;
-    document.getElementById("term2").textContent = texts[lang].term2;
-    document.getElementById("term3").textContent = texts[lang].term3;
-    document.getElementById("prohibitHeader").textContent = texts[lang].prohibitHeader;
-    document.getElementById("prohibit1").textContent = texts[lang].prohibit1;
-    document.getElementById("prohibit2").textContent = texts[lang].prohibit2;
-    document.getElementById("prohibit3").textContent = texts[lang].prohibit3;
-    document.getElementById("agreeHeader").textContent = texts[lang].agreeHeader;
-    document.getElementById("agreeText").textContent = texts[lang].agreeText;
-    document.getElementById("liveHeader").textContent = texts[lang].liveHeader;
-    startReadingBtn.textContent = texts[lang].startBtn;
-    agreeBtn.textContent = texts[lang].agreeBtn;
-    document.getElementById("confirmHeader").textContent = texts[lang].confirmHeader;
-    document.getElementById("confirmText").textContent = texts[lang].confirmText;
-    document.getElementById("voiceConsentHeader").textContent = texts[lang].voiceConsentHeader;
-    document.getElementById("voiceConsentText").textContent = texts[lang].voiceConsentText;
-    document.getElementById("voice1").textContent = texts[lang].voice1;
-    document.getElementById("voice2").textContent = texts[lang].voice2;
-    document.getElementById("voice3").textContent = texts[lang].voice3;
-    document.getElementById("voice4").textContent = texts[lang].voice4;
-    document.getElementById("voice5").textContent = texts[lang].voice5;
+  document.getElementById("siteName").textContent = texts[lang].siteName;
+  document.getElementById("menuHome").textContent = texts[lang].menuHome;
+  document.getElementById("menuOp").textContent = texts[lang].menuOp;
+  document.getElementById("menuVeh").textContent = texts[lang].menuVeh;
+  document.getElementById("menuTicket").textContent = texts[lang].menuTicket;
+  document.getElementById("menuAbout").textContent = texts[lang].menuAbout;
+  document.getElementById("termsHeader").textContent = texts[lang].termsHeader;
+  document.getElementById("termsText").textContent = texts[lang].termsText;
+  document.getElementById("contentHeader").textContent = texts[lang].contentHeader;
+  document.getElementById("term1").textContent = texts[lang].term1;
+  document.getElementById("term2").textContent = texts[lang].term2;
+  document.getElementById("term3").textContent = texts[lang].term3;
+  document.getElementById("prohibitHeader").textContent = texts[lang].prohibitHeader;
+  document.getElementById("prohibit1").textContent = texts[lang].prohibit1;
+  document.getElementById("prohibit2").textContent = texts[lang].prohibit2;
+  document.getElementById("prohibit3").textContent = texts[lang].prohibit3;
+  document.getElementById("agreeHeader").textContent = texts[lang].agreeHeader;
+  document.getElementById("agreeText").textContent = texts[lang].agreeText;
+  document.getElementById("liveHeader").textContent = texts[lang].liveHeader;
+  startReadingBtn.textContent = texts[lang].startBtn;
+  agreeBtn.textContent = texts[lang].agreeBtn;
+  document.getElementById("confirmHeader").textContent = texts[lang].confirmHeader;
+  document.getElementById("confirmText").textContent = texts[lang].confirmText;
+  document.getElementById("voiceConsentHeader").textContent = texts[lang].voiceConsentHeader;
+  document.getElementById("voiceConsentText").textContent = texts[lang].voiceConsentText;
+  document.getElementById("voice1").textContent = texts[lang].voice1;
+  document.getElementById("voice2").textContent = texts[lang].voice2;
+  document.getElementById("voice3").textContent = texts[lang].voice3;
+  document.getElementById("voice4").textContent = texts[lang].voice4;
+  document.getElementById("voice5").textContent = texts[lang].voice5;
 }
 
-// ================= 共通ドロップダウン =================
-function setLanguage(newLang){
-    lang = newLang;
-    renderLanguage();
-    // 両方のドロップダウンを同期
-    document.getElementById("langSelect").value = lang;
-    document.getElementById("langSelectModal").value = lang;
-}
-
-["langSelect","langSelectModal"].forEach(id=>{
-    document.getElementById(id).addEventListener("change",(e)=>{
-        setLanguage(e.target.value);
-    });
-});
+document.getElementById("langSelect").addEventListener("change",(e)=>{lang=e.target.value; renderLanguage();});
+document.getElementById("langSelectModal").addEventListener("change",(e)=>{lang=e.target.value; renderLanguage();});
 
 // ================= 音声利用規約モーダル =================
 const voiceConsentModal = document.getElementById("voiceConsentModal");
@@ -346,75 +330,76 @@ document.addEventListener("DOMContentLoaded", function(){
     voiceConsentModal.style.display = "block";
     mainContainer.style.filter = "blur(4px)";
 
-    // スクロールで同意ボタン有効化
     voiceConsentBody.addEventListener("scroll", function(){
         if(voiceConsentBody.scrollTop + voiceConsentBody.clientHeight >= voiceConsentBody.scrollHeight){
             consentAgreeBtn.disabled = false;
         }
     });
 
-    // 同意ボタン
     consentAgreeBtn.addEventListener("click", function(){
         voiceConsentModal.style.display = "none";
         mainContainer.style.filter = "none";
     });
 
-    // 同意しないボタン
     consentDeclineBtn.addEventListener("click", function(){
         alert(lang==="ja"?"同意しない場合はページを利用できません。ページを閉じます。":"If you do not agree, you cannot use this page. The page will be closed.");
         window.location.href="about:blank";
     });
 });
 
-// ================= 音声認識 =================
+// ================= 音声認識（日本語・英語両対応） =================
 const startReadingBtn = document.getElementById("startReadingBtn");
 const agreeBtn = document.getElementById("agreeBtn");
+const confirmationModal = document.getElementById("confirmationModal");
+const confirmBtn = document.getElementById("confirmBtn");
+const cancelBtn = document.getElementById("cancelBtn");
 const liveTranscript = document.getElementById("liveTranscript");
 
 let recognition;
+let currentTranscript = "";
+const validPhrases = ["同意する","agree"];
 
-startReadingBtn.addEventListener("click", ()=>{
-    if(!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)){
-        alert("このブラウザは音声認識に対応していません");
-        return;
-    }
+function initRecognition() {
+    if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = "ja-JP";
+    } else { alert("このブラウザは音声認識に対応していません。"); return; }
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
-    recognition.lang = (lang==="ja")?"ja-JP":"en-US";
-    recognition.interimResults = true;
-    recognition.continuous = true;
-
-    liveTranscript.style.display = "block";
-    liveTranscript.textContent = "";
-
-    recognition.onresult = (event)=>{
-        let interimTranscript = "";
-        for(let i=event.resultIndex;i<event.results.length;i++){
-            let transcript = event.results[i][0].transcript;
-            if(event.results[i].isFinal){
-                liveTranscript.textContent += transcript + "\n";
-            } else {
-                interimTranscript += transcript;
-            }
+    recognition.onresult = function(event){
+        currentTranscript="";
+        for (let i=0;i<event.results.length;i++){
+            currentTranscript += event.results[i][0].transcript;
         }
-        liveTranscript.textContent += interimTranscript;
-
-        // 「同意する」「agree」でボタン有効化
-        if(interimTranscript.includes("同意する") || interimTranscript.toLowerCase().includes("agree")){
-            agreeBtn.disabled = false;
+        liveTranscript.style.display="block";
+        liveTranscript.textContent=currentTranscript;
+        if(validPhrases.some(p=>currentTranscript.includes(p))){
+            agreeBtn.disabled=false;
             agreeBtn.classList.remove("button-disabled");
         }
-    };
+    }
 
+    recognition.onerror=function(event){ alert("音声認識に失敗しました。もう一度試してください。"); }
+}
+
+startReadingBtn.onclick = function(){
+    currentTranscript="";
+    liveTranscript.style.display="block";
+    liveTranscript.textContent="";
+    if(!recognition)initRecognition();
     recognition.start();
-});
+}
 
-// 同意ボタン
-agreeBtn.addEventListener("click", ()=>{
-    alert(lang==="ja"?"利用規約に同意しました":"You agreed to the terms.");
-    if(recognition) recognition.stop();
-});
+agreeBtn.onclick=function(){ confirmationModal.style.display="block"; }
+confirmBtn.onclick=function(){
+    window.location.href="https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAUnQ-bVUMTRVNEIzWFVIUE1aSEdUWURTTDVVV1FSMC4u";
+}
+cancelBtn.onclick=function(){ confirmationModal.style.display="none"; }
+window.onclick=function(event){ if(event.target===confirmationModal){ confirmationModal.style.display="none"; } }
+
+renderLanguage(); // 初期言語設定
 </script>
+
 </body>
 </html>
