@@ -281,7 +281,7 @@ body {
   width: 100%;
   max-width: 2100px;
   height: 500px;
-  background-image: url('https://raw.githubusercontent.com/kansinline/irukatrin.github.io/refs/heads/main/image/今日までも%20そしてこれからも.png');
+  background-image: url('https://cdn.glitch.global/222e2a02-bde1-49d3-9324-5d9cc0f0d234/%E4%BB%8A%E6%97%A5%E3%81%BE%E3%81%A7%E3%82%82%E3%80%81%20%E3%81%9D%E3%81%97%E3%81%A6%E3%81%93%E3%82%8C%E3%81%8B%E3%82%89%E3%82%82%E3%80%82.png?v=1744875970396');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -554,4 +554,188 @@ body {
 .announce-emergency {
   animation: emergencyFlash 1.2s infinite;
   font-weight: bold;
+
+}
+/* =========================
+   スマホ・タブレット最適化
+========================= */
+@media screen and (max-width: 768px) {
+
+  /* ===== body ===== */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* ===== ヘッダー ===== */
+  .header_inner {
+    padding: 8px 12px;
+  }
+
+  .header_logo img {
+    height: 32px;
+  }
+
+  .header_icon {
+    display: none;
+  }
+
+  /* ===== ハンバーガー ===== */
+  .hamburger {
+    display: flex;
+  }
+
+  .hm_open {
+    display: block;
+  }
+
+  /* ===== ハンバーガーメニュー ===== */
+  #hamburger_menu {
+    top: 56px;
+    padding: 15px;
+  }
+
+  .menu_input input[type="search"] {
+    width: 100%;
+  }
+
+  /* ===== railinfoヘッダー ===== */
+  .railinfo-header {
+    padding: 0 10px;
+    height: 52px;
+  }
+
+  .railinfo-header .logo {
+    height: 26px;
+  }
+
+  /* ===== ナビメニュー ===== */
+  .nav-menu li a {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  /* ===== ボタンエリア ===== */
+  .button-area {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .rail-button {
+    width: 100%;
+    margin: 0;
+    font-size: 15px;
+  }
+
+  /* ===== トップ画像 ===== */
+  .topimag img {
+    width: 100%;
+    height: auto;
+  }
+
+  /* ===== 画像＋検索 ===== */
+  .image-container {
+    height: 280px;
+  }
+
+  .search-form {
+    width: 90%;
+    bottom: 15px;
+  }
+
+  .search-form input {
+    padding: 14px 10px;
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .search-form button {
+    padding: 0 14px;
+    font-size: 14px;
+  }
+
+  /* ===== タブ ===== */
+  .tab-buttons {
+    flex-direction: column;
+  }
+
+  .tab-button {
+    font-size: 15px;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .tab-button.active {
+    border-bottom: 3px solid #7c2c3b;
+  }
+
+  .tab-content {
+    padding: 15px;
+  }
+
+  /* ===== 特集 ===== */
+  .feature-title {
+    font-size: 20px;
+  }
+
+  .feature-content {
+    gap: 20px;
+  }
+
+  .feature-box {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  /* ===== SNS ===== */
+  .sns-hankyu h2 {
+    font-size: 20px;
+  }
+
+  .sns-card {
+    width: 100%;
+    max-width: 260px;
+    font-size: 15px;
+  }
+
+  /* ===== アナウンス ===== */
+  .railinfo-announce {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+
+  .railinfo-announce .icon {
+    font-size: 16px;
+  }
+}
+
+/* =========================
+   超小型スマホ対応
+========================= */
+@media screen and (max-width: 480px) {
+
+  .image-container {
+    height: 220px;
+  }
+
+  .search-form {
+    bottom: 10px;
+  }
+
+  .search-form input {
+    padding: 12px 8px;
+    font-size: 13px;
+  }
+
+  .rail-button {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .feature-title {
+    font-size: 18px;
+  }
+
+  .sns-card {
+    padding: 16px;
+  }
 }
