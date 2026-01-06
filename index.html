@@ -229,7 +229,86 @@
     }
 }
 
+/* ===== アナウンス表示エリア ===== */
+.railinfo-announce-area {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
+/* ===== アナウンス本体 ===== */
+.railinfo-announce {
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.6s forwards;
+}
+
+/* ===== 重要度別カラー ===== */
+.announce-normal {
+  background: linear-gradient(90deg, #002f6c, #004fa3);
+  color: #ffffff;
+}
+
+.announce-caution {
+  background: linear-gradient(90deg, #ffeb3b, #ffe066);
+  color: #000000;
+}
+
+.announce-emergency {
+  background: linear-gradient(90deg, #c62828, #d50000);
+  color: #ffffff;
+}
+
+/* ===== アイコン ===== */
+.railinfo-announce .icon {
+  margin-right: 10px;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* ===== テキスト表示領域 ===== */
+.announce-text-wrap {
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+}
+
+/* 実際に動かすテキスト */
+.announce-text {
+  white-space: nowrap;
+  display: inline-block;
+  transform: translateX(0);
+  will-change: transform;
+  padding-right: 30px; /* 最後が切れないよう余白 */
+}
+
+/* ===== フェードイン ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes emergencyFlash {
+  0%   { background-color: #c40000; }
+  50%  { background-color: #ff3b3b; }
+  100% { background-color: #c40000; }
+}
+
+.announce-emergency {
+  animation: emergencyFlash 1.2s infinite;
+  font-weight: bold;
+}
     
   </style>
 </head>
