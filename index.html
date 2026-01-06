@@ -260,10 +260,13 @@
 
 <div class="railinfo-alert">
     <p><img src="https://cdn.glitch.global/222e2a02-bde1-49d3-9324-5d9cc0f0d234/%E5%90%8D%E7%A7%B0%E6%9C%AA%E8%A8%AD%E5%AE%9A%E3%81%AE%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%20(5).png?v=1744802974338" alt="Delay Icon"> 現在の時間運行していません。。</p>
-    <span class="time" id="current-time"></span>
 
 
+    <span class="time" id="current-time"></span></div>
+<div class="railinfo-announce-area" id="railinfo-announce-area">
+  <!-- JSでアナウンスが自動生成される -->
 </div>
+
 
 
 <!-- 駅名検索フォーム -->
@@ -494,9 +497,170 @@
       buttons.forEach(btn => btn.classList.remove('active'));
       contents.forEach(content => content.classList.remove('active'));
       button.classList.add('active');
-      document.getElementById(target).classList.add('active');
+      
+document.getElementById(target).classList.add('active');
     });
   });
+/* ===============================
+   動的プレースホルダ処理
+================================ */
+function applyDynamicText(text) {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+  const hour = now.getHours();
+  const min = String(now.getMinutes()).padStart(2, "0");
+
+  return text
+    .replace(/{{YEAR}}/g, year)
+    .replace(/{{MONTH}}/g, month)
+    .replace(/{{DAY}}/g, day)
+    .replace(/{{TIME}}/g, `${hour}:${min}`);
+}
+
+function applyAnniversary(text, openYear) {
+  const now = new Date();
+  const anniversary = now.getFullYear() - openYear;
+  return text.replace(/{{ANNIVERSARY}}/g, anniversary);
+}
+
+/* ===============================
+   アナウンス定義
+================================ */
+const announceEvents = [
+  {
+    level: "normal",
+    repeat: "yearly",
+    start: "01-01T00:00",
+    end: "01-01T23:59",
+    message_ja: "{{YEAR}}年 あけましておめでとうございます。本年もいるか電鉄をご利用ください。",
+    message_en: "Happy New Year {{YEAR}}. Thank you for using Iruka Railway."
+  },
+  {
+    level: "normal",
+    repeat: "always",
+    message_ja: "いるか電鉄は開業{{ANNIVERSARY}}周年を迎えました。",
+    message_en: "Iruka Railway celebrates its {{ANNIVERSARY}}th anniversary.",
+    openYear: 2025
+  }
+];
+
+/* ===============================
+   時間判定（yearly対応）
+================================ */
+function isInTime(event, now) {
+  if (event.repeat === "always") return true;
+
+  let start, end;
+
+  if (event.repeat === "yearly") {
+    const y = now.getFullYear();
+    start = new Date(`${y}-${event.start}`);
+    end = new Date(`${y}-${event.end}`);
+  } else {
+    start = new Date(event.start);
+    end = new Date(event.end);
+  }
+
+  return now >= start && now <= end;
+}
+
+/* ===============================
+   スクロール → 終了後に言語切替
+================================ */
+function startScrollThenSwitch(textEl, wrapEl, ja, en) {
+  let x = wrapEl.clientWidth;
+  let lang = "ja";
+  const speed = 0.5;
+  let waiting = false;
+
+  function loop() {
+    if (!waiting) {
+      x -= speed;
+      textEl.style.transform = `translateX(${x}px)`;
+
+      if (x < -textEl.scrollWidth) {
+        waiting = true;
+        setTimeout(() => {
+          lang = lang === "ja" ? "en" : "ja";
+          textEl.textContent = lang === "ja" ? ja : en;
+          x = wrapEl.clientWidth;
+          waiting = false;
+        }, 1000);
+      }
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+/* ===============================
+   短文用：全文切替
+================================ */
+function startShortSwitch(textEl, ja, en) {
+  let lang = "ja";
+  setInterval(() => {
+    lang = lang === "ja" ? "en" : "ja";
+    textEl.textContent = lang === "ja" ? ja : en;
+  }, 5000);
+}
+
+/* ===============================
+   メイン描画処理
+================================ */
+function checkAnnounceMultiple() {
+  const now = new Date();
+  const area = document.getElementById("railinfo-announce-area");
+  area.innerHTML = "";
+
+  announceEvents.forEach(event => {
+    if (!isInTime(event, now)) return;
+
+    let ja = applyDynamicText(event.message_ja);
+    let en = applyDynamicText(event.message_en);
+
+    if (event.openYear) {
+      ja = applyAnniversary(ja, event.openYear);
+      en = applyAnniversary(en, event.openYear);
+    }
+
+    const box = document.createElement("div");
+    box.className = `railinfo-announce announce-${event.level}`;
+
+    const icon = document.createElement("span");
+    icon.className = "icon";
+    icon.textContent =
+      event.level === "emergency" ? "🚨" :
+      event.level === "caution"   ? "⚠️" : "📢";
+
+    const wrap = document.createElement("div");
+    wrap.className = "announce-text-wrap";
+
+    const text = document.createElement("div");
+    text.className = "announce-text";
+    text.textContent = ja;
+
+    wrap.appendChild(text);
+    box.appendChild(icon);
+    box.appendChild(wrap);
+    area.appendChild(box);
+
+    requestAnimationFrame(() => {
+      if (text.scrollWidth > wrap.clientWidth) {
+        startScrollThenSwitch(text, wrap, ja, en);
+      } else {
+        startShortSwitch(text, ja, en);
+      }
+    });
+  });
+}
+
+/* ===============================
+   起動
+================================ */
+checkAnnounceMultiple();
+setInterval(checkAnnounceMultiple, 60000);
 </script>
 
 </body>
