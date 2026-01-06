@@ -624,7 +624,7 @@ const announceEvents = [
     openYear: 2025
   },
   {
-    level: "normal",
+    level: "caution",
     repeat: "always",
     message_ja: "いつもイルカ電鉄をご利用頂きありがとうございます。アイテムを車内で投げる行為は、サーバーをラグくする原因になるのでやめましょう",
     message_en: "Thank you for using Iruka Dentetsu. Please refrain from throwing items inside the train as it may cause server lag.",
@@ -657,7 +657,7 @@ function isInTime(event, now) {
 function startScrollThenSwitch(textEl, wrapEl, ja, en) {
   let x = wrapEl.clientWidth;
   let lang = "ja";
-  const speed = 2.5;
+  const speed = 1.5;
   let waiting = false;
 
   function loop() {
