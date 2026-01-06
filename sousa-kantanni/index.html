@@ -1,1 +1,175 @@
-404
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+
+<title>Iruka iOS WebView</title>
+
+<style>
+*{
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+  box-sizing:border-box;
+}
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif;
+}
+
+/* ===== 画角 ===== */
+#viewport{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  pointer-events:none;
+}
+.phone{
+  width:390px;
+  height:844px;
+  border-radius:40px;
+  overflow:hidden;
+  background:#000;
+  position:relative;
+  pointer-events:auto;
+}
+
+/* ===== ステータス ===== */
+.status{
+  height:50px;
+  padding:12px 18px;
+  color:#fff;
+  display:flex;
+  justify-content:space-between;
+}
+
+/* ===== ホーム ===== */
+.home{
+  padding:20px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+.app{
+  text-align:center;
+  color:#fff;
+  font-size:12px;
+}
+.icon{
+  width:70px;
+  height:70px;
+  margin:0 auto 6px;
+  border-radius:18px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:26px;
+  background:linear-gradient(135deg,#007aff,#0040dd);
+}
+.app:active .icon{transform:scale(.96);}
+
+/* ===== アプリ画面 ===== */
+.app-screen{
+  position:absolute;
+  inset:0;
+  background:#000;
+  display:none;
+  flex-direction:column;
+}
+
+/* ===== ナビバー ===== */
+.nav{
+  height:50px;
+  background:rgba(0,0,0,.85);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  padding:0 12px;
+}
+.back{
+  cursor:pointer;
+  margin-right:10px;
+}
+
+/* ===== WebView ===== */
+.webview{
+  flex:1;
+  border:none;
+  width:100%;
+}
+</style>
+</head>
+
+<body>
+
+<div id="viewport">
+<div class="phone" id="phone">
+
+  <div class="status">
+    <div id="clock">9:41</div>
+    <div>📶 🔋</div>
+  </div>
+
+  <!-- ホーム -->
+  <div class="home" id="home">
+    <div class="app" onclick="openApp('https://irukatrin.dolphin.f5.si')">
+      <div class="icon">🌐</div>
+      イルカ電鉄
+    </div>
+  </div>
+ 
+
+  <!-- アプリ画面 -->
+  <div class="app-screen" id="appScreen">
+    <div class="nav">
+      <div class="back" onclick="closeApp()">＜ 戻る</div>
+      <div id="appTitle">Web</div>
+    </div>
+    <iframe class="webview" id="webview"></iframe>
+  </div>
+
+</div>
+</div>
+
+<script>
+/* ===== 画角調整 ===== */
+function fit(){
+  const s=Math.min(
+    innerWidth/390,
+    innerHeight/844
+  );
+  phone.style.transform=`scale(${s})`;
+}
+addEventListener("resize",fit);
+fit();
+
+/* ===== 時計 ===== */
+function updateClock(){
+  const d=new Date();
+  clock.textContent=
+    d.getHours()+":"+String(d.getMinutes()).padStart(2,"0");
+}
+setInterval(updateClock,60000);
+updateClock();
+
+/* ===== アプリ制御 ===== */
+function openApp(url){
+  home.style.display="none";
+  appScreen.style.display="flex";
+  webview.src=url;
+}
+function closeApp(){
+  webview.src="";
+  appScreen.style.display="none";
+  home.style.display="grid";
+}
+</script>
+
+</body>
+</html>
