@@ -5,313 +5,452 @@
   <title>いるか電鉄</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* === ヘッダー === */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: white;
-      padding: 10px 20px;
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-    }
-
-    .logo {
-      height: 40px;
-      margin-right: 10px;
-    }
-
-    .site-name {
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    .header-right a {
-      text-decoration: none;
-      color: #0055aa;
-      margin-left: 10px;
-    }
-
-    /* === 駅名検索 === */
-    .suggestions {
-      position: absolute;
-      background-color: white;
-      border: 1px solid #ccc;
-      width: calc(100% - 20px);
-      max-height: 150px;
-      overflow-y: auto;
-      z-index: 999;
-    }
-
-    .suggestions div {
-      padding: 8px;
-      cursor: pointer;
-    }
-
-    .suggestions div:hover {
-      background-color: #f0f0f0;
-    }
-
-    /* === スライダー === */
-    .slider {
-      position: relative;
-      max-width: 900px;
-      margin: auto;
-      overflow: hidden;
-    }
-
-    .slider-track {
-      display: flex;
-      transition: transform 0.5s ease-in-out;
-    }
-
-    .slider-track img {
-      width: 100%;
-      max-width: 900px;
-      height: 500px;
-      object-fit: cover;
-      flex-shrink: 0;
-    }
-
-    .slider-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: rgba(0,0,0,0.5);
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      cursor: pointer;
-      font-size: 18px;
-      z-index: 1;
-    }
-
-    .prev-btn { left: 10px; }
-    .next-btn { right: 10px; }
-
-    /* === タブ切り替え === */
-    .tab-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .tab-button {
-      padding: 10px 20px;
-      cursor: pointer;
-      background-color: #eee;
-      border: none;
-    }
-
-    .tab-button.active {
-      background-color: white;
-      color: black;
-    }
-
-    .tab-content {
-      display: none;
-      margin-top: 10px;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    /* === 特集 === */
-    .feature-section {
-      margin: 40px 0;
-      text-align: center;
-    }
-
-    .feature-content {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .feature-box {
-      border: none;
-      background: none;
-      text-align: center;
-    }
-
-    .feature-box img {
-      height: 100px;
-    }
-
-    /* === SNSカード === */
-    .sns-hankyu {
-      margin-top: 40px;
-    }
-
-    .sns-cards {
-      
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .sns-card {
-      text-decoration: none;
-      background-color: #eeeeee;
-      padding: 10px 20px;
-      border-radius: 5px;
-      color: black;
-    }
-.railinfo-alert {
-    background-color: #f8f8f8;  /* 背景色 */
-    border-radius: 8px;         /* 角を丸める */
-    padding: 10px 20px;         /* 内側の余白 */
-    display: flex;              /* フレックスボックスで並べる */
-    align-items: center;        /* アイテムを縦に中央揃え */
-    justify-content: space-between; /* アイテムを左右に配置 */
-    border: 2px solid #e4e4e4;  /* 枠線の色 */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 軽い影 */
+/* === 共通リセット === */
+* {
+  box-sizing: border-box;
 }
 
-.railinfo-alert p {
-    font-size: 16px;          /* フォントサイズ */
-    color: #333333;           /* 文字色 */
-    margin: 0;                /* パラグラフの余白をリセット */
-    display: flex;            /* 画像とテキストを横並びにする */
-    align-items: center;      /* 画像とテキストを中央揃え */
+body {
+  margin: 0;
+  font-family: "Noto Sans JP", sans-serif;
 }
 
-.railinfo-alert img {
-    width: 24px;              /* アイコンのサイズ */
-    height: 24px;             /* アイコンのサイズ */
-    margin-right: 10px;       /* アイコンとテキストの間隔 */
-}
-
-.railinfo-alert .time {
-    font-size: 14px;          /* 時刻のフォントサイズ */
-    color: #666666;           /* 時刻の文字色 */
-    font-weight: bold;        /* 時刻の文字を太字に */
-}
-.KV_inner.cont {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    padding: 0;
-}
-
-.KV_inner_cnt {
-    position: relative;
-    text-align: right;
-}
-
-.KV_inner_cnt img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
-
-.KV_inner_cnt .sp {
-    display: none;
-}
-
-.KV_inner_cnt .pc {
-    display: block;
-}
-
-@media screen and (max-width: 768px) {
-    .KV_inner_cnt .sp {
-        display: block;
-    }
-
-    .KV_inner_cnt .pc {
-        display: none;
-    }
-}
-
-/* ===== アナウンス表示エリア ===== */
-.railinfo-announce-area {
-  margin-top: 8px;
+/* === ヘッダー === */
+.header {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 10px 20px;
+  flex-wrap: wrap;
 }
 
-/* ===== アナウンス本体 ===== */
-.railinfo-announce {
-  border-radius: 8px;
-  padding: 12px 16px;
+.header-left {
   display: flex;
   align-items: center;
-  font-size: 15px;
-  overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  animation: fadeIn 0.6s forwards;
 }
 
-/* ===== 重要度別カラー ===== */
-.announce-normal {
-  background: linear-gradient(90deg, #002f6c, #004fa3);
-  color: #ffffff;
-}
-
-.announce-caution {
-  background: linear-gradient(90deg, #ffeb3b, #ffe066);
-  color: #000000;
-}
-
-.announce-emergency {
-  background: linear-gradient(90deg, #c62828, #d50000);
-  color: #ffffff;
-}
-
-/* ===== アイコン ===== */
-.railinfo-announce .icon {
+.logo {
+  height: 40px;
   margin-right: 10px;
-  font-size: 18px;
+}
+
+.site-name {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.header-right {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.header-right a {
+  text-decoration: none;
+  color: #0055aa;
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+/* === 駅名検索 === */
+.suggestions {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  width: calc(100% - 20px);
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 999;
+}
+
+.suggestions div {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.suggestions div:hover {
+  background-color: #f0f0f0;
+}
+
+/* === スライダー === */
+.slider {
+  position: relative;
+  max-width: 900px;
+  margin: auto;
+  overflow: hidden;
+  width: 100%;
+}
+
+.slider-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slider-track img {
+  width: 100%;
+  max-width: 900px;
+  height: 500px;
+  object-fit: cover;
   flex-shrink: 0;
 }
 
-/* ===== テキスト表示領域 ===== */
-.announce-text-wrap {
-  position: relative;
-  overflow: hidden;
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 18px;
+  z-index: 1;
+}
+
+.prev-btn { left: 10px; }
+.next-btn { right: 10px; }
+
+/* === タブ切り替え === */
+.tab-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.tab-button {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #eee;
+  border: none;
   flex: 1;
 }
 
-/* 実際に動かすテキスト */
-.announce-text {
-  white-space: nowrap;
-  display: inline-block;
-  transform: translateX(0);
-  will-change: transform;
-  padding-right: 30px; /* 最後が切れないよう余白 */
+.tab-button.active {
+  background-color: white;
+  color: black;
 }
 
-/* ===== フェードイン ===== */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes emergencyFlash {
-  0%   { background-color: #c40000; }
-  50%  { background-color: #ff3b3b; }
-  100% { background-color: #c40000; }
+.tab-content {
+  display: none;
+  margin-top: 10px;
 }
 
-.announce-emergency {
-  animation: emergencyFlash 1.2s infinite;
+.tab-content.active {
+  display: block;
+}
+
+/* === 特集 === */
+.feature-section {
+  margin: 40px 0;
+  text-align: center;
+  padding: 0 10px;
+}
+
+.feature-content {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.feature-box {
+  border: none;
+  background: none;
+  text-align: center;
+}
+
+.feature-box img {
+  height: 100px;
+  max-width: 100%;
+}
+
+/* === SNSカード === */
+.sns-hankyu {
+  margin-top: 40px;
+  padding: 0 10px;
+}
+
+.sns-cards {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.sns-card {
+  text-decoration: none;
+  background-color: #eeeeee;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: black;
+  width: fit-content;
+}
+
+/* === 運行情報アラート === */
+.railinfo-alert {
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 2px solid #e4e4e4;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.railinfo-alert p {
+  font-size: 16px;
+  color: #333333;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.railinfo-alert img {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.railinfo-alert .time {
+  font-size: 14px;
+  color: #666666;
   font-weight: bold;
 }
+
+/* === キービジュアル === */
+.KV_inner.cont {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 0;
+}
+
+.KV_inner_cnt {
+  position: relative;
+  text-align: right;
+}
+
+.KV_inner_cnt img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.KV_inner_cnt .sp {
+  display: none;
+}
+
+.KV_inner_cnt .pc {
+  display: block;
+}
+
+/* === スマホ対応 === */
+@media screen and (max-width: 768px) {
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-right {
+    margin-top: 10px;
+  }
+
+  .slider-track img {
+    height: 250px;
+  }
+
+  .slider-btn {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+
+  .tab-button {
+    flex: 1 1 100%;
+  }
+
+  .feature-box img {
+    height: 80px;
+  }
+
+  .railinfo-alert {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .railinfo-alert .time {
+    align-self: flex-end;
+  }
+
+  .KV_inner_cnt .sp {
+    display: block;
+  }
+
+  .KV_inner_cnt .pc {
+    display: none;
+  }
+}
+/* =========================
+   スマホ用 下ナビ
+========================= */
+.bottom-nav {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    padding-bottom: 64px;
+  }
+
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 64px;
+    background: #ffffff;
+    border-top: 1px solid #ddd;
+    z-index: 2000;
+  }
+
+  .bottom-item {
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .bottom-item .icon {
+    font-size: 20px;
+  }
+
+  .bottom-item:active {
+    background-color: #f0f0f0;
+  }
+}
+@media screen and (max-width: 768px) {
+  .slider-btn {
+    padding: 6px 8px;
+    font-size: 14px;
+  }
+}
+.hero-wrap {
+  display: flex;
+  width: 100%;
+  max-width: 2100px;
+  margin: 0 auto;
+}
+.image-container.base {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  background-image: url("https://irukatrin.dolphin.f5.si/image/Irukaweb%20-%201.png");
+  background-size: cover;
+  background-position: center;
+}
+.overlay-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 100%;
+  background-image: url("https://irukatrin.dolphin.f5.si/image/Irukaweb%20-%202.png");
+  background-size: cover;
+  background-position: center;
+  z-index: 2;
+}
+.overlay-search {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  z-index: 3;
+}
+
+.overlay-search input {
+  padding: 14px 16px;
+  min-width: 240px;
+}
+
+.overlay-search button {
+  padding: 14px 16px;
+}
+@media screen and (max-width: 768px) {
+  .image-container.base {
+    height: 260px;
+  }
+
+  .overlay-image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .overlay-search {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+  }
+
+  .overlay-search input {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 768px) {
+  .search-form input,
+  .search-form button {
+    width: 100%;          /* 幅いっぱいにして見やすく */
+    font-size: 18px;      /* 文字を少し大きく */
+    padding: 12px 15px;   /* タッチしやすい大きさ */
+  }
+
+  .search-form {
+    display: flex;
+    flex-direction: column;  /* 入力とボタンを縦並び */
+    gap: 10px;               /* 間隔 */
+    align-items: center;     /* 中央揃え */
+    position: absolute;      /* 画像上に被せる */
+    top: 20%;                /* 画面上からの位置調整 */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;             /* スライダーや背景より前面 */
+  }
+}
+
+
+
     
   </style>
 </head>
+<!-- スマホ用 下ナビ -->
+<nav class="bottom-nav">
+  <a href="#" class="bottom-item">
+    <span class="icon">🏠</span>
+    <span class="label">ホーム</span>
+  </a>
+  <a href="unkou" class="bottom-item">
+    <span class="icon">🚆</span>
+    <span class="label">運行</span>
+  </a>
+  <a href="#" class="bottom-item">
+    <span class="icon">🎫</span>
+    <span class="label">チケット</span>
+  </a>
+  <a href="Pack" class="bottom-item">
+    <span class="icon">🏢</span>
+    <span class="label">会社</span>
+  </a>
+</nav>
+
 <body>
   
 
@@ -348,11 +487,11 @@
 
 
 
-<!-- 駅名検索フォーム -->
 <div class="topimage">
   <div class="image-container">
+    <img src="https://irukatrin.dolphin.f5.si/image/Irukaweb%20-%202.png" alt="被せ画像" class="overlay-img">
     <form class="search-form" id="stationSearchForm" autocomplete="off">
-      <input type="text" id="stationInput" placeholder="駅名検索　対応kamui鉄道ささ電鉄いるか電鉄" />
+      <input type="text" id="stationInput" placeholder="駅名検索　対応kamui鉄道・ささ電鉄・いるか電鉄" />
       <div id="suggestions" class="suggestions"></div>
       <button type="submit">駅名</button>
     </form>
@@ -365,7 +504,7 @@
 <div class="slider" id="slider">
   <div class="slider-track" id="sliderTrack">
     <img src="https://raw.githubusercontent.com/kansinline/irukatrin.github.io/refs/heads/main/image/IMG_0979.png" alt="画像1">
-    <img src="" alt="画像2">
+    <img src="https://raw.githubusercontent.com/kansinline/irukatrin.github.io/refs/heads/main/image/IMG_0980.png" alt="画像2">
     <img src="https://raw.githubusercontent.com/kansinline/irukatrin.github.io/refs/heads/main/image/IMG_0980.png" alt="画像3">
   </div>
   <button class="slider-btn prev-btn" onclick="slidePrev()">‹</button>
@@ -425,6 +564,46 @@
 
 <!-- JavaScript -->
 <script>
+/* ===============================
+   スライダー：スワイプ対応
+================================ */
+let startX = 0;
+let isSwiping = false;
+
+const slider = document.getElementById("slider");
+
+slider.addEventListener("touchstart", function (e) {
+  startX = e.touches[0].clientX;
+  isSwiping = true;
+  stopAutoSlide();
+});
+
+slider.addEventListener("touchmove", function (e) {
+  if (!isSwiping) return;
+  const diff = e.touches[0].clientX - startX;
+
+  // 少しでも横移動したらスクロール防止
+  if (Math.abs(diff) > 10) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
+slider.addEventListener("touchend", function (e) {
+  if (!isSwiping) return;
+
+  const endX = e.changedTouches[0].clientX;
+  const diff = endX - startX;
+
+  if (diff > 50) {
+    slidePrev(); // 右スワイプ
+  } else if (diff < -50) {
+    slideNext(); // 左スワイプ
+  }
+
+  isSwiping = false;
+  startAutoSlide();
+});
+
     async function checkTrainStatus() {
     try {
       // あなたのAPIから運行データを取得
@@ -608,7 +787,7 @@ function applyAnniversary(text, openYear) {
    アナウンス定義
 ================================ */
 const announceEvents = [
-  {
+{
     level: "normal",
     repeat: "yearly",
     start: "01-01T00:00",
