@@ -567,6 +567,69 @@ body {
 <!-- JavaScript -->
 <script>
 /* ===============================
+   お知らせとリリースをAPIから取得
+================================ */
+async function loadAllDataFromAPI() {
+  const newsContainer = document.getElementById("news");
+  const releaseContainer = document.getElementById("release");
+  
+  try {
+    // APIからデータを取得
+    // ※URLは自分のNode.jsサーバーのURLに変えてね！
+    const response = await fetch("https://irukarailwayapi.onrender.com/api/info");
+    const data = await response.json();
+
+    // --- 1. お知らせ(news)の処理 ---
+    newsContainer.innerHTML = "";
+    const newsUl = document.createElement("ul");
+    newsUl.style.listStyle = "none";
+    newsUl.style.padding = "0";
+
+    data.news.forEach(item => {
+      const li = document.createElement("li");
+      li.style.padding = "10px 0";
+      li.style.borderBottom = "1px solid #eee";
+      li.innerHTML = `
+        <small style="color: #888; display: block;">${item.date}</small>
+        <a href="${item.link}" style="color: #0055aa; text-decoration: none; font-weight: bold;">${item.title}</a>
+      `;
+      newsUl.appendChild(li);
+    });
+    newsContainer.appendChild(newsUl);
+
+    // --- 2. ニュースリリース(release)の処理 ---
+    releaseContainer.innerHTML = "";
+    const releaseUl = document.createElement("ul");
+    releaseUl.style.listStyle = "none";
+    releaseUl.style.padding = "0";
+
+    data.releases.forEach(item => {
+      const li = document.createElement("li");
+      li.style.padding = "10px 0";
+      li.style.borderBottom = "1px solid #eee";
+      li.innerHTML = `
+        <small style="color: #888; display: block;">${item.date}</small>
+        <a href="${item.link}" style="color: #444; text-decoration: none;">【プレスリリース】${item.title}</a>
+      `;
+      releaseUl.appendChild(li);
+    });
+    releaseContainer.appendChild(releaseUl);
+
+  } catch (err) {
+    console.error("データ取得失敗:", err);
+    newsContainer.innerHTML = "<p>お知らせの読み込みに失敗しました。</p>";
+    releaseContainer.innerHTML = "<p>リリースの読み込みに失敗しました。</p>";
+  }
+}
+
+// 実行
+loadAllDataFromAPI();
+
+
+
+
+
+/* ===============================
    スライダー：スワイプ対応
 ================================ */
 let startX = 0;
@@ -949,6 +1012,11 @@ setInterval(checkAnnounceMultiple, 60000);
 
 </body>
 </html>
+
+
+
+
+
 
 
 
