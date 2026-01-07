@@ -476,8 +476,10 @@ body {
 </header>
   
 
-<div class="railinfo-alert">
-    <p><img src="https://cdn.glitch.global/222e2a02-bde1-49d3-9324-5d9cc0f0d234/%E5%90%8D%E7%A7%B0%E6%9C%AA%E8%A8%AD%E5%AE%9A%E3%81%AE%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%20(5).png?v=1744802974338" alt="Delay Icon"> 現在の時間運行していません。。</p>
+<div class="railinfo-alert" id="rail-status-box">
+  <p id="rail-status"><img src="https://cdn.glitch.global/222e2a02-bde1-49d3-9324-5d9cc0f0d234/%E5%90%8D%E7%A7%B0%E6%9C%AA%E8%A8%AD%E5%AE%9A%E3%81%AE%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%20(5).png?v=1744802974338" alt="Delay Icon"> 現在の時間運行していません。。</p>
+  <span class="time" id="current-time"></span>
+</div>
 
 
     <span class="time" id="current-time"></span></div>
@@ -604,31 +606,49 @@ slider.addEventListener("touchend", function (e) {
   startAutoSlide();
 });
 
-    async function checkTrainStatus() {
-    try {
-      // あなたのAPIから運行データを取得
-      const response = await fetch("https://irukarailwayapi.onrender.com/trains");
-      const trains = await response.json();
+async function checkTrainStatus() {
+  try {
+    const response = await fetch("https://irukarailwayapi.onrender.com/trains");
+    const trains = await response.json();
 
-      // 表示するターゲットを選択（「現在の時間運行していません。。」がある部分）
-      const target = document.querySelector(".railinfo-alert:nth-of-type(2) p");
+    const box = document.getElementById("rail-status-box");
+    const statusText = document.getElementById("rail-status");
 
-      // ターゲットが存在しなければ終了
-      if (!target) return;
+    if (!box || !statusText) return;
 
-      // 運休が含まれているか確認
-      const hasCancel = trains.some(train => train.status && train.status.includes("運休"));
+    const hasCancel = trains.some(train => train.status && train.status.includes("運休"));
 
-      // 運休が出たときだけテキスト更新
-      if (hasCancel) {
-        target.textContent = "❌ 一部の列車が運休しています。";
-      }
-
-    } catch (err) {
-      console.error("運行情報の取得に失敗しました:", err);
-      // エラー時は何も変更しない（デザイン保持）
+    if (hasCancel) {
+      // 運休あり
+      statusText.innerHTML = "❌ 一部の列車が運休しています。";
+      box.style.backgroundColor = "#ffe6e6"; // 薄赤
+      box.style.borderColor = "#ff4d4d";     // 赤い枠
+      statusText.querySelector("img")?.remove(); // 画像削除（任意）
+    } else {
+      // 運行中
+      statusText.innerHTML = "✅ 現在運行しています。";
+      box.style.backgroundColor = "#f8f8f8"; // 元の背景
+      box.style.borderColor = "#e4e4e4";     // 元の枠
+      // 必要ならアイコンを戻す
+      const img = document.createElement("img");
+      img.src = "https://cdn.glitch.global/222e2a02-bde1-49d3-9324-5d9cc0f0d234/%E5%90%8D%E7%A7%B0%E6%9C%AA%E8%A8%AD%E5%AE%9A%E3%81%AE%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%20(5).png?v=1744802974338";
+      img.alt = "Delay Icon";
+      img.style.width = "24px";
+      img.style.height = "24px";
+      img.style.marginRight = "10px";
+      statusText.prepend(img);
     }
+
+  } catch (err) {
+    console.error("運行情報の取得に失敗しました:", err);
   }
+}
+
+// 初回チェック＋定期チェック（1分ごと）
+checkTrainStatus();
+setInterval(checkTrainStatus, 60000);
+
+
 
   // 初回チェック＋定期チェック（1分ごと）
   checkTrainStatus();
