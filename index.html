@@ -679,20 +679,35 @@ async function checkTrainStatus() {
 
     if (!box || !statusText) return;
 
+    // ステータスごとの判定
     const hasCancel = trains.some(train => train.status && train.status.includes("運休"));
+    const hasDelay = trains.some(train => train.status && train.status.includes("遅延"));
+    const hasSuspension = trains.some(train => train.status && train.status.includes("運転見合わせ"));
 
-    if (hasCancel) {
+    // まず既存のアイコンを削除
+    statusText.querySelector("img")?.remove();
+
+    if (hasSuspension) {
+      // 運転見合わせ
+      statusText.innerHTML = "⛔ 運転見合わせがあります。";
+      box.style.backgroundColor = "#ffe6cc"; // 薄オレンジ
+      box.style.borderColor = "#ff9933";     // 濃オレンジ
+    } else if (hasCancel) {
       // 運休あり
       statusText.innerHTML = "❌ 一部の列車が運休しています。";
       box.style.backgroundColor = "#ffe6e6"; // 薄赤
       box.style.borderColor = "#ff4d4d";     // 赤い枠
-      statusText.querySelector("img")?.remove(); // 画像削除（任意）
+    } else if (hasDelay) {
+      // 遅延あり
+      statusText.innerHTML = "⚠️ 一部の列車に遅れがあります。";
+      box.style.backgroundColor = "#fff8e6"; // 薄黄色
+      box.style.borderColor = "#ffcc00";     // 黄色の枠
     } else {
-      // 運行中
+      // 全て運行中
       statusText.innerHTML = "✅ 現在運行しています。";
       box.style.backgroundColor = "#f8f8f8"; // 元の背景
       box.style.borderColor = "#e4e4e4";     // 元の枠
-      // 必要ならアイコンを戻す
+
       const img = document.createElement("img");
       img.src = "https://cdn.glitch.global/222e2a02-bde1-49d3-9324-5d9cc0f0d234/%E5%90%8D%E7%A7%B0%E6%9C%AA%E8%A8%AD%E5%AE%9A%E3%81%AE%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%20(5).png?v=1744802974338";
       img.alt = "Delay Icon";
