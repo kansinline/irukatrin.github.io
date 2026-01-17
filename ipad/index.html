@@ -3,44 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Iruka Railway iPad API表示</title>
+<title>Iruka Railway Dashboard</title>
 <link rel="icon" href="https://irukatrin.dolphin.f5.si/favicon.ico">
 <style>
-:root {
-  --main: #1e88e5;
-  --sub: #26c6da;
-  --bg: #f0f4f8;
-  --text: #333;
-  --card-bg: rgba(255,255,255,0.95);
-  --shadow: rgba(0,0,0,0.15);
-}
-* { box-sizing: border-box; margin:0; padding:0; font-family:"Noto Sans JP",system-ui,sans-serif; }
-body { background: var(--bg); color: var(--text); overflow-x:hidden; }
-
-header {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:10px 16px; background:#fff; border-bottom:1px solid #ddd;
-}
-.logo { height:36px; }
-.site-name { font-size:20px; font-weight:bold; }
-.lang-select select { font-size:14px; padding:4px 6px; }
-
-main { max-width:900px; margin:20px auto; padding:0 16px; }
-.card { background: var(--card-bg); border-radius:20px; padding:20px; margin-bottom:16px;
-        box-shadow:0 10px 25px var(--shadow); }
-h2 { font-size:1.4em; color: var(--main); margin-bottom:12px; }
-.status { text-align:center; margin:12px 0; font-size:1em; }
-button { padding:12px 20px; border:none; border-radius:12px; background: var(--main); color:#fff; cursor:pointer; font-weight:600; font-size:1em; }
-
-@media (max-width:1024px){
-  main { margin:15px; }
-  h2 { font-size:1.2em; }
-}
-@media (max-width:768px){
-  header { flex-direction: column; align-items: flex-start; gap:10px; }
-  .site-name { font-size:18px; }
-  main { margin:10px; }
-}
+body {margin:0;padding:0;font-family:"Noto Sans JP",system-ui,sans-serif;background:#0d1117;color:#fff;overflow-x:hidden;}
+header{display:flex;align-items:center;justify-content:center;padding:20px;}
+.logo{height:48px;margin-right:16px;}
+.site-name{font-size:2em;font-weight:bold;}
+main{max-width:1200px;margin:20px auto;padding:0 16px;display:flex;flex-direction:column;gap:20px;}
+.widget{background:rgba(20,20,30,0.9);border-radius:20px;padding:20px;box-shadow:0 10px 25px rgba(0,0,0,0.5);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;transition:transform 0.2s;}
+.widget:hover{transform:scale(1.02);}
+.status-box{font-size:2.5em;font-weight:bold;padding:40px;border-radius:20px;width:100%;text-align:center;color:white;transition:background 0.3s;}
+button{padding:18px 30px;border:none;border-radius:20px;background:linear-gradient(135deg,#1e88e5,#26c6da);color:#fff;cursor:pointer;font-weight:700;font-size:1.3em;margin-top:20px;transition:transform 0.2s;}
+button:hover{transform:scale(1.05);}
+.carousel-container{position:relative;width:100%;overflow:hidden;height:250px;border-radius:20px;box-shadow:0 10px 25px rgba(0,0,0,0.5);}
+.carousel-track{display:flex;transition:transform 0.5s ease;}
+.carousel-item{min-width:100%;flex-shrink:0;background:#1a1a2e;color:#fff;display:flex;align-items:center;justify-content:center;gap:15px;padding:20px;box-sizing:border-box;}
+.carousel-item img{width:120px;height:80px;object-fit:cover;border-radius:12px;}
+.carousel-item .news-content{flex:1;display:flex;flex-direction:column;}
+.carousel-item h3{color:#1e88e5;margin-bottom:5px;font-size:1.2em;}
+.carousel-item p{color:#ccc;margin-bottom:5px;font-size:0.9em;}
+.carousel-item a{color:#26c6da;text-decoration:none;}
+.carousel-item a:hover{text-decoration:underline;}
+@media(max-width:768px){.carousel-item img{width:100px;height:70px;}}
 </style>
 </head>
 <body>
@@ -48,131 +33,93 @@ button { padding:12px 20px; border:none; border-radius:12px; background: var(--m
 <header>
   <img src="https://irukatrin.dolphin.f5.si/favicon.ico" class="logo">
   <span class="site-name">Iruka Railway</span>
-  <div class="lang-select">
-    <select id="lang-select" onchange="setLanguage(this.value)">
-      <option value="ja">日本語</option>
-      <option value="en">English</option>
-      <option value="zh">中文</option>
-    </select>
-  </div>
 </header>
 
 <main>
-  <div class="status" id="status">読み込み中…</div>
-  <div id="train-list"></div>
-  <div id="start-container" style="text-align:center; margin-top:20px;"></div>
+  <div class="widget">
+    <div id="api-status" class="status-box" style="background:red;">API停止中</div>
+    <div id="start-container"></div>
+  </div>
+
+  <div class="widget">
+    <h2>最新ニュース</h2>
+    <div class="carousel-container">
+      <div class="carousel-track" id="news-carousel"></div>
+    </div>
+  </div>
 </main>
 
 <script>
-// 多言語テキスト
-const texts = {
-  ja: { loading:"データ取得中…", error:"データの取得に失敗しました。", noData:"データがありません", startBtn:"APIを起動する", starting:"API起動中…", running:"APIは起動中です" },
-  en: { loading:"Fetching data…", error:"Failed to fetch data.", noData:"No data available", startBtn:"Start API", starting:"Starting API…", running:"API is running" },
-  zh: { loading:"数据获取中…", error:"数据获取失败。", noData:"没有数据", startBtn:"启动API", starting:"API启动中…", running:"API已启动" }
-};
+const API_CHECK_URL = "https://irukarailwayapi.onrender.com/trains";
+const API_START_URL = "https://your-server-url.com/api/start";
+const RSS_URL = "https://news.web.nhk/n-data/conf/na/rss/cat0.xml";
+const CORS_PROXY = "https://api.allorigins.win/get?url=";
 
-let lang = "ja";
-function setLanguage(l){
-  lang = l;
-  document.getElementById('status').textContent = texts[lang].loading;
-}
+const texts = { ja:{running:"API起動中",stopped:"API停止中",starting:"API起動中…",startBtn:"APIを起動する",newsLoading:"ニュース取得中…",newsFail:"ニュース取得に失敗しました"} };
+let lang="ja";
 
-// APIチェック
 async function checkAPI(){
-  const statusEl = document.getElementById('status');
+  const statusEl = document.getElementById('api-status');
   const startContainer = document.getElementById('start-container');
-  statusEl.textContent = texts[lang].loading;
-  statusEl.style.color = "blue";
-  startContainer.innerHTML = "";
+  startContainer.innerHTML="";
+  statusEl.textContent="確認中…";
+  statusEl.style.background="orange";
   try{
-    const res = await fetch("https://irukarailwayapi.onrender.com/trains");
-    if(res.ok){
-      statusEl.textContent = texts[lang].running;
-      statusEl.style.color = "green";
-      fetchTrainData(); // 動作中ならデータ取得
-    } else {
-      throw new Error();
-    }
-  } catch(e){
-    statusEl.textContent = texts[lang].error;
-    statusEl.style.color = "red";
-    // 起動ボタンを表示
-    const btn = document.createElement('button');
-    btn.textContent = texts[lang].startBtn;
-    btn.onclick = startAPI;
-    startContainer.appendChild(btn);
+    const res = await fetch(API_CHECK_URL,{method:"HEAD"});
+    if(res.ok){statusEl.textContent=texts[lang].running;statusEl.style.background="green";}
+    else throw new Error();
+  }catch{
+    statusEl.textContent=texts[lang].stopped;statusEl.style.background="red";
+    const btn=document.createElement('button'); btn.textContent=texts[lang].startBtn; btn.onclick=startAPI; startContainer.appendChild(btn);
   }
 }
 
-// API起動
 async function startAPI(){
-  const startContainer = document.getElementById('start-container');
-  const statusEl = document.getElementById('status');
-  startContainer.innerHTML = "";
-  statusEl.textContent = texts[lang].starting;
-  statusEl.style.color = "orange";
-  try{
-    // Renderなどの起動用エンドポイント例
-    const res = await fetch("https://irukarailwayapi.onrender.com/api/start", {method:"POST"});
-    if(res.ok){
-      statusEl.textContent = texts[lang].running;
-      statusEl.style.color = "green";
-      fetchTrainData();
-    } else {
-      throw new Error();
-    }
-  } catch(e){
-    console.error(e);
-    statusEl.textContent = texts[lang].error;
-    statusEl.style.color = "red";
-    // 再表示ボタン
-    const btn = document.createElement('button');
-    btn.textContent = texts[lang].startBtn;
-    btn.onclick = startAPI;
-    startContainer.appendChild(btn);
-  }
+  const statusEl=document.getElementById('api-status');
+  const startContainer=document.getElementById('start-container');
+  startContainer.innerHTML=""; statusEl.textContent="API起動中…"; statusEl.style.background="orange";
+  try{ const res=await fetch(API_START_URL,{method:"POST"}); if(res.ok){statusEl.textContent=texts[lang].running;statusEl.style.background="green";} else throw new Error();}
+  catch{statusEl.textContent=texts[lang].stopped;statusEl.style.background="red"; const btn=document.createElement('button'); btn.textContent=texts[lang].startBtn; btn.onclick=startAPI; startContainer.appendChild(btn);}
 }
 
-// データ取得・表示
-async function fetchTrainData(){
-  const statusEl = document.getElementById('status');
-  const listEl = document.getElementById('train-list');
-  statusEl.textContent = texts[lang].loading;
-  statusEl.style.color = "blue";
-  listEl.innerHTML = "";
-
+// RSS取得してカルーセル作成
+async function fetchRSS(){
+  const track = document.getElementById('news-carousel');
+  track.innerHTML = `<div style="color:#ccc;padding:10px;">${texts[lang].newsLoading}</div>`;
   try{
-    const res = await fetch("https://irukarailwayapi.onrender.com/trains");
-    if(!res.ok) throw new Error();
+    const res = await fetch(CORS_PROXY + encodeURIComponent(RSS_URL));
     const data = await res.json();
-    if(!Array.isArray(data) || data.length===0){
-      statusEl.textContent = texts[lang].noData;
-      statusEl.style.color = "red";
-      return;
-    }
-    statusEl.textContent = "";
-    data.forEach(item=>{
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <h2>${item.line || "不明路線"}</h2>
-        <p>運行状況: ${item.status || "-"}</p>
-        <p>遅延: ${item.delay || "なし"}</p>
-        <p>更新時刻: ${item.updated || "-"}</p>
-      `;
-      listEl.appendChild(card);
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(data.contents,"application/xml");
+    const items = xml.querySelectorAll("item");
+    track.innerHTML="";
+    items.forEach(item=>{
+      const title=item.querySelector("title")?.textContent||"無題";
+      const date=item.querySelector("pubDate")?.textContent||"";
+      const link=item.querySelector("link")?.textContent||"#";
+      const imgURL = item.querySelector("media\\:thumbnail")?.getAttribute("url") || item.querySelector("enclosure")?.getAttribute("url") || "https://via.placeholder.com/120x80?text=No+Image";
+      const div=document.createElement('div'); div.className="carousel-item";
+      div.innerHTML=`<img src="${imgURL}"><div class="news-content"><h3>${title}</h3><p>${date}</p><a href="${link}" target="_blank">詳細</a></div>`;
+      track.appendChild(div);
     });
-  } catch(e){
-    console.error(e);
-    statusEl.textContent = texts[lang].error;
-    statusEl.style.color = "red";
-  }
+  }catch{track.innerHTML=`<div style="color:red;padding:10px;">${texts[lang].newsFail}</div>`;}
 }
 
-// 初回ロード
-window.addEventListener('load', ()=>{
-  checkAPI();
-});
+// 自動スクロール
+let currentIndex=0;
+function autoScroll(){
+  const track=document.getElementById('news-carousel');
+  const items=track.children;
+  if(items.length===0) return;
+  currentIndex=(currentIndex+1)%items.length;
+  track.style.transform=`translateX(-${currentIndex*100}%)`;
+}
+setInterval(autoScroll,5000);
+
+setInterval(checkAPI,10000);
+setInterval(fetchRSS,300000);
+
+window.addEventListener('load',()=>{checkAPI(); fetchRSS();});
 </script>
 
 </body>
