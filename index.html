@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>いるか電鉄</title>
   <link rel="stylesheet" href="style.css">
+    <!-- JR風ドットフォント -->
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
   <style>
 /* === 共通リセット === */
 * {
@@ -424,7 +426,7 @@ body {
     transform: translateX(-50%);
     z-index: 10;             /* スライダーや背景より前面 */
   }
-}
+
 
 
 
@@ -480,7 +482,9 @@ body {
   <p id="rail-status"><img src="https://cdn.glitch.global/222e2a02-bde1-49d3-9324-5d9cc0f0d234/%E5%90%8D%E7%A7%B0%E6%9C%AA%E8%A8%AD%E5%AE%9A%E3%81%AE%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%20(5).png?v=1744802974338" alt="Delay Icon"> 現在の時間運行していません。。</p>
   <span class="time" id="current-time"></span>
 </div>
-
+<div id="board-wrapper">
+  <div id="board"></div>
+</div>
 
     <span class="time" id="current-time"></span></div>
 <div class="railinfo-announce-area" id="railinfo-announce-area">
@@ -566,6 +570,78 @@ body {
 
 <!-- JavaScript -->
 <script>
+/* ===============================
+   API設定
+=============================== */
+const API_URL = "https://irukarailwayapi.onrender.com/trains"; // ← 実際のAPIに変更する
+
+/* ===============================
+   API取得
+=============================== */
+async function fetchStatus() {
+  try {
+    const res = await fetch(API_URL, { cache: "no-store" });
+    if (!res.ok) throw new Error("API error");
+    return await res.json();
+  } catch (e) {
+    console.error("運行情報取得失敗", e);
+    return [];
+  }
+}
+
+/* ===============================
+   状態 → クラス
+=============================== */
+function getStatusClass(status) {
+  if (status === "遅延") return "status-delay";
+  if (status === "運転見合わせ") return "status-stop";
+  return "status-info";
+}
+
+/* ===============================
+   描画処理
+=============================== */
+async function renderBoard() {
+  const data = await fetchStatus();
+  const wrapper = document.getElementById("board-wrapper");
+  const board = document.getElementById("board");
+
+  board.innerHTML = "";
+  board.className = "";
+
+  // 平常運行は非表示
+  const targets = data.filter(
+    d => d.status !== "平常運行" && d.status !== "平常運転"
+  );
+
+  // 表示対象なし
+  if (targets.length === 0) {
+    wrapper.style.display = "none";
+    return;
+  }
+
+  wrapper.style.display = "flex";
+
+  targets.forEach(item => {
+    const div = document.createElement("div");
+    div.className = `board-item ${getStatusClass(item.status)}`;
+    div.textContent = `${item.name}　${item.status}`;
+    board.appendChild(div);
+  });
+
+  // 動作切替
+  if (targets.length === 1) {
+    board.classList.add("blink");
+  } else {
+    board.classList.add("scroll");
+  }
+}
+
+/* ===============================
+   初期表示＋自動更新
+=============================== */
+renderBoard();
+setInterval(renderBoard, 30000); // 30秒ごとに更新
 /* ===============================
    お知らせとリリースをAPIから取得
 ================================ */
