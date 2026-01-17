@@ -739,3 +739,65 @@ body {
     padding: 16px;
   }
 }
+/* ===============================
+   電光掲示板
+=============================== */
+#board-wrapper {
+  margin-top: 60px;
+  width: 100%;
+  height: 36px;
+  background: #000;
+  overflow: hidden;
+  display: none;
+  align-items: center;
+}
+
+#board {
+  display: inline-flex;
+  white-space: nowrap;
+  align-items: center;
+}
+
+/* 表示項目 */
+.board-item {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 48px;
+  font-family: "DotGothic16", monospace;
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+
+/* ===== 状態別カラー ===== */
+.status-delay {
+  color: #ffd400; /* 遅延：黄色 */
+}
+
+.status-stop {
+  color: #ff3b30; /* 運転見合わせ：赤 */
+}
+
+.status-info {
+  color: #ff9f0a; /* その他：橙 */
+}
+
+/* ===== 点滅（1路線のみ） ===== */
+.blink {
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ===== 横スクロール（2路線以上） ===== */
+.scroll {
+  animation: scroll-left 15s linear infinite;
+}
+
+@keyframes scroll-left {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(-100%); }
+
+}
