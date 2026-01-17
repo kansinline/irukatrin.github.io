@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Iruka Railway - Credit</title>
+<title>Iruka Railway - Credits</title>
 
 <style>
 body {
@@ -12,15 +12,18 @@ body {
   background: #f2f4f8;
 }
 
-/* ===== ヘッダー ===== */
+/* ===== ヘッダー固定 ===== */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 16px;
-  background: #fff;
+  background: #ded5c0;
   border-bottom: 1px solid #ddd;
-  position: relative;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
 }
 
 .header-left {
@@ -38,7 +41,6 @@ body {
   font-weight: bold;
 }
 
-/* ===== ナビ ===== */
 .header-right {
   display: flex;
   gap: 14px;
@@ -48,13 +50,13 @@ body {
   text-decoration: none;
   color: #0055aa;
   font-size: 14px;
+  transition: color 0.2s;
 }
+.header-right a:hover { color: #003366; }
 
-/* ===== 言語ドロップダウン ===== */
 .lang-select {
   margin-left: 10px;
 }
-
 .lang-select select {
   padding: 4px 6px;
   border-radius: 4px;
@@ -65,192 +67,163 @@ body {
 }
 
 /* ===== ハンバーガー ===== */
-.menu-toggle {
-  display: none;
-  flex-direction: column;
-  gap: 4px;
-  cursor: pointer;
-}
-
-.menu-toggle span {
-  width: 24px;
-  height: 3px;
-  background: #0055aa;
-  border-radius: 2px;
-}
+.menu-toggle { display: none; flex-direction: column; gap: 4px; cursor: pointer; }
+.menu-toggle span { width: 24px; height: 3px; background: #451722; border-radius: 2px; }
 
 /* ===== セクション ===== */
 section {
-  max-width: 900px;
-  margin: 50px auto;
+  max-width: 950px;
+  margin: 100px auto 50px auto; 
   padding: 20px;
+  scroll-margin-top: 80px;
 }
 
 h2 {
-  font-size: 22px;
+  font-size: 24px;
   border-left: 6px solid #0055aa;
   padding-left: 10px;
   margin-bottom: 20px;
 }
 
+/* ===== 共通カード ===== */
 .box {
   background: #fff;
-  border-radius: 8px;
-  padding: 20px;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-/* ===== クレジット ===== */
+/* ===== クレジットカード ===== */
 .credit-item {
   display: flex;
   gap: 15px;
-  padding: 12px 0;
+  padding: 16px 0;
   border-bottom: 1px solid #eee;
+  align-items: center;
+  transition: background 0.25s;
 }
-
-.credit-item:last-child {
-  border-bottom: none;
-}
+.credit-item:last-child { border-bottom: none; }
+.credit-item:hover { background: linear-gradient(90deg,#e0f0ff,#f0f8ff); border-radius:12px; }
 
 .credit-item img {
-  width: 48px;
-  height: 48px;
-  border-radius: 6px;
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  object-fit: cover;
+  transition: transform 0.3s;
 }
+.credit-item:hover img { transform: rotate(-10deg) scale(1.1); }
 
-.credit-title {
-  font-weight: bold;
-}
+.credit-title { font-weight: bold; color: #0055aa; }
+.credit-name { font-size: 14px; color: #555; transition: color 0.2s; }
+.credit-item:hover .credit-name { color: #003366; }
 
-.credit-name {
-  font-size: 14px;
-  color: #555;
-}
-
-/* ===== 車両ボタン ===== */
+/* ===== 車両カード ===== */
 .credit-vehicle-split {
   display: flex;
   margin-top: 25px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 16px;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: transform 0.25s, box-shadow 0.25s;
 }
+.credit-vehicle-split:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
 
 .vehicle-image {
   width: 50%;
   background-image: url("https://raw.githubusercontent.com/kansinline/irukatrin.github.io/refs/heads/main/eeeeeeeeeeeeeeeeeee.png");
-  background-size: cover;
-  background-position: left center;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 180px;
 }
 
 .vehicle-info {
   width: 50%;
   padding: 16px;
-  text-decoration: none;
-  background: #f7f9fc;
+  background: linear-gradient(145deg,#f7f9fc,#eaf1fb);
   display: flex;
   flex-direction: column;
   justify-content: center;
+  text-decoration: none;
+  transition: background 0.25s, transform 0.25s;
 }
+.vehicle-info:hover { background: linear-gradient(145deg,#eaf1fb,#d0e6ff); transform: translateY(-2px); }
 
-.vehicle-info:hover {
-  background: #eaf1fb;
+.vehicle-name { font-size: 20px; font-weight: bold; color: #0055aa; margin-bottom: 6px; }
+.vehicle-author { font-size: 14px; color: #555; margin-bottom: 10px; }
+
+/* 車両詳細ボタン */
+.vehicle-info .detail-btn {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #0055aa;
+  color: #fff;
+  font-size: 13px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.25s, transform 0.25s;
 }
-
-.vehicle-name {
-  font-size: 18px;
-  font-weight: bold;
-  color: #0055aa;
-}
-
-.vehicle-author {
-  font-size: 14px;
-  color: #555;
+.vehicle-info .detail-btn:hover {
+  background: #003366;
+  transform: translateY(-2px);
 }
 
 /* ===== 情報行 ===== */
 .info-row {
   display: flex;
+  justify-content: space-between;
   padding: 10px 0;
   border-bottom: 1px solid #eee;
+  transition: background 0.2s;
 }
+.info-row:hover { background: #f5f9fc; }
+.info-row:last-child { border-bottom: none; }
+.label { font-weight: bold; color: #333; }
 
-.info-row:last-child {
-  border-bottom: none;
-}
-
-.label {
-  width: 140px;
-  font-weight: bold;
-}
-
-/* ===== Kamui鯖 ===== */
+/* ===== Kamui鯖カード ===== */
 .kamui-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
   gap: 15px;
 }
-
 .kamui-item {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  background: #fafafa;
+  border-radius: 16px;
+  background: linear-gradient(135deg,#ffffff,#d9edff);
+  padding: 18px;
+  text-align: center;
+  font-weight: bold;
+  color: #0055aa;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: transform 0.25s, box-shadow 0.25s, background 0.25s;
+}
+.kamui-item:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.15);
+  background: linear-gradient(135deg,#e0f4ff,#cce6ff);
 }
 
 /* ===== フッター ===== */
-footer {
-  text-align: center;
-  padding: 20px;
-  font-size: 13px;
-  color: #666;
-  background: #fafafa;
-  border-top: 1px solid #ddd;
-}
+footer { text-align: center; padding: 30px; font-size: 14px; color: #666; background: #fafafa; border-top: 1px solid #ddd; }
 
-/* ===== スマホ ===== */
-@media (max-width: 600px) {
-  .menu-toggle { display: flex; }
-
-  .header-right {
-    display: none;
-    flex-direction: column;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    background: #fff;
-    border-top: 1px solid #ddd;
-  }
-
-  .header-right.open { display: flex; }
-
-  .header-right a {
-    padding: 12px;
-    border-bottom: 1px solid #eee;
-  }
-
-  .credit-vehicle-split {
-    flex-direction: column;
-  }
-
-  .vehicle-image,
-  .vehicle-info {
-    width: 100%;
-    height: 140px;
-  }
-
-  .info-row {
-    flex-direction: column;
-  }
-
-  .label {
-    width: auto;
-    margin-bottom: 4px;
-  }
+/* ===== モバイル ===== */
+@media(max-width:600px){
+  .menu-toggle{display:flex;}
+  .header-right{display:none;flex-direction:column;position:absolute;top:60px;left:0;width:100%;background:#fff;border-top:1px solid #ddd;}
+  .header-right.open{display:flex;}
+  .header-right a{padding:12px;border-bottom:1px solid #eee;}
+  .credit-vehicle-split{flex-direction:column;}
+  .vehicle-image,.vehicle-info{width:100%;height:160px;}
+  .info-row{flex-direction:column;padding:8px 0;}
+  .label{width:auto;margin-bottom:4px;}
 }
 </style>
 </head>
-
 <body>
 
 <header class="header">
@@ -258,18 +231,10 @@ footer {
     <img src="https://irukatrin.dolphin.f5.si/favicon.ico" class="logo">
     <span class="site-name">Iruka Railway</span>
   </div>
-
-  <div class="menu-toggle" onclick="toggleMenu()">
-    <span></span><span></span><span></span>
-  </div>
-
+  <div class="menu-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></div>
   <nav class="header-right" id="menu"></nav>
-
   <div class="lang-select">
-    <select id="langSelect">
-      <option value="ja">🇯🇵 日本語</option>
-      <option value="en">🇺🇸 English</option>
-    </select>
+    <select id="langSelect"><option value="ja">🇯🇵 日本語</option><option value="en">🇺🇸 English</option></select>
   </div>
 </header>
 
@@ -295,151 +260,75 @@ footer {
 
 <section>
   <h2 id="kamuiTitle"></h2>
-  <div class="box">
-    <div class="kamui-list" id="kamuiList"></div>
-  </div>
+  <div class="box"><div class="kamui-list" id="kamuiList"></div></div>
 </section>
 
 <footer id="footerText"></footer>
 
 <script>
-function toggleMenu() {
-  document.getElementById("menu").classList.toggle("open");
-}
-
-const menuLinks = {
-  ja: [
-    "https://irukatrin.dolphin.f5.si",
-    "fumei",
-    "https://irukatrin.dolphin.f5.si/irukaSNS.html",
-    "fumei",
-    "https://irukatrin.dolphin.f5.si/Pack/Index.html"
-  ],
-  en: [
-    "https://irukatrin.dolphin.f5.si",
-    "fumei",
-    "https://irukatrin.dolphin.f5.si/irukaSNS.html",
-    "fumei",
-    "https://irukatrin.dolphin.f5.si/Pack/Index.html"
-  ]
-};
-
-const data = {
-  ja: {
-    menu: ["ホーム","運行情報","車両利用","チケット","会社概要"],
-    creditTitle: "クレジット",
-    vehicleTitle: "車両情報",
-    aboutTitle: "この会社について",
-    parentTitle: "親会社",
-    kamuiTitle: "Kamui鯖鉄道一覧",
-    footer: "©2025- iruka Railway. All right Reserved.",
-    credits: [
-      { title:"サイト制作", name:"いるか電鉄", img:"https://irukatrin.dolphin.f5.si/favicon.ico" },
-      { title:"デザイン", name:"いるか" },
-      { title:"車両アナウンス（使用予定）", name:"動画制作会社VIDWEB", link:"https://vidweb.co.jp/" },
-      { title:"ロゴ", name:"okutetsu_eisen"}
+function toggleMenu(){document.getElementById("menu").classList.toggle("open");}
+const menuLinks={ja:["https://irukatrin.dolphin.f5.si","fumei","https://irukatrin.dolphin.f5.si/irukaSNS.html","fumei","https://irukatrin.dolphin.f5.si/Pack/Index.html"],en:["https://irukatrin.dolphin.f5.si","fumei","https://irukatrin.dolphin.f5.si/irukaSNS.html","fumei","https://irukatrin.dolphin.f5.si/Pack/Index.html"]};
+const data={
+  ja:{
+    menu:["ホーム","運行情報","車両利用","チケット","会社概要"],
+    creditTitle:"クレジット",
+    vehicleTitle:"車両情報",
+    aboutTitle:"この会社について",
+    parentTitle:"親会社",
+    kamuiTitle:"Kamui鯖鉄道一覧",
+    footer:"©2025- iruka Railway. All right Reserved.",
+    credits:[
+      {title:"サイト制作",name:"いるか電鉄",img:"https://irukatrin.dolphin.f5.si/favicon.ico"},
+      {title:"デザイン",name:"いるか"},
+      {title:"車両アナウンス（使用予定）",name:"動画制作会社VIDWEB",link:"https://vidweb.co.jp/"},
+      {title:"ロゴ",name:"okutetsu_eisen"}
     ],
-    vehicle: {
-      name:"I 6000",
-      author:"製作者 ゆきゆきさん※改造されています。",
-      info:{ "形式":"I 6000","製造年":"2024年","備考":"架空車両" }
-    },
-    about:{ "名称":"いるか電鉄","設立":"2024年","注意":"架空の鉄道プロジェクトです" },
-    parent:{ "親会社名":"ささいるかホールディングス","事業内容":"創作・架空鉄道プロジェクト","備考":"実在しません" },
+    vehicle:{name:"I 6000",author:"製作者 ゆきゆきさん※改造されています。",info:{"形式":"I 6000","製造年":"2024年","備考":"架空車両"}},
+    about:{"名称":"いるか電鉄","設立":"2024","注意":"架空の鉄道プロジェクトです"},
+    parent:{"親会社名":"ささいるかホールディングス","事業内容":"創作・架空鉄道プロジェクト","備考":"実在しません"},
     kamui:["ささ電鉄","kamui鉄道","佐田海洋鉄道","赤城産交電鉄","ささいるか電気軌道(ささいるかホールディングス)","茶ノ川電気鉄道","出島高速鉄道"]
   },
-  en: {
-    menu: ["Home","Operation","Vehicles","Tickets","About"],
-    creditTitle: "Credits",
-    vehicleTitle: "Vehicle Information",
-    aboutTitle: "About This Project",
-    parentTitle: "Parent Company",
-    kamuiTitle: "Kamui Server Railways",
-    footer: "©2025- Iruka Railway. All Rights Reserved.",
-    credits: [
-      { title:"Website", name:"Iruka Railway", img:"https://irukatrin.dolphin.f5.si/favicon.ico" },
-      { title:"Design", name:"Iruka" },
-      { title:"Train Announcement (Planned)", name:"VIDWEB", link:"https://vidweb.co.jp/" },
-      { title:"Logo", name:"okutetsu_eisen"}
+  en:{
+    menu:["Home","Operation","Vehicles","Tickets","About"],
+    creditTitle:"Credits",
+    vehicleTitle:"Vehicle Information",
+    aboutTitle:"About This Project",
+    parentTitle:"Parent Company",
+    kamuiTitle:"Kamui Server Railways",
+    footer:"©2025- Iruka Railway. All Rights Reserved.",
+    credits:[
+      {title:"Website",name:"Iruka Railway",img:"https://irukatrin.dolphin.f5.si/favicon.ico"},
+      {title:"Design",name:"Iruka"},
+      {title:"Train Announcement (Planned)",name:"VIDWEB",link:"https://vidweb.co.jp/"},
+      {title:"Logo",name:"okutetsu_eisen"}
     ],
-    vehicle: {
-      name:"I 6000",
-      author:"Created by Yukiyuki (Modified)",
-      info:{ "Model":"I 6000","Year":"2024","Note":"Fictional vehicle" }
-    },
-    about:{ "Name":"Iruka Railway","Founded":"2024","Note":"Fictional railway project" },
-    parent:{ "Company":"sasairuka HD","Business":"Creative railway projects","Note":"Fictional" },
+    vehicle:{name:"I 6000",author:"Created by Yukiyuki (Modified)",info:{"Model":"I 6000","Year":"2024","Note":"Fictional vehicle"}},
+    about:{"Name":"Iruka Railway","Founded":"2024","Note":"Fictional railway project"},
+    parent:{"Company":"sasairuka HD","Business":"Creative railway projects","Note":"Fictional"},
     kamui:["Sasa Railway","Kamui Railway","Sada Marine Railway","Akagi Sanko Electric Railway","Sasairuka Electric Tramway (Sasairuka Holdings)","Chanagawa Electric Railway","Dejima Rapid Railway"]
   }
 };
+let lang="ja";
+function render(){
+  const d=data[lang],links=menuLinks[lang];
+  menu.innerHTML="";d.menu.forEach((m,i)=>{menu.innerHTML+=`<a href="${links[i]}">${m}</a>`;});
+  creditTitle.textContent=d.creditTitle;vehicleTitle.textContent=d.vehicleTitle;
+  aboutTitle.textContent=d.aboutTitle;parentTitle.textContent=d.parentTitle;
+  kamuiTitle.textContent=d.kamuiTitle;footerText.textContent=d.footer;
 
-let lang = "ja";
-
-function render() {
-  const d = data[lang];
-  const links = menuLinks[lang];
-
-  menu.innerHTML = "";
-  d.menu.forEach((m, i) => {
-    menu.innerHTML += `<a href="${links[i]}">${m}</a>`;
+  creditBox.innerHTML="";d.credits.forEach(c=>{
+    creditBox.innerHTML+=`<div class="credit-item">${c.img?`<img src="${c.img}">`:""}<div><div class="credit-title">${c.title}</div>${c.link?`<a href="${c.link}" target="_blank">${c.name}</a>`:`<div class="credit-name">${c.name}</div>`}</div></div>`;
   });
 
-  creditTitle.textContent = d.creditTitle;
-  vehicleTitle.textContent = d.vehicleTitle;
-  aboutTitle.textContent = d.aboutTitle;
-  parentTitle.textContent = d.parentTitle;
-  kamuiTitle.textContent = d.kamuiTitle;
-  footerText.textContent = d.footer;
+  creditBox.innerHTML+=`<div class="credit-vehicle-split"><div class="vehicle-image"></div><a class="vehicle-info" href="https://x.com/MahuyuYukiyuki" target="_blank"><div class="vehicle-name">${d.vehicle.name}</div><div class="vehicle-author">${d.vehicle.author}</div><span class="detail-btn">詳細を見る</span></a></div>`;
 
-  creditBox.innerHTML = "";
-  d.credits.forEach(c => {
-    creditBox.innerHTML += `
-      <div class="credit-item">
-        ${c.img ? `<img src="${c.img}">` : ""}
-        <div>
-          <div class="credit-title">${c.title}</div>
-          ${c.link ? `<a href="${c.link}" target="_blank">${c.name}</a>` : `<div class="credit-name">${c.name}</div>`}
-        </div>
-      </div>`;
-  });
-
-  creditBox.innerHTML += `
-    <div class="credit-vehicle-split">
-      <div class="vehicle-image"></div>
-      <a class="vehicle-info" href="https://x.com/MahuyuYukiyuki" target="_blank">
-        <div class="vehicle-name">${d.vehicle.name}</div>
-        <div class="vehicle-author">${d.vehicle.author}</div>
-      </a>
-    </div>`;
-
-  vehicleInfo.innerHTML = "";
-  Object.entries(d.vehicle.info).forEach(([k,v])=>{
-    vehicleInfo.innerHTML += `<div class="info-row"><span class="label">${k}</span><span>${v}</span></div>`;
-  });
-
-  aboutBox.innerHTML = "";
-  Object.entries(d.about).forEach(([k,v])=>{
-    aboutBox.innerHTML += `<div class="info-row"><span class="label">${k}</span><span>${v}</span></div>`;
-  });
-
-  parentBox.innerHTML = "";
-  Object.entries(d.parent).forEach(([k,v])=>{
-    parentBox.innerHTML += `<div class="info-row"><span class="label">${k}</span><span>${v}</span></div>`;
-  });
-
-  kamuiList.innerHTML = "";
-  d.kamui.forEach(r=>{
-    kamuiList.innerHTML += `<div class="kamui-item">${r}</div>`;
-  });
+  vehicleInfo.innerHTML="";Object.entries(d.vehicle.info).forEach(([k,v])=>{vehicleInfo.innerHTML+=`<div class="info-row"><span class="label">${k}</span><span>${v}</span></div>`;});
+  aboutBox.innerHTML="";Object.entries(d.about).forEach(([k,v])=>{aboutBox.innerHTML+=`<div class="info-row"><span class="label">${k}</span><span>${v}</span></div>`;});
+  parentBox.innerHTML="";Object.entries(d.parent).forEach(([k,v])=>{parentBox.innerHTML+=`<div class="info-row"><span class="label">${k}</span><span>${v}</span></div>`;});
+  kamuiList.innerHTML="";d.kamui.forEach(r=>{kamuiList.innerHTML+=`<div class="kamui-item">${r}</div>`;});
 }
-
-langSelect.addEventListener("change", e => {
-  lang = e.target.value;
-  render();
-});
-
+langSelect.addEventListener("change",e=>{lang=e.target.value;render();});
 render();
 </script>
-
 </body>
 </html>
