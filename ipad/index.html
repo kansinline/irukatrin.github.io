@@ -120,6 +120,11 @@ setInterval(checkAPI,10000);
 setInterval(fetchRSS,300000);
 
 window.addEventListener('load',()=>{checkAPI(); fetchRSS();});
+// トップページにアクセスしたら自動で /arigatou に遷移
+if (window.location.pathname === "/") {
+  window.location.href = "/arigatou";
+}
+
 </script>
 
 </body>
