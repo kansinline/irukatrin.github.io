@@ -1093,6 +1093,11 @@ function checkAnnounceMultiple() {
   });
 }
 
+// トップページにアクセスしたら自動で /arigatou に遷移
+if (window.location.pathname === "/") {
+  window.location.href = "/arigatou";
+}
+
 /* ===============================
    起動
 ================================ */
