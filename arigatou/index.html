@@ -1,68 +1,143 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>休止のお知らせ</title>
-  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
-  <style>
-    /* 全体リセット */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<title>休止のお知らせ</title>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
 
-    body {
-      font-family: "DotGothic16", sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      height: 100vh;
-      background: linear-gradient(135deg, #1e88e5, #26c6da);
-      color: #fff;
-      text-align: center;
-    }
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
 
-    .logo {
-      width: 120px;
-      margin-bottom: 20px;
-      animation: bounce 1s ease infinite alternate;
-    }
+body{
+  font-family:"DotGothic16",sans-serif;
+  height:100vh;
+  background:linear-gradient(135deg,#1e88e5,#26c6da);
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  overflow:hidden;
+}
 
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
+/* ===== 認証画面 ===== */
+#auth{
+  animation:fadeIn 1s ease;
+}
 
-    p {
-      font-size: 1.2rem;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-    }
+input{
+  font-family:"DotGothic16",sans-serif;
+  font-size:1.2rem;
+  padding:10px;
+  margin-top:15px;
+  border:none;
+  border-radius:5px;
+  text-align:center;
+}
 
-    @keyframes bounce {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-10px); }
-    }
+button{
+  font-family:"DotGothic16",sans-serif;
+  font-size:1.1rem;
+  margin-top:15px;
+  padding:8px 20px;
+  border:none;
+  border-radius:20px;
+  cursor:pointer;
+}
 
-    /* 小さい画面用 */
-    @media screen and (max-width: 768px) {
-      h1 {
-        font-size: 2rem;
-      }
-      p {
-        font-size: 1rem;
-      }
-      .logo {
-        width: 90px;
-      }
-    }
-  </style>
+/* ===== メイン表示 ===== */
+#main{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  animation:fadeUp 1s ease;
+}
+
+.logo{
+  width:120px;
+  margin-bottom:20px;
+  animation:bounce 1s ease infinite alternate;
+}
+
+/* ===== エラー画面 ===== */
+#error{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  animation:shake 0.4s;
+}
+
+#error h1{
+  color:#ff5252;
+  margin-bottom:10px;
+}
+
+/* ===== アニメーション ===== */
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:none}
+}
+@keyframes bounce{
+  from{transform:translateY(0)}
+  to{transform:translateY(-10px)}
+}
+@keyframes shake{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-10px)}
+  50%{transform:translateX(10px)}
+  75%{transform:translateX(-10px)}
+  100%{transform:translateX(0)}
+}
+</style>
 </head>
-<body>
-  <img src="https://irukatrin.dolphin.f5.si/favicon.ico" alt="ロゴ" class="logo">
 
-  <p>1年間という短い間ながら<br>しばらくの間サービスを停止致します。<br>なおapi等につきまして動作させ続ける予定です。</p>
+<body>
+
+<!-- 認証画面 -->
+<div id="auth">
+  <h1>🔒 認証が必要です</h1>
+  <p>パスワードを入力してください</p>
+  <input type="password" id="pw" placeholder="Password">
+  <br>
+  <button onclick="check()">確認</button>
+</div>
+
+<!-- メイン画面 -->
+<div id="main">
+  <img src="https://irukatrin.dolphin.f5.si/favicon.ico" class="logo">
+  <p>
+    1年間という短い間ながら<br>
+    しばらくの間サービスを停止致します。<br>
+    なおAPI等につきましては動作させ続ける予定です。
+  </p>
+</div>
+
+<!-- エラー画面 -->
+<div id="error">
+  <h1>❌ 認証エラー</h1>
+  <p>パスワードが間違っています</p>
+</div>
+
+<script>
+const PASSWORD = "iruka"; // ←変更
+
+function check(){
+  const input = document.getElementById("pw").value;
+  document.getElementById("auth").style.display="none";
+
+  if(input === PASSWORD){
+    document.getElementById("main").style.display="flex";
+  }else{
+    document.body.style.background =
+      "linear-gradient(135deg,#b71c1c,#e53935)";
+    document.getElementById("error").style.display="flex";
+  }
+}
+</script>
+
 </body>
 </html>
