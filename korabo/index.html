@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iruka Railway コラボページ</title>
+
+<style>
+/* ===== リセット ===== */
+* {
+  box-sizing: border-box;
+}
+
+/* ===== ヘッダー固定 ===== */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #ded5c0;
+  border-bottom: 1px solid #ddd;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 36px;
+  margin-right: 10px;
+}
+
+.site-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.header-right {
+  display: flex;
+  gap: 14px;
+}
+
+.header-right a {
+  text-decoration: none;
+  color: #0055aa;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.header-right a:hover {
+  color: #003366;
+}
+
+.lang-select {
+  margin-left: 10px;
+}
+
+.lang-select select {
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid #0055aa;
+  color: #0055aa;
+  font-size: 12px;
+  background: #fff;
+}
+
+/* ===== ハンバーガー ===== */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  width: 24px;
+  height: 3px;
+  background: #451722;
+  border-radius: 2px;
+}
+
+/* ===== メイン ===== */
+body {
+  margin: 0;
+  padding-top: 64px;
+  background: #f5f5f5;
+  font-family: "Nunito", system-ui, sans-serif;
+}
+
+.page-content {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* ===== コラボヒーロー ===== */
+.collab-hero {
+  background: linear-gradient(135deg, #ded5c0, #f5efe3);
+  padding: 32px;
+  border-radius: 14px;
+  margin-bottom: 24px;
+}
+
+.collab-hero h1 {
+  margin: 0 0 8px;
+  font-size: 30px;
+}
+
+.collab-hero p {
+  margin: 0;
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+/* ===== セクション ===== */
+.section {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.section h2 {
+  margin-top: 0;
+  border-left: 5px solid #0055aa;
+  padding-left: 10px;
+  font-size: 22px;
+}
+
+/* ===== コラボ内容 ===== */
+.collab-list {
+  padding-left: 20px;
+}
+
+.collab-list li {
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+/* ===== 情報テーブル ===== */
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.info-table th,
+.info-table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.info-table th {
+  width: 140px;
+  background: #f0f0f0;
+}
+
+/* ===== フッター ===== */
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+  font-size: 13px;
+}
+/* どんな画像でも画面に収まる */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.gallery img {
+  width: 100%;
+  aspect-ratio: 16 / 9;   /* 比率固定（好みで変更） */
+  object-fit: cover;     /* 枠いっぱいに表示 */
+  border-radius: 10px;
+.section a {
+  color: #0055aa;
+  text-decoration: underline;
+}
+
+.section a:hover {
+  color: #003366;
+}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <img src="https://irukatrin.dolphin.f5.si/favicon.ico" class="logo">
+    <span class="site-name">Iruka Railway</span>
+  </div>
+
+  <div class="menu-toggle" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <nav class="header-right" id="menu">
+    <a href="/">ホーム</a>
+    <a href="/collab.html">コラボ</a>
+    <a href="/train.html">車両</a>
+    <a href="/news.html">お知らせ</a>
+  </nav>
+
+  <div class="lang-select">
+    <select id="langSelect">
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="en">🇺🇸 English</option>
+    </select>
+  </div>
+</header>
+<img src="https://raw.githubusercontent.com/kansinline/irukatrin.github.io/refs/heads/main/image/小見出しを追加.png"</img>
+<main class="page-content">
+
+  <section class="collab-hero">
+    <h1>Iruka Railway × legisters</h1>
+    <p>公式コラボレーション企画</p>
+  </section>
+
+  <section class="section">
+    <h2>コラボ内容</h2>
+    <ul class="collab-list">
+      <li>限定ユーザーページ</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>開催情報</h2>
+    <table class="info-table">
+      <tr>
+        <th>開催期間</th>
+        <td>2026年2月1日 〜 </td>
+      </tr>
+      <tr>
+
+      </tr>
+      <tr>
+        <th>備考</th>
+        <td>内容は予告なく変更される場合があります。</td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2>詳細説明</h2>
+    <p>
+ 今回のものは思いつきで始まっているため不具合などがある可能性が考えられれます。ご了承ください.
+    </p>
+  </section>
+
+<section class="section">
+  <h2>ユーザー紹介ページリンク</h2>
+  <p>
+    <a href="https://irukarailwayapi.onrender.com/users/" target="_blank" rel="noopener">
+      https://irukarailwayapi.onrender.com/users/
+    </a>
+  </p>
+</section>
+</main>
+
+<footer class="footer">
+  © 2026 Iruka Railway
+</footer>
+
+<script>
+function toggleMenu() {
+  const menu = document.getElementById("menu");
+  if (menu.style.display === "flex") {
+    menu.style.display = "none";
+  } else {
+    menu.style.display = "flex";
+  }
+}
+</script>
+
+</body>
+</html>
