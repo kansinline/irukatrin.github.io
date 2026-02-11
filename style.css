@@ -436,14 +436,14 @@ body {
 }
 
 /* SNSセクション（阪急風） */
-.sns-hankyu {
+.sns-iruka {
   padding: 40px 20px;
   text-align: center;
   background: #f8f5f0;
   font-family: "Hiragino Mincho ProN", "游明朝", serif;
 }
 
-.sns-hankyu h2 {
+.sns-iruka h2 {
   font-size: 24px;
   margin-bottom: 30px;
   color: black;
