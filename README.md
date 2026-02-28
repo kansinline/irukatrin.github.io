@@ -1,1 +1,2 @@
 いるか電鉄(架空)のマイクラ鯖の鉄道(？)です。
+（Copyright (c) [Year] [irukakun859]）
