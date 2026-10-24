@@ -1,825 +1,152 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>カメレオン スイカゲーム 3D Pro</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-    body {
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      background: radial-gradient(circle at center, #1b2838 0%, #0d121d 100%);
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      color: #fff;
-    }
-    #canvas-container {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-    }
-    #ui-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 10;
-      pointer-events: none;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 20px;
-    }
-    .interactive {
-      pointer-events: auto;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-    .score-panel {
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 16px;
-      padding: 15px 25px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-    .score-label {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: #94a3b8;
-    }
-    .score-value {
-      font-size: 38px;
-      font-weight: 800;
-      color: #10b981;
-      text-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
-    }
-    .next-container {
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 16px;
-      padding: 12px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-    .next-title {
-      font-size: 11px;
-      color: #94a3b8;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-    }
-    #next-canvas {
-      width: 90px;
-      height: 90px;
-      display: block;
-    }
-    .evolution-chart {
-      position: absolute;
-      right: 20px;
-      top: 130px;
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 10px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      opacity: 0.15; /* プレイ中は邪魔にならないよう薄くする */
-      pointer-events: none;
-    }
-    .evolution-chart:hover, .evolution-chart.show-fully {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .evo-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 11px;
-      color: #cbd5e1;
-    }
-    .evo-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      box-shadow: inset 0 -2px 4px rgba(0,0,0,0.4);
-    }
-    .controls-hint {
-      text-align: center;
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 10px 24px;
-      border-radius: 30px;
-      align-self: center;
-      margin-bottom: 10px;
-      font-size: 13px;
-      color: #e2e8f0;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
-    #game-over-modal {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(10px);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 100;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease;
-    }
-    #game-over-modal.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .modal-card {
-      background: #0f172a;
-      border: 2px solid #ef4444;
-      padding: 40px;
-      border-radius: 24px;
-      text-align: center;
-      box-shadow: 0 0 50px rgba(239, 68, 68, 0.3);
-      max-width: 420px;
-      width: 90%;
-    }
-    .modal-title {
-      font-size: 36px;
-      font-weight: 900;
-      color: #ef4444;
-      margin-bottom: 10px;
-      letter-spacing: 2px;
-    }
-    .btn {
-      background: linear-gradient(135deg, #10b981, #059669);
-      border: none;
-      color: #fff;
-      font-weight: 700;
-      font-size: 16px;
-      padding: 14px 36px;
-      border-radius: 30px;
-      cursor: pointer;
-      margin-top: 24px;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
-    }
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
-    }
-  </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#100d08">
+<title>BANANA CATCH! — Banana Republic Arcade</title>
+<style>
+:root{--yellow:#ffe04b;--gold:#ffb900;--dark:#100d08;--cream:#fff8d9;--green:#a6e66e}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;background:#100d08;color:var(--cream);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
+button{font:inherit;cursor:pointer}
+#loader{position:fixed;inset:0;z-index:1000;background:radial-gradient(ellipse at center,#42300b,#100d08 68%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;transition:opacity .75s ease,visibility .75s}
+#loader.done{opacity:0;visibility:hidden;pointer-events:none}
+.loader-logo{font-size:clamp(4rem,18vw,7rem);filter:drop-shadow(0 0 25px #ffd52a88);animation:bananaSpin 1.35s ease-in-out infinite}
+.loader-title{font-weight:1000;font-size:clamp(1.3rem,5vw,2rem);letter-spacing:.12em;color:var(--yellow);animation:pulse 1s ease-in-out infinite alternate}
+.loader-sub{font-size:.75rem;letter-spacing:.25em;color:#d8c78f}
+.progress-shell{width:min(76vw,330px);height:8px;background:#ffffff20;border-radius:99px;overflow:hidden;margin-top:10px;border:1px solid #ffffff22}
+.progress{height:100%;width:0;background:linear-gradient(90deg,#ffae00,#fff27a);border-radius:99px;box-shadow:0 0 18px #ffdb38;transition:width .2s}
+#loadPercent{font-variant-numeric:tabular-nums;color:#fff1ae;font-size:.8rem}
+.loader-bits{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.loader-bit{position:absolute;bottom:-60px;font-size:26px;opacity:.6;animation:floatUp 4s linear infinite}
+@keyframes bananaSpin{0%,100%{transform:rotate(-14deg) scale(.94)}50%{transform:rotate(14deg) scale(1.08)}}
+@keyframes pulse{to{text-shadow:0 0 20px #ffda4c;transform:scale(1.03)}}
+@keyframes floatUp{to{transform:translateY(-120vh) rotate(360deg);opacity:0}}
+#app{opacity:0;transform:translateY(12px);transition:opacity .8s,transform .8s}
+#app.ready{opacity:1;transform:none}
+nav{height:65px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(14px,4vw,42px);border-bottom:1px solid #ffffff18;background:#100d08dd;position:sticky;top:0;z-index:20;backdrop-filter:blur(14px)}
+.brand{font-weight:1000;letter-spacing:.04em;color:var(--yellow);display:flex;align-items:center;gap:8px}.brand span{font-size:1.6rem;display:inline-block;animation:bananaSpin 3s ease-in-out infinite}
+.navtag{font-size:.72rem;border:1px solid #ffe04b66;border-radius:99px;padding:6px 10px;color:#ffdf55;letter-spacing:.08em}
+.hero{position:relative;min-height:260px;text-align:center;padding:48px 15px 32px;overflow:hidden;background:radial-gradient(ellipse at 50% 0,#54400e 0,transparent 65%)}
+.hero h1{font-size:clamp(2.5rem,10vw,5.6rem);line-height:.98;letter-spacing:-.06em;margin:0;color:var(--yellow);text-shadow:0 5px 0 #8d5900,0 0 40px #ffcc3340}
+.hero h1 .outline{color:transparent;-webkit-text-stroke:1.5px #fff4b1}
+.hero p{color:#e8d9a7;margin:18px 0 0;font-size:.9rem;letter-spacing:.04em}
+.floating{position:absolute;font-size:clamp(1.5rem,5vw,3rem);opacity:.65;pointer-events:none;animation:float 4s ease-in-out infinite}
+.f1{left:8%;top:28%;animation-delay:-1s}.f2{right:10%;top:20%;animation-delay:-2s}.f3{right:19%;bottom:8%;font-size:1.5rem;animation-delay:-.5s}.f4{left:18%;bottom:10%;font-size:1.4rem}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-9deg)}50%{transform:translateY(-15px) rotate(9deg)}}
+.wrap{width:min(100% - 24px,600px);margin:0 auto 45px}
+.hud{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 12px}
+.stat{background:linear-gradient(145deg,#ffffff13,#ffffff06);border:1px solid #ffffff25;border-radius:14px;padding:9px 4px;text-align:center;box-shadow:inset 0 1px #ffffff0c}
+.stat span{display:block;font-size:.72rem;color:#d8c98f}.stat strong{font-size:1.35rem;color:var(--yellow);font-variant-numeric:tabular-nums}
+.stage{position:relative;border:2px solid #e9bf37;border-radius:20px;overflow:hidden;background:#172a3b;box-shadow:0 15px 50px #0009,0 0 0 5px #ffdf4b0c;touch-action:pan-y;transform:translateZ(0)}
+canvas{display:block;width:100%;height:auto;aspect-ratio:4/5}
+#toast{position:absolute;left:50%;top:15px;transform:translate(-50%,-12px) scale(.7);background:#fff4b9;color:#382700;border-radius:999px;padding:8px 16px;font-weight:1000;opacity:0;pointer-events:none;white-space:nowrap;box-shadow:0 5px 25px #ffdd4c55}
+#toast.show{animation:toastPop .8s ease both}
+@keyframes toastPop{0%{opacity:0;transform:translate(-50%,-12px) scale(.7)}20%,70%{opacity:1;transform:translate(-50%,0) scale(1.08)}100%{opacity:0;transform:translate(-50%,-15px) scale(.95)}}
+.overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px;background:#090b0bdc;backdrop-filter:blur(7px);transition:opacity .4s,transform .4s}
+.overlay.hidden{opacity:0;transform:scale(1.04);pointer-events:none;visibility:hidden}
+.big{font-size:4.3rem;line-height:1.1;filter:drop-shadow(0 5px 0 #8b5a00);animation:float 2.5s ease-in-out infinite}
+.overlay h2{margin:12px 0 5px;font-size:1.65rem;color:var(--yellow)}
+.overlay p{line-height:1.65;margin:5px 0 18px;color:#f6edcf;font-size:.9rem}
+.primary{border:0;border-radius:999px;background:linear-gradient(180deg,#fff17c,#ffb900);color:#281b00;font-weight:1000;font-size:1rem;padding:14px 25px;box-shadow:0 5px 0 #a86c00,0 0 25px #ffcf3650;transition:transform .15s,filter .15s}
+.primary:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.primary:active{transform:translateY(3px);box-shadow:0 2px 0 #a86c00}
+.controls{display:flex;gap:12px;margin-top:12px}
+.controls button{flex:1;border:1px solid #ffe04b66;border-radius:14px;background:linear-gradient(145deg,#3d2d0c,#211a0b);color:#ffe77b;font-weight:900;font-size:1.2rem;padding:12px;box-shadow:0 4px 0 #080704;touch-action:manipulation;transition:transform .1s}
+.controls button:active{transform:translateY(3px)}
+.help{text-align:center;font-size:.78rem;color:#c8ba8d;margin:14px 0 0;line-height:1.6}
+footer{text-align:center;padding:24px 12px 34px;border-top:1px solid #ffffff13;color:#8f825e;font-size:.72rem;letter-spacing:.08em}
+#flash{position:fixed;inset:0;background:#fff8c7;pointer-events:none;z-index:50;opacity:0}
+#flash.hit{animation:flash .22s ease}
+@keyframes flash{0%{opacity:.55}100%{opacity:0}}
+.shake{animation:shake .28s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .8s,transform .8s}.reveal.visible{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
-  <div id="canvas-container"></div>
-
-  <div id="ui-container">
-    <header>
-      <div class="score-panel">
-        <div class="score-label">SCORE</div>
-        <div class="score-value" id="score-val">0</div>
-      </div>
-      <div class="next-container interactive" id="evo-toggle-btn" title="リストを表示/非表示">
-        <div class="next-title">NEXT FRUIT</div>
-        <canvas id="next-canvas"></canvas>
-      </div>
-    </header>
-
-    <div class="evolution-chart" id="evo-chart"></div>
-
-    <div class="controls-hint">
-      [操作] ドラッグ / スワイプで移動 ｜ [指を離す] または [Space] で落とす
+<div id="loader" role="status" aria-label="Loading">
+  <div class="loader-bits" id="loaderBits"></div>
+  <div class="loader-logo">🍌</div>
+  <div class="loader-title">BANANA CATCH!</div>
+  <div class="loader-sub">BANANA REPUBLIC ARCADE</div>
+  <div class="progress-shell"><div class="progress" id="progress"></div></div>
+  <div id="loadPercent">LOADING 0%</div>
+</div>
+<div id="flash"></div>
+<div id="app">
+  <nav><div class="brand"><span>🍌</span> BANANA ARCADE</div><div class="navtag">MINI GAME 001</div></nav>
+  <header class="hero">
+    <span class="floating f1">🍌</span><span class="floating f2">✨</span><span class="floating f3">⭐</span><span class="floating f4">🍌</span>
+    <h1>BANANA<br><span class="outline">CATCH!</span></h1>
+    <p>キャッチして、集めて、バナナマスターになれ。</p>
+  </header>
+  <main class="wrap reveal">
+    <div class="hud">
+      <div class="stat"><span>SCORE</span><strong id="score">0</strong></div>
+      <div class="stat"><span>TIME LEFT</span><strong id="time">30</strong></div>
+      <div class="stat"><span>LIFE</span><strong id="lives">❤️❤️❤️</strong></div>
     </div>
-  </div>
-
-  <div id="game-over-modal">
-    <div class="modal-card">
-      <div class="modal-title">GAME OVER</div>
-      <p style="margin-bottom: 15px; color: #94a3b8; font-size: 14px;">フルーツがコンテナから溢れ出しました！</p>
-      <div style="font-size: 20px; margin-bottom: 20px; color: #cbd5e1;">最終スコア: <span id="final-score" style="color:#10b981; font-weight:800; font-size: 28px;">0</span></div>
-      <button class="btn interactive" onclick="resetGame()">もう一度挑戦する</button>
+    <div class="stage" id="stage">
+      <canvas id="game" width="400" height="500" aria-label="バナナをキャッチするゲーム"></canvas>
+      <div id="toast">🍌 +10 POINTS!</div>
+      <div class="overlay" id="start">
+        <div class="big">🍌</div><h2>バナナを集めろ！</h2>
+        <p>落ちてくるバナナをカゴでキャッチ！<br>💣 爆弾に当たるとライフが減るぞ。<br>制限時間30秒でハイスコアを狙え！</p>
+        <button class="primary" id="startBtn">GAME START　▶</button>
+      </div>
+      <div class="overlay hidden" id="result">
+        <div class="big" id="resultEmoji">🏆</div><h2 id="resultTitle">GAME OVER</h2><p id="resultText"></p>
+        <button class="primary" id="againBtn">PLAY AGAIN　↻</button>
+      </div>
     </div>
-  </div>
-
-  <script>
-    const FRUIT_TYPES = [
-      { name: 'チェリー', radius: 0.45, color: 0xe11d48, points: 10, mass: 1.0, texType: 'cherry' },
-      { name: 'イチゴ', radius: 0.65, color: 0xf43f5e, points: 20, mass: 1.3, texType: 'strawberry' },
-      { name: 'ブドウ', radius: 0.9, color: 0x8b5cf6, points: 40, mass: 1.8, texType: 'grape' },
-      { name: 'デコポン', radius: 1.15, color: 0xf97316, points: 80, mass: 2.5, texType: 'orange' },
-      { name: '柿', radius: 1.45, color: 0xea580c, points: 160, mass: 3.4, texType: 'persimmon' },
-      { name: 'リンゴ', radius: 1.8, color: 0xdc2626, points: 320, mass: 4.5, texType: 'apple' },
-      { name: 'ナシ', radius: 2.2, color: 0xeab308, points: 640, mass: 6.0, texType: 'pear' },
-      { name: 'モモ', radius: 2.65, color: 0xf472b6, points: 1280, mass: 8.0, texType: 'peach' },
-      { name: 'パイナップル', radius: 3.15, color: 0xfacc15, points: 2560, mass: 10.5, texType: 'pineapple' },
-      { name: 'メロン', radius: 3.7, color: 0x22c55e, points: 5120, mass: 13.5, texType: 'melon' },
-      { name: 'スイカ', radius: 4.3, color: 0x15803d, points: 10240, mass: 17.0, texType: 'watermelon' }
-    ];
-
-    const CONTAINER_WIDTH = 10;
-    const CONTAINER_HEIGHT = 14;
-    const CONTAINER_DEPTH = 10;
-    const DROP_Y = 5.5;
-    const DAMPING = 0.96;
-    const RESTITUTION = 0.15;
-
-    let scene, camera, renderer;
-    let fruits = [];
-    let score = 0;
-    let isGameOver = false;
-    let canDrop = true;
-    let currentFruitIndex = 0;
-    let nextFruitIndex = 0;
-
-    let aimX = 0;
-    let aimZ = 0;
-    let currentFruitMesh = null;
-    let dropGuideMesh = null;
-    let chameleonMesh, eyeLeft, eyeRight, tongueMesh;
-    let tongueAnim = 0;
-
-    const keys = { left: false, right: false };
-    const textureCache = {};
-
-    // タップ誤爆防止用の座標トラッキング
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let hasMovedSignificantly = false;
-
-    const scoreValElem = document.getElementById('score-val');
-    const finalScoreElem = document.getElementById('final-score');
-    const gameOverModal = document.getElementById('game-over-modal');
-    const nextCanvas = document.getElementById('next-canvas');
-    let nextCtx = nextCanvas.getContext('2d');
-    const evoChartElem = document.getElementById('evo-chart');
-
-    let audioCtx = null;
-
-    function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-    }
-
-    function playSound(type) {
-      if (!audioCtx) return;
-      try {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        const now = audioCtx.currentTime;
-
-        if (type === 'drop') {
-          osc.frequency.setValueAtTime(260, now);
-          osc.frequency.exponentialRampToValueAtTime(80, now + 0.18);
-          gain.gain.setValueAtTime(0.25, now);
-          gain.gain.linearRampToValueAtTime(0, now + 0.18);
-          osc.start(now);
-          osc.stop(now + 0.18);
-        } else if (type === 'merge') {
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(320, now);
-          osc.frequency.exponentialRampToValueAtTime(720, now + 0.22);
-          gain.gain.setValueAtTime(0.35, now);
-          gain.gain.linearRampToValueAtTime(0, now + 0.22);
-          osc.start(now);
-          osc.stop(now + 0.22);
-        }
-      } catch (e) {}
-    }
-
-    function generateFruitTexture(type, colorHex) {
-      if (textureCache[type]) return textureCache[type];
-      const canvas = document.createElement('canvas');
-      canvas.width = 512;
-      canvas.height = 512;
-      const ctx = canvas.getContext('2d');
-
-      const hexStr = '#' + colorHex.toString(16).padStart(6, '0');
-      ctx.fillStyle = hexStr;
-      ctx.fillRect(0, 0, 512, 512);
-
-      if (type === 'watermelon') {
-        ctx.fillStyle = '#06200a';
-        for (let i = 0; i < 8; i++) {
-          ctx.beginPath();
-          const x = i * 64 + 10;
-          ctx.moveTo(x, 0);
-          for (let y = 0; y <= 512; y += 40) {
-            ctx.lineTo(x + Math.sin(y * 0.05) * 20, y);
-          }
-          ctx.lineTo(x + 35, 512);
-          for (let y = 512; y >= 0; y -= 40) {
-            ctx.lineTo(x + 35 + Math.sin(y * 0.05) * 20, y);
-          }
-          ctx.closePath();
-          ctx.fill();
-        }
-      } else if (type === 'strawberry') {
-        ctx.fillStyle = '#fef08a';
-        for (let y = 20; y < 512; y += 45) {
-          const shift = (y / 45) % 2 === 0 ? 0 : 25;
-          for (let x = 20 + shift; x < 512; x += 50) {
-            ctx.beginPath();
-            ctx.ellipse(x, y, 3, 6, 0, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
-      } else if (type === 'pineapple') {
-        ctx.strokeStyle = '#854d0e';
-        ctx.lineWidth = 6;
-        for (let i = -512; i < 1024; i += 48) {
-          ctx.beginPath();
-          ctx.moveTo(i, 0); ctx.lineTo(i + 512, 512); ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(i, 512); ctx.lineTo(i + 512, 0); ctx.stroke();
-        }
-      } else if (type === 'melon') {
-        ctx.strokeStyle = '#dcfce7';
-        ctx.lineWidth = 4;
-        ctx.globalAlpha = 0.6;
-        for (let i = 0; i < 50; i++) {
-          ctx.beginPath();
-          ctx.arc(Math.random() * 512, Math.random() * 512, 20 + Math.random() * 40, 0, Math.PI * 2);
-          ctx.stroke();
-        }
-      } else {
-        const grad = ctx.createRadialGradient(256, 256, 20, 256, 256, 250);
-        grad.addColorStop(0, 'rgba(255,255,255,0.2)');
-        grad.addColorStop(1, 'rgba(0,0,0,0.25)');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, 512, 512);
-      }
-
-      const texture = new THREE.CanvasTexture(canvas);
-      textureCache[type] = texture;
-      return texture;
-    }
-
-    function init() {
-      const container = document.getElementById('canvas-container');
-
-      scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x0a0f1d);
-      scene.fog = new THREE.FogExp2(0x0a0f1d, 0.012);
-
-      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-      camera.position.set(0, 6, 27);
-      camera.lookAt(0, -1, 0);
-
-      renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-      container.appendChild(renderer.domElement);
-
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-      scene.add(ambientLight);
-
-      const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-      dirLight.position.set(12, 24, 16);
-      dirLight.castShadow = true;
-      dirLight.shadow.mapSize.width = 2048;
-      dirLight.shadow.mapSize.height = 2048;
-      scene.add(dirLight);
-
-      const rimLight = new THREE.PointLight(0x10b981, 0.8, 40);
-      rimLight.position.set(-15, 10, -10);
-      scene.add(rimLight);
-
-      createContainer();
-      createChameleon();
-      createDropGuide();
-      buildEvoChart();
-
-      nextCanvas.width = 90;
-      nextCanvas.height = 90;
-
-      // Listeners (Pointer Events for robust mouse/touch handling)
-      window.addEventListener('resize', onWindowResize);
-      window.addEventListener('pointerdown', onPointerDown);
-      window.addEventListener('pointermove', onPointerMove);
-      window.addEventListener('pointerup', onPointerUp);
-      window.addEventListener('keydown', onKeyDown);
-      window.addEventListener('keyup', onKeyUp);
-
-      // リスト部分にホバー/タップしたときに一時的にリストを全表示にする
-      document.getElementById('evo-toggle-btn').addEventListener('mouseenter', () => evoChartElem.classList.add('show-fully'));
-      document.getElementById('evo-toggle-btn').addEventListener('mouseleave', () => evoChartElem.classList.remove('show-fully'));
-      evoChartElem.addEventListener('mouseenter', () => evoChartElem.classList.add('show-fully'));
-      evoChartElem.addEventListener('mouseleave', () => evoChartElem.classList.remove('show-fully'));
-
-      currentFruitIndex = getRandomStartFruit();
-      nextFruitIndex = getRandomStartFruit();
-      updateNextCanvas();
-      updateHoldFruitMesh();
-
-      animate();
-    }
-
-    function createContainer() {
-      const wallMat = new THREE.MeshPhysicalMaterial({
-        color: 0xffffff, transparent: true, opacity: 0.18, roughness: 0.05, transmission: 0.92, thickness: 1.5, clearcoat: 1.0
-      });
-      const frameMat = new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x022c22, roughness: 0.3, metalness: 0.8 });
-
-      const bottom = new THREE.Mesh(new THREE.BoxGeometry(CONTAINER_WIDTH, 0.4, CONTAINER_DEPTH), wallMat);
-      bottom.position.y = -CONTAINER_HEIGHT / 2;
-      bottom.receiveShadow = true;
-      scene.add(bottom);
-
-      const sideG = new THREE.BoxGeometry(0.4, CONTAINER_HEIGHT, CONTAINER_DEPTH);
-      const leftWall = new THREE.Mesh(sideG, wallMat); leftWall.position.set(-CONTAINER_WIDTH / 2, 0, 0); scene.add(leftWall);
-      const rightWall = new THREE.Mesh(sideG, wallMat); rightWall.position.set(CONTAINER_WIDTH / 2, 0, 0); scene.add(rightWall);
-      const backWall = new THREE.Mesh(new THREE.BoxGeometry(CONTAINER_WIDTH, CONTAINER_HEIGHT, 0.4), wallMat); backWall.position.set(0, 0, -CONTAINER_DEPTH / 2); scene.add(backWall);
-
-      const grid = new THREE.GridHelper(40, 20, 0x10b981, 0x1e293b);
-      grid.position.y = -CONTAINER_HEIGHT / 2 - 0.2;
-      scene.add(grid);
-    }
-
-    function createChameleon() {
-      const chamGroup = new THREE.Group();
-      const skinMat = new THREE.MeshStandardMaterial({ color: 0x22c55e, roughness: 0.3, metalness: 0.1 });
-
-      const body = new THREE.Mesh(new THREE.SphereGeometry(1.4, 24, 24).scale(1.3, 0.95, 0.95), skinMat);
-      chamGroup.add(body);
-
-      const head = new THREE.Mesh(new THREE.ConeGeometry(1.1, 2.2, 20).rotateX(-Math.PI / 2), skinMat);
-      head.position.set(0, 0.2, 1.2);
-      chamGroup.add(head);
-
-      const crest = new THREE.Mesh(new THREE.ConeGeometry(0.5, 1.6, 12), skinMat);
-      crest.position.set(0, 1.3, 0.8); crest.rotation.x = -0.4;
-      chamGroup.add(crest);
-
-      const eyeMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.1 });
-      const eyeBaseG = new THREE.SphereGeometry(0.45, 16, 16);
-
-      eyeLeft = new THREE.Group();
-      eyeLeft.add(new THREE.Mesh(eyeBaseG, skinMat), Object.assign(new THREE.Mesh(new THREE.SphereGeometry(0.2, 12, 12), eyeMat), { position: new THREE.Vector3(0, 0, 0.35) }));
-      eyeLeft.position.set(-0.95, 0.5, 1.4);
-
-      eyeRight = eyeLeft.clone();
-      eyeRight.position.set(0.95, 0.5, 1.4);
-      chamGroup.add(eyeLeft, eyeRight);
-
-      tongueMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 1, 12), new THREE.MeshBasicMaterial({ color: 0xf43f5e }));
-      tongueMesh.rotation.x = Math.PI / 2;
-      tongueMesh.position.set(0, -0.1, 1.8);
-      tongueMesh.scale.set(1, 0.01, 1);
-      chamGroup.add(tongueMesh);
-
-      chamGroup.position.set(0, DROP_Y + 3.2, 0);
-      scene.add(chamGroup);
-      chameleonMesh = chamGroup;
-    }
-
-    function createDropGuide() {
-      dropGuideMesh = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.08, 0.08, CONTAINER_HEIGHT, 12),
-        new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.3 })
-      );
-      scene.add(dropGuideMesh);
-    }
-
-    function createFruitMesh(index) {
-      const def = FRUIT_TYPES[index];
-      const mesh = new THREE.Mesh(
-        new THREE.SphereGeometry(def.radius, 32, 32),
-        new THREE.MeshStandardMaterial({ map: generateFruitTexture(def.texType, def.color), roughness: 0.35, metalness: 0.05 })
-      );
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-
-      const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, def.radius * 0.35, 8), new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.8 }));
-      stem.position.y = def.radius;
-      mesh.add(stem);
-
-      return mesh;
-    }
-
-    function updateHoldFruitMesh() {
-      if (currentFruitMesh) scene.remove(currentFruitMesh);
-      if (!isGameOver) {
-        currentFruitMesh = createFruitMesh(currentFruitIndex);
-        currentFruitMesh.position.set(aimX, DROP_Y, aimZ);
-        scene.add(currentFruitMesh);
-      }
-    }
-
-    function getRandomStartFruit() {
-      return Math.floor(Math.random() * 4);
-    }
-
-    function spawnFruit() {
-      if (!canDrop || isGameOver) return;
-
-      playSound('drop');
-      canDrop = false;
-      tongueAnim = 1.0;
-
-      const typeIndex = currentFruitIndex;
-      const def = FRUIT_TYPES[typeIndex];
-
-      if (currentFruitMesh) {
-        scene.remove(currentFruitMesh);
-        currentFruitMesh = null;
-      }
-
-      const mesh = createFruitMesh(typeIndex);
-      mesh.position.set(aimX, DROP_Y, aimZ);
-      scene.add(mesh);
-
-      fruits.push({
-        mesh: mesh, type: typeIndex, radius: def.radius, mass: def.mass,
-        pos: mesh.position, vel: new THREE.Vector3(0, -2, 0), isMergerTarget: false, spawnTime: Date.now()
-      });
-
-      currentFruitIndex = nextFruitIndex;
-      nextFruitIndex = getRandomStartFruit();
-      updateNextCanvas();
-
-      setTimeout(() => {
-        canDrop = true;
-        updateHoldFruitMesh();
-      }, 550);
-    }
-
-    function updatePhysics(dt) {
-      const gravity = -32.0;
-      const subSteps = 4;
-      const subDt = dt / subSteps;
-
-      for (let step = 0; step < subSteps; step++) {
-        for (let i = 0; i < fruits.length; i++) {
-          const f = fruits[i];
-          f.vel.y += gravity * subDt;
-          f.pos.addScaledVector(f.vel, subDt);
-
-          const minY = -CONTAINER_HEIGHT / 2 + f.radius;
-          if (f.pos.y < minY) {
-            f.pos.y = minY;
-            f.vel.y = -f.vel.y * RESTITUTION;
-            f.vel.x *= DAMPING; f.vel.z *= DAMPING;
-          }
-
-          const maxX = CONTAINER_WIDTH / 2 - f.radius;
-          if (Math.abs(f.pos.x) > maxX) {
-            f.pos.x = Math.sign(f.pos.x) * maxX;
-            f.vel.x = -f.vel.x * RESTITUTION; f.vel.z *= DAMPING;
-          }
-
-          const maxZ = CONTAINER_DEPTH / 2 - f.radius;
-          if (Math.abs(f.pos.z) > maxZ) {
-            f.pos.z = Math.sign(f.pos.z) * maxZ;
-            f.vel.z = -f.vel.z * RESTITUTION; f.vel.x *= DAMPING;
-          }
-
-          f.mesh.position.copy(f.pos);
-        }
-
-        for (let i = 0; i < fruits.length; i++) {
-          for (let j = i + 1; j < fruits.length; j++) {
-            const f1 = fruits[i];
-            const f2 = fruits[j];
-            if (!f1 || !f2 || f1.isMergerTarget || f2.isMergerTarget) continue;
-
-            const delta = new THREE.Vector3().subVectors(f2.pos, f1.pos);
-            const dist = delta.length();
-            const minDist = f1.radius + f2.radius;
-
-            if (dist < minDist && dist > 0.0001) {
-              if (f1.type === f2.type && f1.type < FRUIT_TYPES.length - 1) {
-                f1.isMergerTarget = true; f2.isMergerTarget = true;
-                mergeFruits(i, j);
-                return;
-              }
-
-              const normal = delta.normalize();
-              const overlap = minDist - dist;
-              f1.pos.addScaledVector(normal, -overlap * 0.5);
-              f2.pos.addScaledVector(normal, overlap * 0.5);
-
-              const relativeVel = new THREE.Vector3().subVectors(f2.vel, f1.vel);
-              const velAlongNormal = relativeVel.dot(normal);
-
-              if (velAlongNormal < 0) {
-                const impulse = -(1 + RESTITUTION) * velAlongNormal / (1 / f1.mass + 1 / f2.mass);
-                f1.vel.addScaledVector(normal, -impulse / f1.mass);
-                f2.vel.addScaledVector(normal, impulse / f2.mass);
-              }
-            }
-          }
-        }
-      }
-
-      if (!isGameOver) {
-        const now = Date.now();
-        for (let f of fruits) {
-          if (now - f.spawnTime > 1500 && f.pos.y > DROP_Y - 1.2 && f.vel.lengthSq() < 0.2) {
-            triggerGameOver();
-            break;
-          }
-        }
-      }
-    }
-
-    function mergeFruits(idx1, idx2) {
-      const f1 = fruits[idx1];
-      const f2 = fruits[idx2];
-      const newType = f1.type + 1;
-      const newPos = new THREE.Vector3().addVectors(f1.pos, f2.pos).multiplyScalar(0.5);
-
-      scene.remove(f1.mesh); scene.remove(f2.mesh);
-      fruits = fruits.filter((_, idx) => idx !== idx1 && idx !== idx2);
-
-      score += FRUIT_TYPES[newType].points;
-      scoreValElem.innerText = score;
-      playSound('merge');
-
-      const mesh = createFruitMesh(newType);
-      mesh.position.copy(newPos);
-      scene.add(mesh);
-
-      fruits.push({
-        mesh: mesh, type: newType, radius: FRUIT_TYPES[newType].radius, mass: FRUIT_TYPES[newType].mass,
-        pos: mesh.position, vel: new THREE.Vector3(0, 1.5, 0), isMergerTarget: false, spawnTime: Date.now()
-      });
-    }
-
-    function updateAimX(targetX) {
-      if (isGameOver) return;
-      const currentRadius = FRUIT_TYPES[currentFruitIndex].radius;
-      const limitX = CONTAINER_WIDTH / 2 - currentRadius;
-      aimX = Math.max(-limitX, Math.min(limitX, targetX));
-
-      if (chameleonMesh) chameleonMesh.position.x = aimX;
-      if (dropGuideMesh) dropGuideMesh.position.x = aimX;
-      if (currentFruitMesh) currentFruitMesh.position.x = aimX;
-    }
-
-    // --- 誤爆防止のポインター操作 ---
-    function onPointerDown(e) {
-      if (e.target.closest('.interactive') || isGameOver) return;
-      initAudio();
-      touchStartX = e.clientX;
-      touchStartY = e.clientY;
-      hasMovedSignificantly = false;
-
-      const mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-      updateAimX(mouseX * (CONTAINER_WIDTH / 2));
-    }
-
-    function onPointerMove(e) {
-      const mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-      updateAimX(mouseX * (CONTAINER_WIDTH / 2));
-
-      if (Math.abs(e.clientX - touchStartX) > 10 || Math.abs(e.clientY - touchStartY) > 10) {
-        hasMovedSignificantly = true;
-      }
-
-      if (eyeLeft && eyeRight) {
-        eyeLeft.rotation.y = mouseX * 0.9;
-        eyeRight.rotation.y = mouseX * 0.9;
-      }
-    }
-
-    function onPointerUp(e) {
-      if (e.target.closest('.interactive') || isGameOver) return;
-      // タップが大きく動いておらず、UI以外の上であれば指を離した瞬間にドロップ
-      spawnFruit();
-    }
-
-    function onKeyDown(e) {
-      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
-      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
-      if (e.key === ' ' || e.key === 'Enter') {
-        initAudio();
-        spawnFruit();
-      }
-    }
-
-    function onKeyUp(e) {
-      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
-      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
-    }
-
-    function processKeyboardInput(dt) {
-      if (keys.left || keys.right) {
-        const speed = 12.0 * dt;
-        let newX = aimX;
-        if (keys.left) newX -= speed;
-        if (keys.right) newX += speed;
-        updateAimX(newX);
-      }
-    }
-
-    function updateNextCanvas() {
-      nextCtx.clearRect(0, 0, 90, 90);
-      const def = FRUIT_TYPES[nextFruitIndex];
-      nextCtx.beginPath();
-      nextCtx.arc(45, 45, Math.min(32, def.radius * 9 + 10), 0, Math.PI * 2);
-      nextCtx.fillStyle = '#' + def.color.toString(16).padStart(6, '0');
-      nextCtx.fill();
-      nextCtx.lineWidth = 3;
-      nextCtx.strokeStyle = 'rgba(255,255,255,0.8)';
-      nextCtx.stroke();
-    }
-
-    function buildEvoChart() {
-      evoChartElem.innerHTML = '';
-      FRUIT_TYPES.forEach(f => {
-        const item = document.createElement('div');
-        item.className = 'evo-item';
-        const dot = document.createElement('div');
-        dot.className = 'evo-dot';
-        dot.style.backgroundColor = '#' + f.color.toString(16).padStart(6, '0');
-        const label = document.createElement('span');
-        label.innerText = f.name;
-        item.appendChild(dot);
-        item.appendChild(label);
-        evoChartElem.appendChild(item);
-      });
-    }
-
-    function triggerGameOver() {
-      isGameOver = true;
-      finalScoreElem.innerText = score;
-      gameOverModal.classList.add('show');
-      evoChartElem.classList.add('show-fully'); // ゲームオーバー時はリストをしっかり見せる
-    }
-
-    function resetGame() {
-      fruits.forEach(f => scene.remove(f.mesh));
-      fruits = [];
-      score = 0;
-      scoreValElem.innerText = score;
-      isGameOver = false;
-      canDrop = true;
-      gameOverModal.classList.remove('show');
-      evoChartElem.classList.remove('show-fully');
-
-      currentFruitIndex = getRandomStartFruit();
-      nextFruitIndex = getRandomStartFruit();
-      updateNextCanvas();
-      updateHoldFruitMesh();
-    }
-
-    function onWindowResize() {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    }
-
-    const clock = new THREE.Clock();
-
-    function animate() {
-      requestAnimationFrame(animate);
-      const dt = Math.min(clock.getDelta(), 0.033);
-
-      processKeyboardInput(dt);
-
-      if (!isGameOver) {
-        updatePhysics(dt);
-      }
-
-      if (tongueAnim > 0 && tongueMesh) {
-        tongueAnim -= dt * 4.0;
-        const scaleZ = Math.sin(Math.max(0, tongueAnim) * Math.PI) * 2.5;
-        tongueMesh.scale.set(1, Math.max(0.01, scaleZ), 1);
-      }
-
-      if (chameleonMesh) {
-        chameleonMesh.position.y = DROP_Y + 3.2 + Math.sin(Date.now() * 0.0025) * 0.12;
-      }
-
-      renderer.render(scene, camera);
-    }
-
-    window.onload = init;
-  </script>
+    <div class="controls"><button id="leftBtn">⬅ LEFT</button><button id="rightBtn">RIGHT ➡</button></div>
+    <p class="help">操作：左右ボタン ／ キーボード ← → ／ ゲーム画面を指でスライド</p>
+  </main>
+  <footer>🍌 BANANA REPUBLIC ARCADE · HAVE A PEELING GOOD TIME 🍌</footer>
+</div>
+<script>
+(() => {
+  // Loading sequence: the page works offline; progress is a short visual intro.
+  const loader=document.getElementById('loader'), progress=document.getElementById('progress'), percent=document.getElementById('loadPercent');
+  const bits=document.getElementById('loaderBits');
+  for(let i=0;i<15;i++){const b=document.createElement('span');b.className='loader-bit';b.textContent=['🍌','✨','⭐'][i%3];b.style.left=(Math.random()*100)+'%';b.style.animationDelay=(-Math.random()*4)+'s';b.style.animationDuration=(3+Math.random()*3)+'s';bits.appendChild(b);}
+  let load=0;
+  const loading=setInterval(()=>{load=Math.min(100,load+8+Math.random()*17);progress.style.width=load+'%';percent.textContent='LOADING '+Math.floor(load)+'%';if(load>=100){clearInterval(loading);setTimeout(()=>{loader.classList.add('done');document.getElementById('app').classList.add('ready');document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));},300);}},100);
+
+  const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),$=id=>document.getElementById(id);
+  const W=canvas.width,H=canvas.height;
+  let running=false,score=0,lives=3,timeLeft=30,last=0,spawn=0,elapsed=0,items=[],particles=[],keys={left:false,right:false},toastTimer;
+  const basket={x:W/2-38,y:H-62,w:76,h:38,speed:300};
+  let best=Number(localStorage.getItem('bananaBest')||0);
+  function reset(){score=0;lives=3;timeLeft=30;elapsed=0;spawn=0;items=[];particles=[];basket.x=W/2-basket.w/2;updateHUD();}
+  function updateHUD(){$('score').textContent=score;$('time').textContent=Math.ceil(timeLeft);$('lives').textContent='❤️'.repeat(lives)+'🖤'.repeat(3-lives);}
+  function start(){reset();running=true;last=performance.now();$('start').classList.add('hidden');$('result').classList.add('hidden');requestAnimationFrame(loop);}
+  function end(){running=false;const isBest=score>best;if(isBest){best=score;localStorage.setItem('bananaBest',String(best));}
+    $('resultEmoji').textContent=score>=150?'👑':score>=80?'🏆':'🍌';$('resultTitle').textContent=score>=150?'BANANA MASTER!':score>=80?'NICE CATCH!':'GAME OVER';
+    $('resultText').innerHTML=`スコア：<b>${score}点</b><br>ハイスコア：<b>${best}点</b>${isBest?'<br>🎉 ハイスコア更新！':''}`;$('result').classList.remove('hidden');}
+  function spawnItem(){const bomb=Math.random()<.19;items.push({x:22+Math.random()*(W-44),y:-28,vy:125+Math.random()*75+elapsed*2,type:bomb?'bomb':'banana',rot:Math.random()*6.28,spin:(Math.random()-.5)*3});}
+  function pop(x,y,color,label){for(let i=0;i<15;i++)particles.push({x,y,vx:(Math.random()-.5)*230,vy:-40-Math.random()*170,life:.45+Math.random()*.45,color,label:i===0?label:''});}
+  function showToast(text){const t=$('toast');t.textContent=text;t.classList.remove('show');void t.offsetWidth;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),850);}
+  function drawEmoji(emoji,x,y,rot=0,size=30){ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.font=size+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(emoji,0,0);ctx.restore();}
+  function drawBasket(){const x=basket.x,y=basket.y;ctx.save();ctx.shadowColor='#0008';ctx.shadowBlur=8;ctx.shadowOffsetY=4;ctx.fillStyle='#b56b25';ctx.beginPath();ctx.moveTo(x,y+4);ctx.lineTo(x+8,y+basket.h);ctx.lineTo(x+basket.w-8,y+basket.h);ctx.lineTo(x+basket.w,y+4);ctx.closePath();ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle='#f4bd58';ctx.lineWidth=4;ctx.stroke();ctx.strokeStyle='#6b3513';ctx.lineWidth=3;for(let i=1;i<5;i++){ctx.beginPath();ctx.moveTo(x+i*basket.w/5,y+8);ctx.lineTo(x+i*basket.w/5,y+basket.h-2);ctx.stroke();}ctx.fillStyle='#ffe0a0';ctx.fillRect(x-3,y,basket.w+6,8);ctx.font='20px sans-serif';ctx.textAlign='center';ctx.fillText('🍌',x+basket.w/2,y+22);ctx.restore();}
+  function drawBackground(){ctx.clearRect(0,0,W,H);for(let i=0;i<34;i++){const x=(i*73+17)%W,y=(i*47+25)%270;ctx.fillStyle=i%3===0?'#ffe99a':'#ffffff75';ctx.beginPath();ctx.arc(x,y,(i%3)*.45+.8,0,Math.PI*2);ctx.fill();}
+    ctx.fillStyle='#1a302a';ctx.beginPath();ctx.moveTo(0,345);for(let x=0;x<=W;x+=40)ctx.lineTo(x,325+Math.sin(x*.035)*13);ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();ctx.fill();ctx.fillStyle='#6e5527';ctx.fillRect(0,365,W,H-365);ctx.strokeStyle='#9a793a55';ctx.lineWidth=2;for(let y=382;y<H;y+=28){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}for(let x=0;x<W;x+=45){ctx.beginPath();ctx.moveTo(x,365);ctx.lineTo(x-15,H);ctx.stroke();}ctx.font='22px sans-serif';ctx.fillText('🌴',18,350);ctx.fillText('🌴',W-44,350);}
+  function draw(){drawBackground();items.forEach(it=>drawEmoji(it.type==='banana'?'🍌':'💣',it.x,it.y,it.rot,it.type==='banana'?30:29));drawBasket();particles.forEach(p=>{ctx.globalAlpha=Math.max(0,p.life*1.8);ctx.fillStyle=p.color;ctx.font='bold 16px sans-serif';ctx.textAlign='center';ctx.fillText(p.label||'✦',p.x,p.y);});ctx.globalAlpha=1;}
+  function loop(now){if(!running)return;const dt=Math.min((now-last)/1000,.04);last=now;elapsed+=dt;timeLeft-=dt;if(keys.left)basket.x-=basket.speed*dt;if(keys.right)basket.x+=basket.speed*dt;basket.x=Math.max(0,Math.min(W-basket.w,basket.x));spawn-=dt;if(spawn<=0){spawnItem();spawn=Math.max(.28,.72-elapsed*.008)+Math.random()*.25;}
+    for(let i=items.length-1;i>=0;i--){const it=items[i];it.y+=it.vy*dt;it.rot+=it.spin*dt;if(it.y+basket.h/2>=basket.y&&it.y<=basket.y+basket.h&&it.x>=basket.x-5&&it.x<=basket.x+basket.w+5){if(it.type==='banana'){score+=10;pop(it.x,it.y,'#ffdf42','+10');showToast('🍌 +10 POINTS!');$('flash').classList.remove('hit');void $('flash').offsetWidth;$('flash').classList.add('hit');}else{lives--;pop(it.x,it.y,'#ff554e','-1');showToast('💥 LIFE -1');$('stage').classList.remove('shake');void $('stage').offsetWidth;$('stage').classList.add('shake');}items.splice(i,1);updateHUD();if(lives<=0){end();return;}continue;}if(it.y>H+35)items.splice(i,1);}
+    particles.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=240*dt;p.life-=dt;});particles=particles.filter(p=>p.life>0);updateHUD();draw();if(timeLeft<=0){timeLeft=0;updateHUD();draw();end();return;}requestAnimationFrame(loop);}
+  document.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault();if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a')keys.left=true;if(e.key==='ArrowRight'||e.key.toLowerCase()==='d')keys.right=true;if(e.key===' '&&!running)start();});
+  document.addEventListener('keyup',e=>{if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a')keys.left=false;if(e.key==='ArrowRight'||e.key.toLowerCase()==='d')keys.right=false;});
+  function bindHold(id,key){const el=$(id),down=e=>{e.preventDefault();keys[key]=true;},up=e=>{e.preventDefault();keys[key]=false;};el.addEventListener('pointerdown',down);['pointerup','pointerleave','pointercancel'].forEach(ev=>el.addEventListener(ev,up));}
+  bindHold('leftBtn','left');bindHold('rightBtn','right');let dragging=false;
+  canvas.addEventListener('pointerdown',e=>{if(!running)return;dragging=true;canvas.setPointerCapture(e.pointerId);moveBasket(e);});canvas.addEventListener('pointermove',e=>{if(dragging&&running)moveBasket(e);});canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('pointercancel',()=>dragging=false);
+  function moveBasket(e){const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*W;basket.x=Math.max(0,Math.min(W-basket.w,x-basket.w/2));}
+  $('startBtn').addEventListener('click',start);$('againBtn').addEventListener('click',start);reset();draw();
+})();
+</script>
 </body>
 </html>
